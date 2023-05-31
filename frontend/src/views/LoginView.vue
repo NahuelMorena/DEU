@@ -1,0 +1,71 @@
+<template>
+    <v-layout fill-height>
+        <v-col class="d-flex justify-center align-center">
+            <v-card style="width: 500px" v-on:keyup.enter="logearse">
+                <v-card-title primary-title class="mb-7">
+                    <div class="text-h4">Iniciar sesion</div>
+                </v-card-title>
+                <v-card-text>
+                    <v-text-field
+                        v-model="username"
+                        name="username"
+                        label="Nombre de usuario"
+                        id="username"
+                    ></v-text-field>
+                    <v-text-field
+                        v-model="password"
+                        type="password"
+                        name="password"
+                        label="Contraseña"
+                        id="password"
+                    ></v-text-field>
+                    <v-btn
+                        block
+                        color="primary"
+                        class="elevation-0"
+                        @click="logearse"
+                    >
+                        Ingresar
+                    </v-btn>
+                    <v-alert
+                        class="mt-3"
+                        v-model="loginError"
+                        dismissible
+                        type="error"
+                    >
+                        Error al iniciar sesion
+                    </v-alert>
+                </v-card-text>
+            </v-card>
+        </v-col>
+    </v-layout>
+</template>
+<script>
+import { localAxios } from "@/axios";
+import { AuthStore } from "../store/auth";
+export default {
+    data: () => ({
+        username: "",
+        password: "",
+        loginError: false,
+    }),
+    methods: {
+        logearse() {
+            let formdata = new FormData();
+            formdata.append("username", this.username);
+            formdata.append("password", this.password);
+            localAxios
+                .post("/login", formdata)
+                .then((response) => {
+                    let authStore = AuthStore();
+                    authStore.loggedIn(response.data);
+                    this.$router.push({ name: "Home" });
+                })
+                .catch((err) => {
+                    this.loginError = true;
+                    console.log(err);
+                });
+        },
+    },
+};
+</script>

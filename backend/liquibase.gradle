@@ -1,0 +1,18 @@
+dependencies {	  
+  liquibaseRuntime 'org.liquibase:liquibase-core:4.2.2'
+  liquibaseRuntime 'org.liquibase:liquibase-groovy-dsl:2.1.1'
+  liquibaseRuntime 'org.mariadb.jdbc:mariadb-java-client'	
+}
+
+liquibase {
+  activities {    
+    main { 
+      changeLogFile "src/main/resources/db/changelog-root.xml"
+      url 'jdbc:mariadb://localhost:3306/appstarter'
+      username 'root'
+      classpath "$rootDir"
+    }  
+  }
+  runList = 'main'
+  
+}

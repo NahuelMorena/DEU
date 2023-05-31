@@ -1,0 +1,5 @@
+AdminStock
+
+DB: MariaDB 10.6.10
+user: admin
+pass: adminstock

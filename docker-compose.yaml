@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  myapp:
+    image: registry.gitlab.com/huggias/appstarter:0.0.8
+    ports:
+      - "8081:8081"
+    environment:
+      - DB_URL=host.docker.internal
+      - DB_USERNAME=root
+      - DB_NAME=appstarter

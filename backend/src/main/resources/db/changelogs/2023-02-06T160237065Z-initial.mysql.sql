@@ -1,0 +1,35 @@
+-- liquibase formatted sql
+
+-- changeset Ale:1675699146952-1
+CREATE TABLE authorities (id INT AUTO_INCREMENT NOT NULL, name VARCHAR(50) NOT NULL, CONSTRAINT PK_AUTHORITIES PRIMARY KEY (id));
+
+-- changeset Ale:1675699146952-2
+CREATE TABLE authorities_roles (id INT AUTO_INCREMENT NOT NULL, id_authority INT NOT NULL, id_role INT NOT NULL, CONSTRAINT PK_AUTHORITIES_ROLES PRIMARY KEY (id));
+
+-- changeset Ale:1675699146952-6
+CREATE TABLE roles (id INT AUTO_INCREMENT NOT NULL, name VARCHAR(50) NOT NULL, CONSTRAINT PK_ROLES PRIMARY KEY (id));
+
+-- changeset Ale:1675699146952-8
+CREATE TABLE user_roles (id INT AUTO_INCREMENT NOT NULL, id_user INT NOT NULL, id_role INT NOT NULL, CONSTRAINT PK_USER_ROLES PRIMARY KEY (id));
+
+-- changeset Ale:1675699146952-9
+CREATE TABLE users (id INT AUTO_INCREMENT NOT NULL, username VARCHAR(50) NOT NULL, password VARCHAR(255) NOT NULL, CONSTRAINT PK_USERS PRIMARY KEY (id));
+
+-- changeset Ale:1675699146952-12
+CREATE INDEX id_authority ON authorities_roles(id_authority);
+
+-- changeset Ale:1675699146952-16
+CREATE INDEX id_role ON authorities_roles(id_role);
+
+-- changeset Ale:1675699146952-17
+CREATE INDEX id_role ON user_roles(id_role);
+
+-- changeset Ale:1675699146952-18
+CREATE INDEX id_user ON user_roles(id_user);
+
+-- changeset Ale:1675699146952-30
+ALTER TABLE user_roles ADD CONSTRAINT user_roles_ibfk_1 FOREIGN KEY (id_user) REFERENCES users (id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+-- changeset Ale:1675699146952-31
+ALTER TABLE user_roles ADD CONSTRAINT user_roles_ibfk_2 FOREIGN KEY (id_role) REFERENCES roles (id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
