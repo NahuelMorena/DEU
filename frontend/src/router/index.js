@@ -40,6 +40,24 @@ const routes = [
                 name: "Security",
                 component: () => import("@/views/SecurityView"),
             },
+            {
+                path: "/trainings",
+                component: () => import("@/views/TrainingsView"),
+                children: [
+                    {
+                        path: "",
+                        name: "Trainings",
+                        component: () => import("@/views/TrainingsView"),
+                    },
+                    {
+                        path: "edit",
+                        name: "Edit_Training",
+                        component: () =>
+                            import("@/views/TrainingsView/editTraining"),
+                        props: true,
+                    },
+                ],
+            },
         ],
     },
 ];

@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:mariadb://${DB_URL:localhost}:3306/${DB_NAME:appstarter}
+    url: jdbc:mariadb://${DB_URL:localhost}:3306/${DB_NAME:diseño_experiencia_usuario}
     username: ${DB_USERNAME:root}
   liquibase:
     change-log: classpath:db/changelog-root.json
@@ -17,4 +17,4 @@ management:
   endpoints:
     web:
       exposure:
-        include: '*'
+        include: "*"
