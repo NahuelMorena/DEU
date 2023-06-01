@@ -1,7 +1,7 @@
 <template>
     <div>
         <HeaderComponent title="Usuarios" />
-        <v-container>
+        <v-container class="general-padding">
             <v-card v-if="datatable.items">
                 <v-card-text>
                     <v-text-field
@@ -27,7 +27,11 @@
                     >
                         <template v-slot:item="{ item }">
                             <tr>
-                                <td>{{ item.username }}</td>
+                                <td>{{ item.name }}</td>
+                                <td>{{ item.surname }}</td>
+                                <td>{{ item.email }}</td>
+                                <td>{{ item.telephone }}</td>
+                                <td>{{ item.birthdate }}</td>
                                 <td>
                                     <span
                                         v-for="(role, i) in item.roles"
@@ -37,7 +41,7 @@
                                     >
                                 </td>
                                 <td>
-                                    <v-btn icon @click="deleteUser(item)">
+                                    <v-btn icon @click="confirmDelete(item)">
                                         <v-icon>mdi-delete</v-icon>
                                     </v-btn>
                                 </td>
@@ -52,6 +56,25 @@
                 v-model="dialogs.addUser"
                 @saved="(newUser) => newUserSaved(newUser)"
             />
+            <v-dialog
+                v-model="dialogs.deleteVisit"
+                persistent
+                max-width="600px"
+            >
+                <v-card>
+                    <v-card-title class="headline">
+                        ¿Deseas eliminar el usuario seleccionado?
+                    </v-card-title>
+                    <v-card-actions>
+                        <v-btn color="error" @click="deleteUser"
+                            >Eliminar</v-btn
+                        >
+                        <v-btn text @click="dialogs.deleteVisit = false"
+                            >Cancelar</v-btn
+                        >
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
         </v-container>
     </div>
 </template>
@@ -72,14 +95,23 @@ export default {
         datatable: {
             items: null,
             headers: [
-                { text: "Nombre", value: "name", width: "20%" },
-                { text: "Permisos", value: "", width: "60%" },
-                { text: "", value: "", width: "20%" },
+                { text: "Nombre", value: "name" },
+                { text: "Apellido", value: "surname" },
+                { text: "Email", value: "email" },
+                { text: "Telefono", value: "telephone" },
+                {
+                    text: "Fecha de Nacimiento",
+                    value: "birthdate",
+                    width: "20%",
+                },
+                { text: "Permisos", value: "" },
+                { text: "Borrar", value: "", sortable: null },
             ],
             search: "",
         },
         dialogs: {
             addUser: false,
+            deleteVisit: false,
         },
     }),
     async mounted() {
@@ -93,15 +125,19 @@ export default {
                 "Se creó el nuevo usuario: " + newUser.username + "."
             );
         },
-        async deleteUser(item) {
+        confirmDelete(item) {
+            this.dialogs.deleteVisit = true;
+            this.userToDelete = item;
+        },
+        async deleteUser() {
             let response = await localAxios.delete("/admin/users", {
-                data: item,
+                data: this.userToDelete,
             });
             if (response.status == 200) {
-                const index = this.datatable.items.indexOf(item);
+                const index = this.datatable.items.indexOf(this.userToDelete);
                 if (index >= 0) this.datatable.items.splice(index, 1);
                 this.snackbarStore.open(
-                    "Se borró el usuario " + item.username + "."
+                    "Se borró el usuario " + this.userToDelete.username + "."
                 );
             }
         },

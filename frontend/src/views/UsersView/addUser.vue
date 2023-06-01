@@ -14,53 +14,101 @@
                 </v-card-title>
                 <v-card-text>
                     <v-form ref="form">
-                        <v-text-field
-                            label="Nombre del usuario"
-                            v-model="form.username"
-                            :rules="rules.username"
-                        >
-                        </v-text-field>
-                        <v-text-field
-                            v-model="form.password"
-                            :append-icon="
-                                showPassword ? 'mdi-eye' : 'mdi-eye-off'
-                            "
-                            :rules="rules.password"
-                            :type="showPassword ? 'text' : 'password'"
-                            label="Contraseña del usuario"
-                            counter
-                            @click:append="showPassword = !showPassword"
-                        ></v-text-field>
-                        <v-autocomplete
-                            v-model="form.roles"
-                            :items="allRoles"
-                            label="Roles"
-                            item-text="name"
-                            return-object
-                            filled
-                            rounded
-                            chips
-                            multiple
-                        >
-                            <template v-slot:selection="data">
-                                <v-chip
-                                    v-bind="data.attrs"
-                                    :input-value="data.selected"
-                                    close
-                                    @click="data.select"
-                                    @click:close="remove(data.item)"
+                        <v-row>
+                            <v-col cols="6">
+                                <v-text-field
+                                    label="Nombre"
+                                    v-model="form.name"
+                                    :rules="rules.name"
+                                ></v-text-field>
+                            </v-col>
+                            <v-col cols="6">
+                                <v-text-field
+                                    label="Apellido"
+                                    v-model="form.surname"
+                                    :rules="rules.surname"
+                                ></v-text-field>
+                            </v-col>
+                        </v-row>
+                        <v-row>
+                            <v-col cols="6">
+                                <Datepicker
+                                    v-model="form.birthdate"
+                                    label="Fecha de nacimiento"
+                                ></Datepicker>
+                            </v-col>
+                            <v-col cols="6">
+                                <v-text-field
+                                    label="Telefono"
+                                    v-model="form.telephone"
+                                    :rules="rules.telephone"
+                                    type="number"
+                                ></v-text-field>
+                            </v-col>
+                        </v-row>
+                        <v-row>
+                            <v-col cols="6">
+                                <v-text-field
+                                    label="Email"
+                                    v-model="form.email"
+                                    :rules="rules.email"
+                                ></v-text-field>
+                            </v-col>
+                            <v-col cols="6">
+                                <v-text-field
+                                    label="Nombre del usuario"
+                                    v-model="form.username"
+                                    :rules="rules.username"
+                                ></v-text-field>
+                            </v-col>
+                        </v-row>
+                        <v-row>
+                            <v-col cols="6">
+                                <v-text-field
+                                    v-model="form.password"
+                                    :append-icon="
+                                        showPassword ? 'mdi-eye' : 'mdi-eye-off'
+                                    "
+                                    :rules="rules.password"
+                                    :type="showPassword ? 'text' : 'password'"
+                                    label="Contraseña del usuario"
+                                    counter
+                                    @click:append="showPassword = !showPassword"
+                                ></v-text-field>
+                            </v-col>
+                            <v-col cols="6">
+                                <v-autocomplete
+                                    v-model="form.roles"
+                                    :items="allRoles"
+                                    label="Roles"
+                                    item-text="name"
+                                    return-object
+                                    filled
+                                    rounded
+                                    chips
+                                    multiple
                                 >
-                                    {{ data.item.name }}
-                                </v-chip>
-                            </template>
-                            <template v-slot:item="data">
-                                <v-list-item-content>
-                                    <v-list-item-title
-                                        v-html="data.item.name"
-                                    ></v-list-item-title>
-                                </v-list-item-content>
-                            </template>
-                        </v-autocomplete>
+                                    <template v-slot:selection="data">
+                                        <v-chip
+                                            v-bind="data.attrs"
+                                            :input-value="data.selected"
+                                            close
+                                            @click="data.select"
+                                            @click:close="remove(data.item)"
+                                        >
+                                            {{ data.item.name }}
+                                        </v-chip>
+                                    </template>
+                                    <template v-slot:item="data">
+                                        <v-list-item-content>
+                                            <v-list-item-title
+                                                v-html="data.item.name"
+                                            ></v-list-item-title>
+                                        </v-list-item-content>
+                                    </template>
+                                </v-autocomplete>
+                            </v-col>
+                        </v-row>
                     </v-form>
                 </v-card-text>
                 <v-card-actions class="d-flex justify-end">
@@ -82,6 +130,8 @@
 
 <script>
 import { localAxios } from "@/axios";
+import Datepicker from "@/components/datepicker.vue";
+import moment from "moment";
 
 export default {
     props: {
@@ -92,11 +142,26 @@ export default {
         showPassword: false,
         allRoles: null,
         form: {
+            name: "",
+            surname: "",
+            telephone: "",
+            email: "",
             username: "",
             password: "",
+            birthdate: null,
             roles: [],
         },
         rules: {
+            name: [(v) => !!v || "Se requiere un nombre"],
+            surname: [(v) => !!v || "Se requiere un apellido"],
+            telephone: [(v) => !!v || "Se requiere un telefono"],
+            email: [
+                (v) => !!v || "Se requiere un email",
+                (v) =>
+                    /^([\w-.]+@([\w-]+\.)+[\w-]{2,})?$/.test(v) ||
+                    "El email debe tener un formato válido",
+            ],
+            birthdate: [(v) => !!v || "Se requiere una fecha de nacimiento"],
             username: [(v) => !!v || "Se requiere un nombre de usuario"],
             password: [(v) => !!v || "Se requiere una contraseña"],
         },
@@ -126,6 +191,7 @@ export default {
             this.closeAll();
         },
     },
+    components: { Datepicker },
 };
 </script>
 <style></style>
