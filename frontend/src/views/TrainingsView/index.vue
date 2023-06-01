@@ -1,6 +1,6 @@
 <template>
     <div>
-        <HeaderComponent title="Listado de comidas" />
+        <HeaderComponent title="Listado de entrenamientos" />
         <v-card v-if="datatable.items && authStore">
             <v-card-title> Entrenamientos </v-card-title>
             <v-card-text>
