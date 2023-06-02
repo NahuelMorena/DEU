@@ -31,6 +31,14 @@ public class User {
     private List<Role> roles;
 
 
+    @ManyToOne(fetch=FetchType.EAGER)
+    @JoinColumn(name = "id_trainer")
+    private List<User> players_of_trainer;
+
+    @OneToMany(fetch=FetchType.EAGER)
+    @JoinColumn(name = "id_trainer")
+    private User trainer;
+
     public User() {}
 
     public User(long id, String username, String password, String email, Date birthdate, Integer telephone,

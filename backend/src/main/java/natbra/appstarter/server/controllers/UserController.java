@@ -30,7 +30,7 @@ private final String baseUrl = "/admin/users";
 	}
 	
 	@DeleteMapping(baseUrl)
-	public HttpEntity<User> deteleRole(@RequestBody User user){
+	public HttpEntity<User> deleteUser(@RequestBody User user){
 		userRepository.delete(user);
 		return ResponseEntity.ok(user);
 	}

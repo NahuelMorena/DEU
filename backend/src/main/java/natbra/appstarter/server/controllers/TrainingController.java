@@ -1,7 +1,7 @@
 package natbra.appstarter.server.controllers;
 
 import natbra.appstarter.server.Utils;
-import natbra.appstarter.server.model.Training;
+import natbra.appstarter.server.model.train.Training;
 import natbra.appstarter.server.repository.TrainingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;

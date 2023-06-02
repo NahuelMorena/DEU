@@ -185,6 +185,7 @@ export default {
             if (index >= 0) this.form.roles.splice(index, 1);
         },
         async save() {
+            this.form.telephone = parseInt(this.form.telephone);
             let response = await localAxios.post("/admin/users", this.form);
             let newUser = response.data;
             this.$emit("saved", newUser);
