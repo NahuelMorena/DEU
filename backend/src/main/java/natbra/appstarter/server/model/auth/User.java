@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.*;
 
@@ -30,13 +31,8 @@ public class User {
     @OneToMany(fetch=FetchType.EAGER)
     private List<Role> roles;
 
-
     @ManyToOne(fetch=FetchType.EAGER)
-    @JoinColumn(name = "id_trainer")
-    private List<User> players_of_trainer;
-
-    @OneToMany(fetch=FetchType.EAGER)
-    @JoinColumn(name = "id_trainer")
+    @JoinColumn(name = "user")
     private User trainer;
 
     public User() {}

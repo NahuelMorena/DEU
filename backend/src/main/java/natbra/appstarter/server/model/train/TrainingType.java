@@ -5,6 +5,7 @@ import natbra.appstarter.server.model.auth.Authority;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name="training_type")
@@ -15,6 +16,9 @@ public class TrainingType {
     private Long id;
 
     private String name;
+
+    @OneToMany(mappedBy = "training")
+    private Set<Training> trainings;
 
     public TrainingType() {
     }
