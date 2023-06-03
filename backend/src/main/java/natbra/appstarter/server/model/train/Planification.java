@@ -11,8 +11,9 @@ public class Planification {
 
     private String name;
 
-    @OneToMany(mappedBy = "trainer_planifications")
-    private Set<TrainerPlanification> training_planification;
+    @OneToMany(mappedBy = "planification")
+    private Set<TrainerPlanification> trainer_planification;
+    
 
     public Planification(){
 

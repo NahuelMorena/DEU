@@ -11,15 +11,15 @@ public class TrainerPlanification {
     private Long id;
 
     @ManyToOne(fetch= FetchType.EAGER)
-    @JoinColumn(name = "training")
+    @JoinColumn(name = "id_training")
     private Training training;
 
 
     @ManyToOne(fetch= FetchType.EAGER)
-    @JoinColumn(name = "planification")
+    @JoinColumn(name = "id_planification")
     private Planification planification;
 
-    private Integer order;
+    private Integer orderNumber;
 
     private Integer duration;
 
@@ -27,11 +27,11 @@ public class TrainerPlanification {
 
     }
 
-    public TrainerPlanification(Long id, Training training, Planification planification, Integer order, Integer duration) {
+    public TrainerPlanification(Long id, Training training, Planification planification, Integer orderNumber, Integer duration) {
         this.id = id;
         this.training = training;
         this.planification = planification;
-        this.order = order;
+        this.orderNumber = orderNumber;
         this.duration = duration;
     }
 
@@ -59,12 +59,12 @@ public class TrainerPlanification {
         this.planification = planification;
     }
 
-    public Integer getOrder() {
-        return order;
+    public Integer getOrderNumber() {
+        return orderNumber;
     }
 
-    public void setOrder(Integer order) {
-        this.order = order;
+    public void setOrderNumber(Integer orderNumber) {
+        this.orderNumber = orderNumber;
     }
 
     public Integer getDuration() {

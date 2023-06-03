@@ -38,7 +38,7 @@ public class User {
     public User() {}
 
     public User(long id, String username, String password, String email, Date birthdate, Integer telephone,
-                String name, String surname, List<Role> roles) {
+                String name, String surname, List<Role> roles, User trainer) {
         super();
         this.id = id;
         this.username = username;
@@ -49,8 +49,16 @@ public class User {
         this.name = name;
         this.surname = surname;
         this.roles = roles;
+        this.trainer = trainer;
     }
 
+    public User getTrainer() {
+        return trainer;
+    }
+
+    public void setTrainer(User trainer) {
+        this.trainer = trainer;
+    }
 
     public long getId() {
         return id;

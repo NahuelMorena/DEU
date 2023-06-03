@@ -12,11 +12,11 @@ public class UserPlanification {
     private Long id;
 
     @ManyToOne(fetch= FetchType.EAGER)
-    @JoinColumn(name = "user")
+    @JoinColumn(name = "id_user")
     private User user;
 
     @ManyToOne(fetch= FetchType.EAGER)
-    @JoinColumn(name = "planification")
+    @JoinColumn(name = "id_planification")
     private Planification planification;
 
     private LocalDate date;

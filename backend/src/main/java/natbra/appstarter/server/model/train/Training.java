@@ -21,8 +21,8 @@ public class Training {
 	@JoinColumn(name = "training_type")
 	private TrainingType training_type;
 
-	@OneToMany(mappedBy = "training_planifications")
-	private Set<TrainerPlanification> training_planification;
+	@OneToMany(mappedBy = "training")
+	private Set<TrainerPlanification> trainer_planification;
 
 
 	private String description;
@@ -32,7 +32,7 @@ public class Training {
 	private Integer repetitions_quantity;
 
     @ManyToOne(fetch=FetchType.EAGER)
-    @JoinColumn(name = "user")
+    @JoinColumn(name = "id_user")
     private User user;
 
 	public Training() {

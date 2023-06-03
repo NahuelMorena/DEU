@@ -25,9 +25,6 @@ public class UserPlanificationController {
     private final String baseUrl = "/admin/user/planification";
 
     @Autowired
-    PlanificationRepository planificationRepository;
-
-    @Autowired
     UserPlanificationRepository userPlanificationRepository;
 
     @Autowired
