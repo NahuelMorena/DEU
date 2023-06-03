@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name="trainer_planifications")
+@Table(name="training_type")
 public class TrainingType {
 
     @Id

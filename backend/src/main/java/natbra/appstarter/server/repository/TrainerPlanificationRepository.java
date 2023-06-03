@@ -12,4 +12,5 @@ public interface TrainerPlanificationRepository extends JpaRepository<TrainerPla
     //Set<TrainerPlanification> findAllById(@Param("id_planification") Long id_planification);
 
     Set<TrainerPlanification> findAllByPlanificationId(Long planificationId);
+
 }

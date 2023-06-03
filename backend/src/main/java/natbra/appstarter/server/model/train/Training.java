@@ -18,7 +18,7 @@ public class Training {
 	private String name;
 
 	@ManyToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name = "training_type")
+	@JoinColumn(name = "id_training_type")
 	private TrainingType training_type;
 
 	//@OneToMany(mappedBy = "training")

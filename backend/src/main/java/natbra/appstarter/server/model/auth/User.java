@@ -29,11 +29,11 @@ public class User {
     private List<Role> roles;
 
     @ManyToOne(fetch=FetchType.EAGER)
-    @JoinColumn(name = "user")
+    @JoinColumn(name = "id_trainer")
     private User trainer;
 
     @ManyToOne(fetch=FetchType.EAGER)
-    @JoinColumn(name = "user_type")
+    @JoinColumn(name = "id_user_type")
     private UserType user_type;
 
     public User() {}
