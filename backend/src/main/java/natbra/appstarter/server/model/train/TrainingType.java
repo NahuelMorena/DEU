@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name="training_type")
+@Table(name="trainer_planifications")
 public class TrainingType {
 
     @Id
@@ -17,7 +17,7 @@ public class TrainingType {
 
     private String name;
 
-    @OneToMany(mappedBy = "training")
+    @OneToMany(mappedBy = "training_type")
     private Set<Training> trainings;
 
     public TrainingType() {

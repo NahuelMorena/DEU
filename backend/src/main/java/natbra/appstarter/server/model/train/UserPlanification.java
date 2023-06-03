@@ -4,7 +4,8 @@ import natbra.appstarter.server.model.auth.User;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-
+@Entity
+@Table(name="user_planifications")
 public class UserPlanification {
 
     @Id

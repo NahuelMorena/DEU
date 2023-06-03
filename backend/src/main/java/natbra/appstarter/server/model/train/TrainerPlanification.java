@@ -3,7 +3,8 @@ package natbra.appstarter.server.model.train;
 import natbra.appstarter.server.model.auth.User;
 
 import javax.persistence.*;
-
+@Entity
+@Table(name="training_type")
 public class TrainerPlanification {
 
     @Id

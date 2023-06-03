@@ -2,7 +2,8 @@ package natbra.appstarter.server.model.train;
 
 import javax.persistence.*;
 import java.util.Set;
-
+@Entity
+@Table(name="planifications")
 public class Planification {
 
     @Id
