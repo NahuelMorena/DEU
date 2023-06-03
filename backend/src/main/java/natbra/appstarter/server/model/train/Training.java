@@ -4,6 +4,7 @@ import natbra.appstarter.server.model.auth.User;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Set;
 
 @Entity
 @Table(name="trainings")
@@ -19,6 +20,10 @@ public class Training {
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name = "training_type")
 	private TrainingType training_type;
+
+	@OneToMany(mappedBy = "training_planifications")
+	private Set<TrainerPlanification> training_planification;
+
 
 	private String description;
 

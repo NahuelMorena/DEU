@@ -1,6 +1,7 @@
 package natbra.appstarter.server.controllers;
 
 import natbra.appstarter.server.Utils;
+import natbra.appstarter.server.model.auth.User;
 import natbra.appstarter.server.model.train.Training;
 import natbra.appstarter.server.repository.TrainingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class TrainingController {
@@ -23,7 +25,12 @@ public class TrainingController {
 	public HttpEntity<List<Training>> getTrainings(){
 		return ResponseEntity.ok(trainingRepository.findAll());
 	}
-	
+
+	@GetMapping(baseUrl + "/getUser")
+	public HttpEntity<User> getTrainer(@RequestBody Training training){
+		return ResponseEntity.ok(training.getUser());
+	}
+
 	@DeleteMapping(baseUrl)
 	public HttpEntity<Training> deleteTraining(@RequestBody Training training){
 		trainingRepository.delete(training);

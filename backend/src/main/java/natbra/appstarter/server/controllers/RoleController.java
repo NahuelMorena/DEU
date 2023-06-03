@@ -26,7 +26,7 @@ public class RoleController {
 	}
 	
 	@DeleteMapping(baseUrl)
-	public HttpEntity<Role> deteleRole(@RequestBody Role role){
+	public HttpEntity<Role> deleteRole(@RequestBody Role role){
 		rolesRepository.delete(role);
 		return ResponseEntity.ok(role);
 	}

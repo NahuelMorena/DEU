@@ -21,12 +21,12 @@ public class AuthoritiesController {
 	@Autowired AuthoritiesRepository authoritiesRepository;
 	
 	@GetMapping(baseUrl)
-	public HttpEntity<List<Authority>> getAuthoritiess(){
+	public HttpEntity<List<Authority>> getAuthorities(){
 		return ResponseEntity.ok(authoritiesRepository.findAll());
 	}
 	
 	@DeleteMapping(baseUrl)
-	public HttpEntity<Authority> deteleRole(@RequestBody Authority authority){
+	public HttpEntity<Authority> deleteAuthority(@RequestBody Authority authority){
 		authoritiesRepository.delete(authority);
 		return ResponseEntity.ok(authority);
 	}
