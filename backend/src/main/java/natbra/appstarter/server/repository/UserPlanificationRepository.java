@@ -8,6 +8,6 @@ import org.springframework.data.repository.query.Param;
 import java.util.Set;
 
 public interface UserPlanificationRepository extends JpaRepository<UserPlanification, Long> {
-    @Query("SELECT p FROM user_planifications p WHERE p.id_planification = :id_planification")
-    Set<UserPlanification> findAllById(@Param("id_planification") Long id_planification);
+    //@Query("SELECT p FROM user_planifications p WHERE p.id_planification = :id_planification")
+    //Set<UserPlanification> findAllById(@Param("id_planification") Long id_planification);
 }

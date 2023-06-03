@@ -1,10 +1,7 @@
 package natbra.appstarter.server.model.auth;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import java.sql.Date;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.*;
 
@@ -34,6 +31,10 @@ public class User {
     @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name = "user")
     private User trainer;
+
+    @ManyToOne(fetch=FetchType.EAGER)
+    @JoinColumn(name = "user_type")
+    private UserType user_type;
 
     public User() {}
 

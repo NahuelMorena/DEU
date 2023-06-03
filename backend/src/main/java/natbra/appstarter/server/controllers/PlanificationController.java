@@ -42,7 +42,8 @@ public class PlanificationController {
             //seteamos nombre y lista de trainer planifications
 
             planificationToAdd.setName(planification.getName());
-            planificationToAdd.setTrainerPlanificationList(trainerPlanificationRepository.findAllById(planification.getId()));
+            //planificationToAdd.setTrainerPlanificationList(trainerPlanificationRepository.findAllById(planification.getId()));
+            planificationToAdd.setTrainerPlanificationList(trainerPlanificationRepository.findAllByPlanificationId(planification.getId()));
 
             //agregamos a la lista de todas las planificaciones
             fullPlanificationToAdd.add(planificationToAdd);
@@ -87,6 +88,7 @@ public class PlanificationController {
     }
 
     public Set<TrainerPlanification> getTrainerPlanificationList(Long id){
-        return trainerPlanificationRepository.findAllById(id);
+        //return trainerPlanificationRepository.findAllById(id);
+        return trainerPlanificationRepository.findAllByPlanificationId(id);
     }
 }

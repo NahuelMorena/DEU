@@ -1,27 +1,24 @@
 package natbra.appstarter.server.model.auth;
 
-import natbra.appstarter.server.model.train.Training;
-
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.Set;
 
-public class User_Type {
+@Entity
+@Table(name="user_type")
+public class UserType {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user_type")
     private Set<User> users;
 
-    public User_Type() {
+    public UserType() {
 
     }
-    public User_Type(Long id, String name, Set<User> users) {
+    public UserType(Long id, String name, Set<User> users) {
         this.id = id;
         this.name = name;
         this.users = users;
