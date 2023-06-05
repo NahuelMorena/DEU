@@ -18,6 +18,7 @@
                             <v-col cols="12">
                                 <v-text-field
                                     v-model="form.name"
+                                    :rules="rules.name"
                                     label="Nombre"
                                     required
                                 ></v-text-field>
@@ -26,6 +27,7 @@
                         <v-row>
                             <v-col cols="6">
                                 <v-text-field
+                                    :rules="rules.repetitions_quantity"
                                     v-model="form.repetitions_quantity"
                                     label="Cantidad de repeticiones"
                                     type="number"
@@ -34,6 +36,7 @@
                             </v-col>
                             <v-col cols="6">
                                 <v-text-field
+                                    :rules="rules.warmup_time"
                                     v-model="form.warmup_time"
                                     label="Minutos de tiempo de calentamiento"
                                     type="number"
@@ -44,12 +47,14 @@
                         <v-row>
                             <v-col cols="6">
                                 <Datepicker
+                                    :rules="rules.date"
                                     v-model="form.date"
                                     :label="'Fecha'"
                                 ></Datepicker>
                             </v-col>
                             <v-col cols="6">
                                 <v-select
+                                    :rules="rules.training_type"
                                     v-model="form.training_type"
                                     :items="allTypes"
                                     item-text="name"
@@ -63,6 +68,7 @@
                         <v-row>
                             <v-col cols="12">
                                 <v-textarea
+                                    :rules="rules.description"
                                     v-model="form.description"
                                     label="Descripcion"
                                     required
@@ -108,6 +114,20 @@ export default {
             training: null,
             date: moment().format("YYYY-MM-DD"),
         },
+        rules: {
+            name: [(v) => !!v || "Se requiere un nombre"],
+            description: [(v) => !!v || "Se requiere una descripcion"],
+            warmup_time: [
+                (v) => !!v || "Se requiere un tiempo de calentamiento",
+            ],
+            training_type: [
+                (v) => !!v || "Se requiere un tipo de entrenamiento",
+            ],
+            repetitions_quantity: [
+                (v) => !!v || "Se requiere la cantidad de repeticiones",
+            ],
+            date: [(v) => !!v || "Se requiere una fecha"],
+        },
     }),
     watch: {
         value: function (val) {
@@ -128,11 +148,19 @@ export default {
             this.$emit("input", false);
         },
         async save() {
-            let response = await localAxios.put("/admin/trainings", this.form);
-            let newTraining = response.data;
-            this.$emit("saved", newTraining);
-            console.log(this.form);
-            this.closeAll();
+            const isValid = await this.$refs.form.validate();
+            if (isValid) {
+                let response = await localAxios.put(
+                    "/admin/trainings",
+                    this.form
+                );
+                let newTraining = response.data;
+                this.$emit("saved", newTraining);
+                console.log(this.form);
+                this.closeAll();
+            } else {
+                alert("Completa todos los campos");
+            }
         },
     },
     components: { Datepicker },
