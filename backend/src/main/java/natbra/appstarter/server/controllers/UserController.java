@@ -2,6 +2,9 @@ package natbra.appstarter.server.controllers;
 
 import java.util.List;
 
+import natbra.appstarter.server.model.auth.UserType;
+import natbra.appstarter.server.model.train.TrainingType;
+import natbra.appstarter.server.repository.UserTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +24,9 @@ public class UserController {
 private final String baseUrl = "/admin/users";
 	
 	@Autowired UserRepository userRepository;
+
+	@Autowired
+	UserTypeRepository userTypeRepository;
 	@Autowired PasswordEncoder encoder;
 	@Autowired Utils utils;
 	
@@ -28,7 +34,11 @@ private final String baseUrl = "/admin/users";
 	public HttpEntity<List<User>> getUsers(){
 		return ResponseEntity.ok(userRepository.findAll());
 	}
-	
+
+	@GetMapping(baseUrl + "/getTypes")
+	public HttpEntity<List<UserType>> getUserTypes(){
+		return ResponseEntity.ok(userTypeRepository.findAll());
+	}
 	@DeleteMapping(baseUrl)
 	public HttpEntity<User> deleteUser(@RequestBody User user){
 		userRepository.delete(user);

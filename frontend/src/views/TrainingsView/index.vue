@@ -1,25 +1,9 @@
 <template>
     <div>
         <HeaderComponent title="Listado de entrenamientos" />
-        <v-card v-if="datatable.items && authStore">
+        <v-card>
             <v-card-title> Entrenamientos </v-card-title>
             <v-card-text>
-                <v-row>
-                    <v-col cols="12" md="4">
-                        <v-autocomplete
-                            v-if="authStore.hasAuthority('ADMIN')"
-                            :items="users"
-                            :item-text="
-                                (user) => `${user.name} ${user.surname}`
-                            "
-                            item-value="id"
-                            v-model="selectedUser"
-                            @change="getUserTrainings()"
-                            label="Seleccionar usuario"
-                            outlined
-                        />
-                    </v-col>
-                </v-row>
                 <v-text-field
                     v-model="datatable.search"
                     label="Buscador"
@@ -27,7 +11,6 @@
                 >
                     <template v-slot:append-outer>
                         <v-btn
-                            v-if="!esAdmin"
                             color="rgba(34, 56, 67, 0.85)"
                             dark
                             @click="dialogs.addTraining = true"
@@ -37,11 +20,9 @@
                     </template>
                 </v-text-field>
                 <v-data-table
-                    v-if="selectedUser"
                     :headers="datatable.headers"
-                    :items="datatable.filtered"
+                    :items="datatable.items"
                     :search="datatable.search"
-                    :items-per-page-options="[10, 20, 50]"
                     :items-per-page="10"
                     :sort-by="['date']"
                     :sort-asc="true"
@@ -50,15 +31,13 @@
                     <template v-slot:item="{ item }">
                         <tr>
                             <td>{{ item.date }}</td>
-                            <td>{{ item.breakfast }}</td>
-                            <td>{{ item.lunch }}</td>
-                            <td>{{ item.snack }}</td>
-                            <td>{{ item.dinner }}</td>
+                            <td>{{ item.name }}</td>
+                            <td>{{ item.description }}</td>
+                            <td>{{ item.training_type.name }}</td>
+                            <td>{{ item.warmup_time }}</td>
+                            <td>{{ item.repetitions_quantity }}</td>
                             <td>
-                                <v-tooltip
-                                    top
-                                    v-if="!authStore.hasAuthority('ADMIN')"
-                                >
+                                <v-tooltip top>
                                     <template v-slot:activator="{ on, attrs }">
                                         <v-btn
                                             v-bind="attrs"
@@ -73,10 +52,7 @@
                                 </v-tooltip>
                             </td>
                             <td>
-                                <v-tooltip
-                                    top
-                                    v-if="!authStore.hasAuthority('ADMIN')"
-                                >
+                                <v-tooltip top>
                                     <template v-slot:activator="{ on, attrs }">
                                         <v-btn
                                             v-bind="attrs"
@@ -122,7 +98,6 @@ import { localAxios } from "@/axios";
 import HeaderComponent from "@/components/HeaderComponent.vue";
 import AddTraining from "./addTraining.vue";
 import EditTraining from "./editTraining.vue";
-import { AuthStore } from "@/store/auth";
 
 export default {
     components: {
@@ -138,12 +113,10 @@ export default {
         },
         esAdmin: false,
         trainingToDelete: null,
-        authStore: null,
         selectedUser: null,
         users: [],
         datatable: {
-            items: null,
-            filtered: null,
+            items: [],
             headers: [
                 {
                     text: "Fecha",
@@ -153,23 +126,28 @@ export default {
                     sortIcon: "mdi-arrow-up-down",
                 },
                 {
-                    text: "Desayuno",
-                    value: "breakfast",
+                    text: "Nombre",
+                    value: "name",
                     sortable: null,
                 },
                 {
-                    text: "Almuerzo",
-                    value: "lunch",
+                    text: "Descripcion",
+                    value: "description",
                     sortable: null,
                 },
                 {
-                    text: "Merienda",
-                    value: "snack",
+                    text: "Tipo de entrenamiento",
+                    value: "training_type.name",
                     sortable: null,
                 },
                 {
-                    text: "Cena",
-                    value: "dinner",
+                    text: "Tiempo de calentamiento",
+                    value: "warmup_time",
+                    sortable: null,
+                },
+                {
+                    text: "Cantidad de repeticiones",
+                    value: "repetitions_quantity",
                     sortable: null,
                 },
                 { text: "Editar", value: "", sortable: null },
@@ -180,52 +158,18 @@ export default {
         },
     }),
     async mounted() {
-        this.authStore = AuthStore();
-        this.esAdmin = this.authStore.hasAuthority("ADMIN");
         let response = await localAxios.get("/admin/trainings");
-        console.log(response);
         this.datatable.items = response.data;
-
-        if (
-            !this.authStore.hasAuthority("ADMIN") &&
-            this.authStore.hasAuthority("USER")
-        ) {
-            this.selectedUser = this.authStore.user.user.id;
-            this.datatable.filtered = this.datatable.items.filter(
-                (item) => item.user.id === this.selectedUser
-            );
-            this.datatable.items = this.datatable.items.filter(
-                (item) => item.user.id === this.selectedUser
-            );
-            console.log(this.datatable.items);
-        }
-
-        if (this.authStore.hasAuthority("ADMIN")) {
-            let responseUsers = await localAxios.get("/admin/users");
-            this.users = responseUsers.data;
-            this.datatable.headers[5].text = "";
-            this.datatable.headers[6].text = "";
-        }
     },
     methods: {
-        getUserTrainings() {
-            console.log("ENTRO");
-            const filteredTrainings = this.datatable.items.filter(
-                (item) => item.user.id === this.selectedUser
-            );
-            this.datatable.filtered = filteredTrainings;
-        },
         newTrainingSaved(newTraining) {
             this.datatable.items.push(newTraining);
-            this.getUserTrainings();
-            //this.snackbarStore.open("Se agrego nueva comida: " + newTraining + ".");
         },
         savededitTraining(newTraining) {
             const index = this.datatable.items.findIndex(
                 (i) => i.id === newTraining.id
             );
             this.datatable.items.splice(index, 1, newTraining);
-            this.getUserTrainings();
         },
         requestBloqueado() {
             localAxios.get("/api/blocked").then(() => {});
@@ -244,7 +188,6 @@ export default {
                     this.trainingToDelete
                 );
                 if (index >= 0) this.datatable.items.splice(index, 1);
-                this.getUserTrainings();
             }
             this.trainingToDelete = null;
         },

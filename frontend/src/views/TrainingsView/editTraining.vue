@@ -1,6 +1,6 @@
 <template>
     <v-overlay :value="localShow">
-        <v-dialog v-model="localShow" v-if="authStore" hide-overlay persistent>
+        <v-dialog v-model="localShow" hide-overlay persistent>
             <v-card style="width: 600px">
                 <v-card-title
                     class="d-flex justify-space-between align-center mb-4"
@@ -13,45 +13,60 @@
                     </div>
                 </v-card-title>
                 <v-card-text>
-                    <v-form ref="form" @submit.prevent="addFood">
-                        <v-row>
-                            <v-col cols="6">
-                                <v-text-field
-                                    v-model="form.breakfast"
-                                    label="Desayuno"
-                                    required
-                                ></v-text-field>
-                            </v-col>
-                            <v-col cols="6">
-                                <v-text-field
-                                    v-model="form.lunch"
-                                    label="Almuerzo"
-                                    required
-                                ></v-text-field>
-                            </v-col>
-                        </v-row>
-                        <v-row>
-                            <v-col cols="6">
-                                <v-text-field
-                                    v-model="form.snack"
-                                    label="Merienda"
-                                    required
-                                ></v-text-field>
-                            </v-col>
-                            <v-col cols="6">
-                                <v-text-field
-                                    v-model="form.dinner"
-                                    label="Cena"
-                                    required
-                                ></v-text-field>
-                            </v-col>
-                        </v-row>
+                    <v-form ref="form" @submit.prevent="addTraining">
                         <v-row>
                             <v-col cols="12">
+                                <v-text-field
+                                    v-model="form.name"
+                                    label="Nombre"
+                                    required
+                                ></v-text-field>
+                            </v-col>
+                        </v-row>
+                        <v-row>
+                            <v-col cols="6">
+                                <v-text-field
+                                    v-model="form.repetitions_quantity"
+                                    label="Cantidad de repeticiones"
+                                    type="number"
+                                    required
+                                ></v-text-field>
+                            </v-col>
+                            <v-col cols="6">
+                                <v-text-field
+                                    v-model="form.warmup_time"
+                                    label="Minutos de tiempo de calentamiento"
+                                    type="number"
+                                    required
+                                ></v-text-field>
+                            </v-col>
+                        </v-row>
+                        <v-row>
+                            <v-col cols="6">
                                 <Datepicker
                                     v-model="form.date"
                                     :label="'Fecha'"
                                 ></Datepicker>
+                            </v-col>
+                            <v-col cols="6">
+                                <v-select
+                                    v-model="form.training_type"
+                                    :items="allTypes"
+                                    item-text="name"
+                                    item-value="id"
+                                    data-vv-name="select"
+                                    label="Tipo de entrenamiento"
+                                    required
+                                ></v-select>
+                            </v-col>
+                        </v-row>
+                        <v-row>
+                            <v-col cols="12">
+                                <v-textarea
+                                    v-model="form.description"
+                                    label="Descripcion"
+                                    required
+                                ></v-textarea>
                             </v-col>
                         </v-row>
                     </v-form>
@@ -71,7 +86,6 @@
 </template>
 
 <script>
-import { AuthStore } from "@/store/auth";
 import { localAxios } from "@/axios";
 import moment from "moment";
 import Datepicker from "@/components/datepicker.vue";
@@ -83,18 +97,16 @@ export default {
     },
     data: () => ({
         localShow: false,
-        authStore: null,
         //showPassword: false,
-
-        allTrainings: null,
-        usuarioLogeado: null,
+        allTypes: null,
         form: {
-            id: null,
-            breakfast: "",
-            snack: "",
-            lunch: "",
-            dinner: "",
-            date: null,
+            name: "",
+            description: "",
+            warmup_time: null,
+            training_type: null,
+            repetitions_quantity: null,
+            training: null,
+            date: moment().format("YYYY-MM-DD"),
         },
     }),
     watch: {
@@ -107,12 +119,8 @@ export default {
         },
     },
     async mounted() {
-        this.authStore = AuthStore();
-        this.form.id_user = this.authStore.user.user.id;
-        let response = await localAxios.get("/admin/foods");
-        this.allTrainings = response.data;
-        console.log("TRAINING: " + this.training);
-        //this.form = { ...this.food };
+        let response2 = await localAxios.get("/admin/trainings/get-types");
+        this.allTypes = response2.data;
     },
     methods: {
         closeAll() {
