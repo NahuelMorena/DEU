@@ -9,6 +9,7 @@ public enum MenuOption {
 	About("About", "/about", "mdi-information", SubMenu.General.getName()),
 	Security("Seguridad", "/security", "mdi-key", SubMenu.Admin.getName()),
 	Trainings("Trainings", "/trainings", "mdi-account-multiple", SubMenu.Admin.getName()),
+	Planifications("Planifications", "/planifications", "mdi-account-multiple", SubMenu.Admin.getName()),
 	Users("Users", "/users", "mdi-account-multiple", SubMenu.Admin.getName());
 
 	private String name;

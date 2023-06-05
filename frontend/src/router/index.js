@@ -58,6 +58,26 @@ const routes = [
                     },
                 ],
             },
+            {
+                path: "/planifications",
+                component: () => import("@/views/PlanificationsView"),
+                children: [
+                    {
+                        path: "",
+                        name: "Planifications",
+                        component: () => import("@/views/PlanificationsView"),
+                    },
+                    {
+                        path: "edit",
+                        name: "Edit_Planification",
+                        component: () =>
+                            import(
+                                "@/views/PlanificationsView/editPlanification"
+                            ),
+                        props: true,
+                    },
+                ],
+            },
         ],
     },
 ];

@@ -35,7 +35,12 @@ private final String baseUrl = "/admin/users";
 		return ResponseEntity.ok(userRepository.findAll());
 	}
 
-	@GetMapping(baseUrl + "/getTypes")
+	@GetMapping(baseUrl + "/get-players")
+	public HttpEntity<List<User>> getUsersOfTrainer(){
+		return ResponseEntity.ok(userRepository.findAllByTrainerId(utils.getAuthUser().getId()));
+	}
+
+	@GetMapping(baseUrl + "/get-types")
 	public HttpEntity<List<UserType>> getUserTypes(){
 		return ResponseEntity.ok(userTypeRepository.findAll());
 	}
