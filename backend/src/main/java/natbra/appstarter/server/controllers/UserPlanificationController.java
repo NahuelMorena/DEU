@@ -32,6 +32,11 @@ public class UserPlanificationController {
         return ResponseEntity.ok(userPlanificationRepository.findAll());
     }
 
+    @PostMapping(baseUrl + "/retrieve")
+    public HttpEntity<Set<UserPlanification>> getUserPlanificationsById(@RequestBody Planification planification){
+        return ResponseEntity.ok(userPlanificationRepository.findAllByPlanificationId(planification.getId()));
+    }
+
     @DeleteMapping(baseUrl)
     public HttpEntity<List<UserPlanification>> deleteUserPlanification(@RequestBody List<UserPlanification> userPlanifications){
 

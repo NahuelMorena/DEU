@@ -57,6 +57,24 @@
                                             v-bind="attrs"
                                             v-on="on"
                                             icon
+                                            @click="editUserPlanification(item)"
+                                        >
+                                            <v-icon>mdi-account-edit</v-icon>
+                                        </v-btn>
+                                    </template>
+                                    <span
+                                        >Editar asignaciones de usuarios a esta
+                                        planificacion</span
+                                    >
+                                </v-tooltip>
+                            </td>
+                            <td>
+                                <v-tooltip top>
+                                    <template v-slot:activator="{ on, attrs }">
+                                        <v-btn
+                                            v-bind="attrs"
+                                            v-on="on"
+                                            icon
                                             @click="editPlanification(item)"
                                         >
                                             <v-icon>mdi-pencil</v-icon>
@@ -94,6 +112,11 @@
             :planification="dialogs.editPlanification.planification"
             @saved="savededitPlanification"
         />
+        <EditUserPlanification
+            v-model="dialogs.editUserPlanification.show"
+            :planification="dialogs.editUserPlanification.planification"
+            @saved="savededitUserPlanification"
+        />
         <AddUserPlanification
             v-model="dialogs.addUserPlanification.show"
             :planification="dialogs.addUserPlanification.planification"
@@ -125,6 +148,7 @@ import HeaderComponent from "@/components/HeaderComponent.vue";
 import AddPlanification from "./addPlanification.vue";
 import EditPlanification from "./editPlanification.vue";
 import AddUserPlanification from "./addUserPlanification.vue";
+import EditUserPlanification from "./editUserPlanification.vue";
 
 export default {
     components: {
@@ -132,11 +156,13 @@ export default {
         AddPlanification,
         AddUserPlanification,
         EditPlanification,
+        EditUserPlanification,
     },
     data: () => ({
         dialogs: {
             addPlanification: false,
             editPlanification: { show: false, planification: null },
+            editUserPlanification: { show: false, planification: null },
             addUserPlanification: { show: false, planification: null },
             deletePlanification: false,
         },
@@ -153,7 +179,8 @@ export default {
                     sortable: null,
                 },
                 { text: "Agregar usuarios", value: "", sortable: null },
-                { text: "Editar", value: "", sortable: null },
+                { text: "Editar usuarios", value: "", sortable: null },
+                { text: "Editar planificacion", value: "", sortable: null },
                 { text: "Borrar", value: "", sortable: null },
             ],
             trainings: [],
@@ -175,6 +202,7 @@ export default {
             this.datatable.items.splice(index, 1, newPlanification);
         },
         savedaddUserPlanification(newPlanification) {},
+        savededitUserPlanification(newPlanification) {},
         requestBloqueado() {
             localAxios.get("/api/blocked").then(() => {});
         },
@@ -202,6 +230,10 @@ export default {
         async addUserPlanification(item) {
             this.dialogs.addUserPlanification.planification = item;
             this.dialogs.addUserPlanification.show = true;
+        },
+        async editUserPlanification(item) {
+            this.dialogs.editUserPlanification.planification = item;
+            this.dialogs.editUserPlanification.show = true;
         },
     },
 };

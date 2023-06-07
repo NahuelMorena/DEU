@@ -5,7 +5,7 @@
                 <v-card-title
                     class="d-flex justify-space-between align-center mb-4"
                 >
-                    <div>Editar Planificacion</div>
+                    <div>Agregar usuarios a la planificacion</div>
                     <div>
                         <v-btn icon @click="closeAll()">
                             <v-icon>mdi-close</v-icon>
@@ -13,70 +13,55 @@
                     </div>
                 </v-card-title>
                 <v-card-text>
-                    <v-form ref="form" @submit.prevent="addPlanification">
-                        <v-row>
-                            <v-col cols="12">
-                                <v-text-field
-                                    v-model="form.name"
-                                    :rules="rules.name"
-                                    label="Nombre"
-                                    required
-                                ></v-text-field>
-                            </v-col>
-                        </v-row>
-
+                    <v-form ref="form" @submit.prevent="addUserPlanification">
                         <v-row>
                             <v-col cols="12">
                                 <multiselect
                                     v-model="valueMultiselect"
-                                    placeholder="Seleccione entrenamiento"
+                                    placeholder="Seleccione jugadores a los que se les asignara"
                                     label="name"
-                                    :options="trainings"
+                                    track-by="id"
+                                    :options="players"
                                     :multiple="true"
                                     :close-on-select="false"
                                     @input="onSelect"
+                                    @remove="customRemoveTag"
                                 >
                                 </multiselect>
                             </v-col>
                         </v-row>
-
                         <v-row>
                             <v-col cols="12">
-                                <draggable
-                                    v-model="selectedTrainings"
-                                    :element="'ul'"
-                                    class="sortable-list"
-                                    @end="actualizarOrden"
+                                <li
+                                    v-for="(item, index) in selectedPlayers"
+                                    :key="item.id"
+                                    :class="{ deleting: item.deleting }"
                                 >
-                                    <li
-                                        v-for="(
-                                            item, index
-                                        ) in selectedTrainingsSorted"
-                                        :key="item.id"
-                                        :class="{ deleting: item.deleting }"
-                                    >
-                                        <div class="item-container">
-                                            <input
-                                                type="number"
-                                                v-model="item.minutes"
-                                                class="item-minutes"
-                                                min="0"
-                                                placeholder="Minutos"
-                                            />
-                                            <span
-                                                class="item-name"
-                                                style="padding: 1%"
-                                                >{{ item.training.name }}</span
-                                            >
-                                        </div>
-                                        <button
-                                            class="delete-button"
-                                            @click="borrarItem(index)"
+                                    <div class="item-container">
+                                        <Datepicker
+                                            :rules="rules.date"
+                                            v-model="item.date"
+                                            :label="'Fecha'"
+                                        ></Datepicker>
+                                        <span
+                                            class="item-name"
+                                            style="padding: 1%"
+                                            >{{
+                                                item.user.name +
+                                                " " +
+                                                item.user.surname
+                                            }}</span
                                         >
-                                            Borrar
-                                        </button>
-                                    </li>
-                                </draggable>
+                                    </div>
+                                    <button
+                                        class="delete-button"
+                                        @click="borrarItem(index)"
+                                    >
+                                        Borrar<v-icon color="red"
+                                            >mdi-alpha-x</v-icon
+                                        >
+                                    </button>
+                                </li>
                             </v-col>
                         </v-row>
                     </v-form>
@@ -99,11 +84,12 @@
 import { localAxios } from "@/axios";
 import Multiselect from "vue-multiselect";
 import moment from "moment";
-import draggable from "vuedraggable";
+import Datepicker from "@/components/datepicker.vue";
+
 export default {
     components: {
         Multiselect,
-        draggable,
+        Datepicker,
     },
     props: {
         value: { type: Boolean },
@@ -111,21 +97,15 @@ export default {
     },
     data: () => ({
         localShow: false,
-        selectedPlanification: null,
-        //showPassword: false,
-        trainings: [],
+        selectedPlanification: [],
+        selectedPlayers: [],
+        playersBefore: [],
         players: [],
-        form: {
-            name: "",
-            date: moment().format("YYYY-MM-DD"),
-        },
         rules: {
-            name: [(v) => !!v || "Se requiere un nombre"],
             date: [(v) => !!v || "Se requiere una fecha"],
         },
+
         valueMultiselect: [],
-        selectedTrainings: [],
-        trainingsBefore: [],
     }),
     created() {
         this.selectedPlanification = this.planification;
@@ -143,18 +123,30 @@ export default {
             handler: async function (val) {
                 // Hacer una copia superficial del objeto observado
                 const selectedPlanificationCopy = Object.assign({}, val);
-
+                this.valueMultiselect = [];
+                this.selectedPlayers = [];
                 console.log(selectedPlanificationCopy);
                 let response = await localAxios
                     .post(
-                        "/admin/planifications/retrieve",
+                        "/admin/users/planifications/retrieve",
                         selectedPlanificationCopy
                     )
                     .then((response) => {
-                        this.selectedTrainings = response.data;
-                        this.form.name = this.selectedPlanification.name;
-                        console.log("TRAININGS: ");
-                        console.log(this.selectedTrainings);
+                        this.selectedPlayers = response.data;
+                        console.log("SELECTED PLAYERS: ");
+                        for (let i = 0; i < this.selectedPlayers.length; i++) {
+                            this.valueMultiselect.push(
+                                this.selectedPlayers[i].user
+                            );
+                        }
+                        console.log(this.selectedPlayers);
+                        console.log("PLAYERS: ");
+                        console.log(this.valueMultiselect);
+                        // this.valueMultiselect = this.alreadyLoadedPlayers(
+                        //     this.players,
+                        //     this.selectedPlayers.user
+                        // );
+                        // console.log(this.valueMultiselect);
                     })
                     .catch((error) => {
                         // Manejar el error
@@ -164,32 +156,24 @@ export default {
             deep: true, // Observa los cambios profundos en el objeto
         },
     },
-
-    computed: {
-        selectedTrainingsSorted() {
-            return this.selectedTrainings
-                .slice()
-                .sort((a, b) => a.orderNumber - b.orderNumber);
-        },
-    },
-
     async mounted() {
-        let response = await localAxios.get("/admin/trainings");
-        this.trainings = response.data;
         let response2 = await localAxios.get("/admin/users/get-players");
         this.players = response2.data;
     },
     methods: {
-        onSelect() {
-            const nuevoObjeto = {
-                planification: null,
-                training: this.valueMultiselect[0],
-                minutes: null,
-                orderNumber: this.selectedTrainings.length,
-            };
-            this.selectedTrainings.push(nuevoObjeto);
-            this.valueMultiselect = [];
-            console.log(this.selectedTrainings);
+        alreadyLoadedPlayers(array1, array2) {
+            const nuevoArray = [];
+            for (let i = 0; i < array1.length; i++) {
+                const elemento1 = array1[i];
+                for (let j = 0; j < array2.length; j++) {
+                    const elemento2 = array2[j];
+                    if (elemento1.id === elemento2.id) {
+                        nuevoArray.push(elemento1);
+                        break;
+                    }
+                }
+            }
+            return nuevoArray;
         },
 
         getElementsNotInArray(array1, array2) {
@@ -205,91 +189,108 @@ export default {
             return elementsNotInArray;
         },
 
-        actualizarOrden() {
-            this.selectedTrainings.forEach((item, index) => {
-                item.orderNumber = index;
+        customRemoveTag(removedTag) {
+            const index = this.selectedPlayers.findIndex((item) => {
+                // Comparar los atributos del objeto actual con el objeto buscado
+                // Por ejemplo, si deseas comparar los atributos "id" de los objetos:
+                return item.user === removedTag;
             });
-            console.log(this.selectedTrainings);
+            this.selectedPlayers.splice(index, 1);
+            console.log(this.selectedPlayers);
+        },
+
+        onSelect() {
+            const nuevoObjeto = {
+                planification: null,
+                user: this.valueMultiselect[this.valueMultiselect.length - 1],
+                minutes: null,
+                orderNumber: this.valueMultiselect.length,
+            };
+            const existeObjeto = this.selectedPlayers.some((item) => {
+                // Comparar los atributos del objeto actual con el objeto buscado
+                return item.user === nuevoObjeto.user;
+            });
+
+            if (!existeObjeto) {
+                this.selectedPlayers.push(nuevoObjeto);
+            }
         },
 
         borrarItem(index) {
-            this.selectedTrainings.splice(index, 1);
+            this.selectedPlayers.splice(index, 1);
+            this.valueMultiselect.splice(index, 1);
         },
 
         closeAll() {
             this.valueMultiselect = [];
-
-            //al abrir de vuelta la misma ventana 2 veces si borro el selected trainings no aparecen los que tenias antes, asi que hay que recuperarlos...
-            localAxios
+            this.selectedPlayers = [];
+            let response = localAxios
                 .post(
-                    "/admin/planifications/retrieve",
+                    "/admin/users/planifications/retrieve",
                     this.selectedPlanification
                 )
                 .then((response) => {
-                    this.selectedTrainings = response.data;
+                    this.selectedPlayers = response.data;
+                    console.log("SELECTED PLAYERS: ");
+                    for (let i = 0; i < this.selectedPlayers.length; i++) {
+                        this.valueMultiselect.push(
+                            this.selectedPlayers[i].user
+                        );
+                    }
+                    console.log(this.selectedPlayers);
+                    console.log("PLAYERS: ");
+                    console.log(this.valueMultiselect);
+                    // this.valueMultiselect = this.alreadyLoadedPlayers(
+                    //     this.players,
+                    //     this.selectedPlayers.user
+                    // );
+                    // console.log(this.valueMultiselect);
                 })
                 .catch((error) => {
                     // Manejar el error
                     console.error(error);
                 });
-
             this.$emit("input", false);
         },
+
         async save() {
             const isValid = await this.$refs.form.validate();
             if (isValid) {
-                if (this.selectedTrainings.length > 0) {
-                    for (const element of this.selectedTrainings) {
+                if (this.selectedPlayers.length > 0) {
+                    for (const element of this.selectedPlayers) {
                         if (
-                            element.minutes != null &&
-                            this.selectedTrainings.indexOf(element) ===
-                                this.selectedTrainings.length - 1
+                            element.date != null &&
+                            this.selectedPlayers.indexOf(element) ===
+                                this.selectedPlayers.length - 1
                         ) {
                             for (
                                 let i = 0;
-                                i < this.selectedTrainings.length;
+                                i < this.selectedPlayers.length;
                                 i++
                             ) {
-                                this.selectedTrainings[i].minutes = parseInt(
-                                    this.selectedTrainings[i].minutes
-                                );
+                                this.selectedPlayers[i].planification =
+                                    this.selectedPlanification;
                             }
 
                             await localAxios
                                 .post(
-                                    "/admin/planifications/retrieve",
+                                    "/admin/users/planifications/retrieve",
                                     this.selectedPlanification
                                 )
                                 .then((response) => {
-                                    this.trainingsBefore = response.data;
-                                    //Aca enviamos la planificacion de los entrenamientos con sus duraciones, orden y minutos
+                                    this.playersBefore = response.data;
+                                    //Aca enviamos la planificacion asociada a los jugadores
                                     localAxios
                                         .put(
-                                            "/admin/planifications/trainers",
-                                            {
-                                                trainerPlanificationList:
-                                                    this.selectedTrainings,
-                                                name: this.form.name,
-                                                id: this.selectedPlanification
-                                                    .id,
-                                            },
-                                            {
-                                                headers: {
-                                                    "Content-Type":
-                                                        "application/json",
-                                                },
-                                            }
+                                            "/admin/users/planifications",
+                                            this.selectedPlayers
                                         )
-                                        .then((responsePlanification) => {
-                                            //Aca borro las cosas que saque de la lista de entrenamientos, es decir si teniamos el
-                                            // entrenamientos 1 2 3 y deje solo 1 2, deberian cargarse esos y eliminarse el 3
-                                            // aca se elimina el 3, arriba se hizo el put para cargar los cambios de esos 2, por ej en sus mins o el name de la planification
-
+                                        .then((response) => {
                                             let elementsToDelete = [];
                                             elementsToDelete =
                                                 this.getElementsNotInArray(
-                                                    this.trainingsBefore,
-                                                    this.selectedTrainings
+                                                    this.playersBefore,
+                                                    this.selectedPlayers
                                                 );
 
                                             console.log(elementsToDelete);
@@ -297,15 +298,17 @@ export default {
                                             if (elementsToDelete.length > 0) {
                                                 localAxios
                                                     .delete(
-                                                        "/admin/planifications/trainers",
+                                                        "/admin/users/planifications",
                                                         {
                                                             data: elementsToDelete,
                                                         }
                                                     )
                                                     .then((response2) => {
+                                                        console.log(response);
+                                                        // manejar la respuesta del servidor
                                                         this.$emit(
                                                             "saved",
-                                                            responsePlanification.data
+                                                            response.data
                                                         );
                                                         this.closeAll();
                                                     })
@@ -316,7 +319,7 @@ export default {
                                             } else {
                                                 this.$emit(
                                                     "saved",
-                                                    responsePlanification.data
+                                                    response.data
                                                 );
                                                 this.closeAll();
                                             }
@@ -327,11 +330,11 @@ export default {
                                 });
                         } else {
                             if (
-                                this.selectedTrainings.indexOf(element) ===
-                                this.selectedTrainings.length - 1
+                                this.selectedPlayers.indexOf(element) ===
+                                this.selectedPlayers.length - 1
                             ) {
                                 alert(
-                                    "Debes ingresar minutos en cada entrenamiento"
+                                    "Debes ingresar las fechas de la planificacion para cada jugador"
                                 );
                             }
                         }
@@ -384,10 +387,9 @@ li.deleting {
 }
 
 .item-name {
-    margin-right: 10px;
+    text-align: center;
 }
 
 .item-minutes {
-    width: 80px;
 }
 </style>

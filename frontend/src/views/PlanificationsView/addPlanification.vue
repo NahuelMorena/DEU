@@ -26,7 +26,7 @@
                         </v-row>
 
                         <v-row>
-                            <v-col cols="6">
+                            <v-col cols="12">
                                 <multiselect
                                     v-model="valueMultiselect"
                                     placeholder="Seleccione entrenamiento"
@@ -38,7 +38,9 @@
                                 >
                                 </multiselect>
                             </v-col>
-                            <v-col cols="6">
+                        </v-row>
+                        <v-row
+                            ><v-col cols="12">
                                 <draggable
                                     v-model="selectedTrainings"
                                     :element="'ul'"
@@ -74,18 +76,8 @@
                                         </button>
                                     </li>
                                 </draggable>
-                            </v-col>
-                        </v-row>
-
-                        <v-row>
-                            <v-col cols="12">
-                                <Datepicker
-                                    :rules="rules.date"
-                                    v-model="form.date"
-                                    :label="'Fecha'"
-                                ></Datepicker>
-                            </v-col>
-                        </v-row>
+                            </v-col></v-row
+                        >
                     </v-form>
                 </v-card-text>
                 <v-card-actions class="d-flex justify-end">
@@ -107,12 +99,10 @@ import { localAxios } from "@/axios";
 import Multiselect from "vue-multiselect";
 import moment from "moment";
 import draggable from "vuedraggable";
-import Datepicker from "@/components/datepicker.vue";
 
 export default {
     components: {
         Multiselect,
-        Datepicker,
         draggable,
     },
     props: {
@@ -124,7 +114,6 @@ export default {
         players: [],
         form: {
             name: "",
-            date: moment().format("YYYY-MM-DD"),
         },
         rules: {
             name: [(v) => !!v || "Se requiere un nombre"],
