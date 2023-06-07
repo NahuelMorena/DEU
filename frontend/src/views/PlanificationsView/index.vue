@@ -27,17 +27,29 @@
                     :sort-by="['date']"
                     :sort-asc="true"
                     item-key="id"
-                    show-select
                     class="elevation-0"
                 >
                     <template v-slot:item="{ item }">
                         <tr>
-                            <td>{{ item.date }}</td>
                             <td>{{ item.name }}</td>
-                            <td>{{ item.description }}</td>
-                            <td>{{ item.training_type.name }}</td>
-                            <td>{{ item.warmup_time }}</td>
-                            <td>{{ item.repetitions_quantity }}</td>
+                            <td>
+                                <v-tooltip top>
+                                    <template v-slot:activator="{ on, attrs }">
+                                        <v-btn
+                                            v-bind="attrs"
+                                            v-on="on"
+                                            icon
+                                            @click="addUserPlanification(item)"
+                                        >
+                                            <v-icon>mdi-account-plus</v-icon>
+                                        </v-btn>
+                                    </template>
+                                    <span
+                                        >Agregar usuarios a esta
+                                        planificacion</span
+                                    >
+                                </v-tooltip>
+                            </td>
                             <td>
                                 <v-tooltip top>
                                     <template v-slot:activator="{ on, attrs }">
@@ -50,7 +62,7 @@
                                             <v-icon>mdi-pencil</v-icon>
                                         </v-btn>
                                     </template>
-                                    <span>Editar entrenamiento</span>
+                                    <span>Editar planificacion</span>
                                 </v-tooltip>
                             </td>
                             <td>
@@ -65,7 +77,7 @@
                                             <v-icon>mdi-delete</v-icon>
                                         </v-btn>
                                     </template>
-                                    <span>Borrar entrenamiento</span>
+                                    <span>Borrar planificacion</span>
                                 </v-tooltip>
                             </td>
                         </tr>
@@ -82,6 +94,11 @@
             :planification="dialogs.editPlanification.planification"
             @saved="savededitPlanification"
         />
+        <AddUserPlanification
+            v-model="dialogs.addUserPlanification.show"
+            :planification="dialogs.addUserPlanification.planification"
+            @saved="savedaddUserPlanification"
+        />
         <v-dialog
             v-model="dialogs.deletePlanification"
             persistent
@@ -89,7 +106,7 @@
         >
             <v-card>
                 <v-card-title class="headline">
-                    ¿Deseas eliminar el entrenamiento seleccionado?
+                    ¿Deseas eliminar la planificacion seleccionado?
                 </v-card-title>
                 <v-card-actions>
                     <v-btn color="error" @click="confirmDelete">Eliminar</v-btn>
@@ -107,17 +124,20 @@ import { localAxios } from "@/axios";
 import HeaderComponent from "@/components/HeaderComponent.vue";
 import AddPlanification from "./addPlanification.vue";
 import EditPlanification from "./editPlanification.vue";
+import AddUserPlanification from "./addUserPlanification.vue";
 
 export default {
     components: {
         HeaderComponent,
         AddPlanification,
+        AddUserPlanification,
         EditPlanification,
     },
     data: () => ({
         dialogs: {
             addPlanification: false,
             editPlanification: { show: false, planification: null },
+            addUserPlanification: { show: false, planification: null },
             deletePlanification: false,
         },
         esAdmin: false,
@@ -128,37 +148,11 @@ export default {
             items: [],
             headers: [
                 {
-                    text: "Fecha",
-                    align: "start",
-                    sortable: true,
-                    value: "date",
-                    sortIcon: "mdi-arrow-up-down",
-                },
-                {
                     text: "Nombre",
                     value: "name",
                     sortable: null,
                 },
-                {
-                    text: "Descripcion",
-                    value: "description",
-                    sortable: null,
-                },
-                {
-                    text: "Tipo de entrenamiento",
-                    value: "training_type.name",
-                    sortable: null,
-                },
-                {
-                    text: "Tiempo de calentamiento",
-                    value: "warmup_time",
-                    sortable: null,
-                },
-                {
-                    text: "Cantidad de repeticiones",
-                    value: "repetitions_quantity",
-                    sortable: null,
-                },
+                { text: "Agregar usuarios", value: "", sortable: null },
                 { text: "Editar", value: "", sortable: null },
                 { text: "Borrar", value: "", sortable: null },
             ],
@@ -167,7 +161,7 @@ export default {
         },
     }),
     async mounted() {
-        let response = await localAxios.get("/admin/planifications");
+        let response = await localAxios.get("/admin/planifications/basic");
         this.datatable.items = response.data;
     },
     methods: {
@@ -180,6 +174,7 @@ export default {
             );
             this.datatable.items.splice(index, 1, newPlanification);
         },
+        savedaddUserPlanification(newPlanification) {},
         requestBloqueado() {
             localAxios.get("/api/blocked").then(() => {});
         },
@@ -201,14 +196,12 @@ export default {
             this.planificationToDelete = null;
         },
         async editPlanification(item) {
-            // this.$router.push({
-            //     name: "Edit_Planification",
-            //     params: {
-            //         Planification: item,
-            //     },
-            // });
             this.dialogs.editPlanification.planification = item;
             this.dialogs.editPlanification.show = true;
+        },
+        async addUserPlanification(item) {
+            this.dialogs.addUserPlanification.planification = item;
+            this.dialogs.addUserPlanification.show = true;
         },
     },
 };

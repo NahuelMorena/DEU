@@ -3,7 +3,6 @@ package natbra.appstarter.server.controllers;
 import java.util.List;
 
 import natbra.appstarter.server.model.auth.UserType;
-import natbra.appstarter.server.model.train.TrainingType;
 import natbra.appstarter.server.repository.UserTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;

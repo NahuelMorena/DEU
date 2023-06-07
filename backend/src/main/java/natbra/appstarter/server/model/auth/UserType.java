@@ -1,6 +1,9 @@
 package natbra.appstarter.server.model.auth;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -12,12 +15,14 @@ public class UserType {
     private Long id;
 
     private String name;
-    @OneToMany(mappedBy = "user_type")
+    @JsonIgnore
+    @OneToMany(mappedBy = "usertype")
     private Set<User> users;
 
     public UserType() {
 
     }
+
     public UserType(Long id, String name, Set<User> users) {
         this.id = id;
         this.name = name;

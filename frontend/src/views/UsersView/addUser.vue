@@ -37,13 +37,25 @@
                                     label="Fecha de nacimiento"
                                 ></Datepicker>
                             </v-col>
-                            <v-col cols="6">
+                            <v-col cols="3">
                                 <v-text-field
                                     label="Telefono"
                                     v-model="form.telephone"
                                     :rules="rules.telephone"
                                     type="number"
                                 ></v-text-field>
+                            </v-col>
+                            <v-col cols="3">
+                                <v-select
+                                    :rules="rules.user_type"
+                                    v-model="form.user_type"
+                                    :items="allTypes"
+                                    item-text="name"
+                                    item-value="id"
+                                    data-vv-name="select"
+                                    label="Tipo de entrenamiento"
+                                    required
+                                ></v-select>
                             </v-col>
                         </v-row>
                         <v-row>
@@ -141,12 +153,14 @@ export default {
         localShow: false,
         showPassword: false,
         allRoles: null,
+        allTypes: null,
         form: {
             name: "",
             surname: "",
             telephone: "",
             email: "",
             username: "",
+            user_type: null,
             password: "",
             birthdate: null,
             roles: [],
@@ -163,6 +177,7 @@ export default {
             ],
             birthdate: [(v) => !!v || "Se requiere una fecha de nacimiento"],
             username: [(v) => !!v || "Se requiere un nombre de usuario"],
+            user_type: [(v) => !!v || "Se requiere la seleccion del tipo"],
             password: [(v) => !!v || "Se requiere una contraseña"],
         },
     }),
@@ -174,6 +189,8 @@ export default {
     async mounted() {
         let response = await localAxios.get("/admin/roles");
         this.allRoles = response.data;
+        let response2 = await localAxios.get("/admin/users/get-types");
+        this.allTypes = response2.data;
     },
     methods: {
         closeAll() {

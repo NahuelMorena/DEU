@@ -34,12 +34,12 @@ public class User {
 
     @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name = "id_user_type")
-    private UserType user_type;
+    private UserType usertype;
 
     public User() {}
 
     public User(long id, String username, String password, String email, Date birthdate, Integer telephone,
-                String name, String surname, List<Role> roles, User trainer) {
+                String name, String surname, List<Role> roles, User trainer, UserType usertype) {
         super();
         this.id = id;
         this.username = username;
@@ -51,6 +51,15 @@ public class User {
         this.surname = surname;
         this.roles = roles;
         this.trainer = trainer;
+        this.usertype = usertype;
+    }
+
+    public UserType getUsertype() {
+        return usertype;
+    }
+
+    public void setUsertype(UserType user_type) {
+        this.usertype = user_type;
     }
 
     public User getTrainer() {

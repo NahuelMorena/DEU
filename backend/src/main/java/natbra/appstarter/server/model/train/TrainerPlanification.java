@@ -4,7 +4,7 @@ import natbra.appstarter.server.model.auth.User;
 
 import javax.persistence.*;
 @Entity
-@Table(name="training_type")
+@Table(name="trainer_planifications")
 public class TrainerPlanification {
 
     @Id
@@ -22,18 +22,18 @@ public class TrainerPlanification {
 
     private Integer orderNumber;
 
-    private Integer duration;
+    private Integer minutes;
 
     public TrainerPlanification(){
 
     }
 
-    public TrainerPlanification(Long id, Training training, Planification planification, Integer orderNumber, Integer duration) {
+    public TrainerPlanification(Long id, Training training, Planification planification, Integer orderNumber, Integer minutes) {
         this.id = id;
         this.training = training;
         this.planification = planification;
         this.orderNumber = orderNumber;
-        this.duration = duration;
+        this.minutes = minutes;
     }
 
     public Long getId() {
@@ -68,11 +68,13 @@ public class TrainerPlanification {
         this.orderNumber = orderNumber;
     }
 
-    public Integer getDuration() {
-        return duration;
+    public Integer getMinutes() {
+        return minutes;
     }
 
-    public void setDuration(Integer duration) {
-        this.duration = duration;
+    public void setMinutes(Integer minutes) {
+        this.minutes = minutes;
     }
+
+
 }

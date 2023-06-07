@@ -3,9 +3,11 @@ package natbra.appstarter.server.controllers;
 import natbra.appstarter.server.Utils;
 import natbra.appstarter.server.model.train.Planification;
 import natbra.appstarter.server.model.train.TrainerPlanification;
+import natbra.appstarter.server.model.train.UserPlanification;
 import natbra.appstarter.server.repository.PlanificationRepository;
 import natbra.appstarter.server.controllers.requests.AddPlanification;
 import natbra.appstarter.server.repository.TrainerPlanificationRepository;
+import natbra.appstarter.server.repository.UserPlanificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Controller
@@ -25,72 +28,113 @@ public class PlanificationController {
     PlanificationRepository planificationRepository;
 
     @Autowired
+    UserPlanificationRepository userPlanificationRepository;
+    @Autowired
     TrainerPlanificationRepository trainerPlanificationRepository;
     @Autowired
     Utils utils;
 
-    @GetMapping(baseUrl)
-    public HttpEntity<Set<AddPlanification>> getPlanifications(){
+    @GetMapping(baseUrl + "/basic")
+    public HttpEntity<List<Planification>> getPlanificationsBasic(){
+        return ResponseEntity.ok(planificationRepository.findAll());
+    }
 
-        //List<Planification> planificationsList = planificationRepository.findAll();
-
-        //Set<Planification> planifications = new HashSet<>(planificationsList);
-
-        //donde vamos a ir cargando en el for las planifications con los trainers planifications y la respectiva planificacion con su nombre
-        Set<AddPlanification> fullPlanificationToAdd = new HashSet<>();
-        AddPlanification planificationToAdd = new AddPlanification();
-
-        for(Planification planification: planificationRepository.findAll()){
-            //seteamos nombre y lista de trainer planifications
-
-            planificationToAdd.setName(planification.getName());
-            //planificationToAdd.setTrainerPlanificationList(trainerPlanificationRepository.findAllById(planification.getId()));
-            planificationToAdd.setTrainerPlanificationList(trainerPlanificationRepository.findAllByPlanificationId(planification.getId()));
-
-            //agregamos a la lista de todas las planificaciones
-            fullPlanificationToAdd.add(planificationToAdd);
-        }
-
-        return ResponseEntity.ok(fullPlanificationToAdd);
+    @PostMapping(baseUrl + "/retrieve")
+    public HttpEntity<Set<TrainerPlanification>> getPlanifications(@RequestBody Planification planification){
+        return ResponseEntity.ok(trainerPlanificationRepository.findAllByPlanificationId(planification.getId()));
     }
 
     @DeleteMapping(baseUrl)
     public HttpEntity<Planification> deletePlanification(@RequestBody Planification planification){
         //recorro los trainer planifications que agarro con el metodo creado y los borramos
         Set<TrainerPlanification> trainerPlanifications = getTrainerPlanificationList(planification.getId());
-        for (TrainerPlanification trainerPlanification : trainerPlanifications) {
-            trainerPlanificationRepository.delete(trainerPlanification);
-        }
+//        for (TrainerPlanification trainerPlanification : trainerPlanifications) {
+//            trainerPlanificationRepository.delete(trainerPlanification);
+//        }
+        trainerPlanificationRepository.deleteAll(trainerPlanifications);
+
+        //recorro los user planifications que agarro con el metodo creado y los borramos
+        Set<UserPlanification> userPlanifications = getUserPlanificationsList(planification.getId());
+        userPlanificationRepository.deleteAll(userPlanifications);
+
         planificationRepository.delete(planification);
         return ResponseEntity.ok(planification);
     }
 
+    @DeleteMapping(baseUrl + "/trainers")
+    public HttpEntity<Set<TrainerPlanification>> deletePlanificationTrainers(@RequestBody Set<TrainerPlanification> trainerPlanifications){
+
+        trainerPlanificationRepository.deleteAll(trainerPlanifications);
+
+        return ResponseEntity.ok(trainerPlanifications);
+    }
+
     @PostMapping(baseUrl)
-    public HttpEntity<Planification> addPlanification(@ModelAttribute AddPlanification planification){
+    public HttpEntity<Planification> addPlanification(@RequestBody Planification planification){
+        return ResponseEntity.ok(planificationRepository.save(planification));
+
+    }
+    @PostMapping(baseUrl + "/trainers")
+    public HttpEntity<Planification> addPlanificationTrainer(@RequestBody AddPlanification planification){
+        //creo la planificacion con el nombre
+        Planification planification1 = new Planification();
+        planification1.setName(planification.getName());
+        //la guardo y la agarro para cargarla en el trainer_planifications
+//        planification1.setTrainer_planification(planification.getTrainerPlanificationList());
+        Planification planificationSaved = planificationRepository.save(planification1);
+
         //recorro los trainer planifications para este nuevo plan y los voy cargando a la BD
         Set<TrainerPlanification> trainerPlanifications = planification.getTrainerPlanificationList();
         for (TrainerPlanification trainerPlanification : trainerPlanifications) {
-            trainerPlanificationRepository.save(trainerPlanification);
+            trainerPlanification.setPlanification(planificationSaved);
+            //trainerPlanificationRepository.save(trainerPlanification);
         }
-        Planification planification1 = new Planification();
+        trainerPlanificationRepository.saveAll(trainerPlanifications);
+
+        return ResponseEntity.ok(planificationSaved);
+    }
+
+    @PutMapping(baseUrl + "/trainers")
+    public HttpEntity<Planification> editPlanificationTrainer(@RequestBody AddPlanification planification){
+
+
+        trainerPlanificationRepository.saveAll(planification.getTrainerPlanificationList());
+
+        Planification planification1 = planificationRepository.getReferenceById(planification.getId());
+
         planification1.setName(planification.getName());
+
         return ResponseEntity.ok(planificationRepository.save(planification1));
     }
 
     @PutMapping(baseUrl)
-    public HttpEntity<Planification> editPlanification(@ModelAttribute AddPlanification planification){
-        //recorro los trainer planifications para este nuevo plan y los voy cargando a la BD
-        Set<TrainerPlanification> trainerPlanifications = planification.getTrainerPlanificationList();
-        for (TrainerPlanification trainerPlanification : trainerPlanifications) {
-            trainerPlanificationRepository.save(trainerPlanification);
-        }
-        Planification planification1 = new Planification();
-        planification1.setName(planification.getName());
-        return ResponseEntity.ok(planificationRepository.save(planification1));
+    public HttpEntity<Set<TrainerPlanification>> editPlanification(@RequestBody Set<TrainerPlanification> trainerPlanifications){
+        trainerPlanificationRepository.saveAll(trainerPlanifications);
+        return ResponseEntity.ok(trainerPlanifications);
+    }
+
+    @PutMapping(baseUrl + "/basic")
+    public HttpEntity<Planification> changePlanificationName(@RequestBody Planification planification){
+        Planification existingPlanification = planificationRepository.findById(planification.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Planification not found"));
+
+        // Update the necessary fields of existingPlanification using the values from the planification parameter
+        existingPlanification.setName(planification.getName());
+
+        // Save the updated Planification object
+        planificationRepository.save(existingPlanification);
+
+        return ResponseEntity.ok().build();
     }
 
     public Set<TrainerPlanification> getTrainerPlanificationList(Long id){
         //return trainerPlanificationRepository.findAllById(id);
         return trainerPlanificationRepository.findAllByPlanificationId(id);
     }
+
+    public Set<UserPlanification> getUserPlanificationsList(Long id){
+        //return trainerPlanificationRepository.findAllById(id);
+        return userPlanificationRepository.findAllByPlanificationId(id);
+    }
+
 }

@@ -5,7 +5,7 @@
                 <v-card-title
                     class="d-flex justify-space-between align-center mb-4"
                 >
-                    <div>Agregar Entrenamiento</div>
+                    <div>Agregar Planificacion</div>
                     <div>
                         <v-btn icon @click="closeAll()">
                             <v-icon>mdi-close</v-icon>
@@ -28,7 +28,6 @@
                         <v-row>
                             <v-col cols="6">
                                 <multiselect
-                                    :rules="rules.selectedTrainings"
                                     v-model="valueMultiselect"
                                     placeholder="Seleccione entrenamiento"
                                     label="name"
@@ -53,7 +52,20 @@
                                         :key="item.id"
                                         :class="{ deleting: item.deleting }"
                                     >
-                                        {{ item.training.name }}
+                                        <div class="item-container">
+                                            <input
+                                                type="number"
+                                                v-model="item.minutes"
+                                                class="item-minutes"
+                                                min="0"
+                                                placeholder="Minutos"
+                                            />
+                                            <span
+                                                class="item-name"
+                                                style="padding: 1%"
+                                                >{{ item.training.name }}</span
+                                            >
+                                        </div>
                                         <button
                                             class="delete-button"
                                             @click="borrarItem(index)"
@@ -64,22 +76,7 @@
                                 </draggable>
                             </v-col>
                         </v-row>
-                        <v-row>
-                            <v-col cols="12">
-                                <multiselect
-                                    :rules="rules.selectedPlayers"
-                                    v-model="valuePlayer"
-                                    placeholder="Seleccione jugadores a los que se les asignara"
-                                    label="name"
-                                    track-by="id"
-                                    :options="players"
-                                    :multiple="true"
-                                    :close-on-select="false"
-                                    :taggable="true"
-                                >
-                                </multiselect>
-                            </v-col>
-                        </v-row>
+
                         <v-row>
                             <v-col cols="12">
                                 <Datepicker
@@ -125,39 +122,17 @@ export default {
         localShow: false,
         trainings: [],
         players: [],
-        selectedPlayers: [],
-        valuePlayer: [],
         form: {
             name: "",
-            description: "",
-            warmup_time: null,
-            training_type: null,
-            repetitions_quantity: null,
-            training: null,
             date: moment().format("YYYY-MM-DD"),
         },
         rules: {
             name: [(v) => !!v || "Se requiere un nombre"],
-            selectedPlayers: [
-                (v) => !!v || "Se requieren jugadores a los que asignar",
-            ],
-            selectedTrainings: [(v) => !!v || "Se requieren entrenamientos"],
             date: [(v) => !!v || "Se requiere una fecha"],
         },
 
         valueMultiselect: [],
         selectedTrainings: [],
-        options: [
-            {
-                city: "San Martin",
-            },
-            {
-                city: "San Nicolas",
-            },
-            {
-                city: "San Francisco",
-            },
-        ],
     }),
     watch: {
         value: function (val) {
@@ -173,9 +148,10 @@ export default {
     methods: {
         onSelect() {
             const nuevoObjeto = {
-                date: null,
+                planification: null,
                 training: this.valueMultiselect[0],
-                orden: this.selectedTrainings.length,
+                minutes: null,
+                orderNumber: this.selectedTrainings.length,
             };
             this.selectedTrainings.push(nuevoObjeto);
             this.valueMultiselect = [];
@@ -184,7 +160,7 @@ export default {
 
         actualizarOrden() {
             this.selectedTrainings.forEach((item, index) => {
-                item.orden = index;
+                item.orderNumber = index;
             });
             console.log(this.selectedTrainings);
         },
@@ -195,28 +171,77 @@ export default {
 
         closeAll() {
             this.$refs.form.reset();
+            this.valueMultiselect = [];
+            this.selectedTrainings = [];
             this.$emit("input", false);
         },
-        getEntrenamientoNombre(id) {
-            const entrenamiento = this.trainings.find((e) => e.id === id);
-            return entrenamiento ? entrenamiento.name : "";
-        },
         async save() {
+            console.log(this.form);
             const isValid = await this.$refs.form.validate();
             if (isValid) {
-                this.form.training_type = this.allTypes.find(
-                    (type) => type.id === this.form.training_type
-                );
-                let response = await localAxios.post(
-                    "/admin/planifications",
-                    this.form
-                );
-                let newPlanification = response.data;
-                this.$emit("saved", newPlanification);
-                console.log(this.form);
-                this.closeAll();
+                if (this.selectedTrainings.length > 0) {
+                    for (const element of this.selectedTrainings) {
+                        if (
+                            element.minutes != null &&
+                            this.selectedTrainings.indexOf(element) ===
+                                this.selectedTrainings.length - 1
+                        ) {
+                            for (
+                                let i = 0;
+                                i < this.selectedTrainings.length;
+                                i++
+                            ) {
+                                this.selectedTrainings[i].minutes = parseInt(
+                                    this.selectedTrainings[i].minutes
+                                );
+                            }
+
+                            console.log("TRAININGS: ", this.selectedTrainings);
+
+                            //Aca enviamos la planificacion de los entrenamientos con sus duraciones, orden y minutos
+                            let response = await localAxios
+                                .post(
+                                    "/admin/planifications/trainers",
+                                    {
+                                        trainerPlanificationList:
+                                            this.selectedTrainings,
+                                        name: this.form.name,
+                                    },
+                                    {
+                                        headers: {
+                                            "Content-Type": "application/json",
+                                        },
+                                    }
+                                )
+                                .then((response) => {
+                                    console.log("RESPONSE FINAL");
+                                    console.log(response);
+                                    // manejar la respuesta del servidor
+                                    this.$emit("saved", response.data);
+                                    console.log(this.form);
+                                    this.closeAll();
+                                })
+                                .catch((error) => {
+                                    // manejar errores
+                                });
+                        } else {
+                            if (
+                                this.selectedTrainings.indexOf(element) ===
+                                this.selectedTrainings.length - 1
+                            ) {
+                                alert(
+                                    "Debes ingresar minutos en cada entrenamiento"
+                                );
+                            }
+                        }
+                    }
+                } else {
+                    alert(
+                        "Se requieren los jugadores y/o entrenamientos que asignara la planificacion"
+                    );
+                }
             } else {
-                alert("Completa todos los campos");
+                alert("Escribe un nombre y fecha");
             }
         },
     },
@@ -250,5 +275,18 @@ li.deleting {
 
 .delete-button:hover {
     color: #d32f2f;
+}
+
+.item-container {
+    display: flex;
+    align-items: center;
+}
+
+.item-name {
+    margin-right: 10px;
+}
+
+.item-minutes {
+    width: 80px;
 }
 </style>

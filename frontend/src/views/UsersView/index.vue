@@ -32,6 +32,10 @@
                                 <td>{{ item.email }}</td>
                                 <td>{{ item.telephone }}</td>
                                 <td>{{ item.birthdate }}</td>
+                                <td v-if="item.usertype">
+                                    {{ item.usertype.name }}
+                                </td>
+                                <td v-else>-</td>
                                 <td>
                                     <span
                                         v-for="(role, i) in item.roles"
@@ -104,6 +108,7 @@ export default {
                     value: "birthdate",
                     width: "20%",
                 },
+                { text: "Tipo", value: "usertype" },
                 { text: "Permisos", value: "" },
                 { text: "Borrar", value: "", sortable: null },
             ],
@@ -117,6 +122,7 @@ export default {
     async mounted() {
         let response = await localAxios.get("/admin/users");
         this.datatable.items = response.data;
+        console.log(response);
     },
     methods: {
         newUserSaved(newUser) {
