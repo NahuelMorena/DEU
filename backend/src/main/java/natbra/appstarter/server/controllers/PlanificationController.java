@@ -97,12 +97,17 @@ public class PlanificationController {
     @PutMapping(baseUrl + "/trainers")
     public HttpEntity<Planification> editPlanificationTrainer(@RequestBody AddPlanification planification){
 
-
-        trainerPlanificationRepository.saveAll(planification.getTrainerPlanificationList());
-
         Planification planification1 = planificationRepository.getReferenceById(planification.getId());
-
         planification1.setName(planification.getName());
+
+        Set<TrainerPlanification> trainerPlanifications = planification.getTrainerPlanificationList();
+        for (TrainerPlanification trainerPlanification : trainerPlanifications) {
+            trainerPlanification.setPlanification(planification1);
+            //trainerPlanificationRepository.save(trainerPlanification);
+        }
+
+        trainerPlanificationRepository.saveAll(trainerPlanifications);
+
 
         return ResponseEntity.ok(planificationRepository.save(planification1));
     }

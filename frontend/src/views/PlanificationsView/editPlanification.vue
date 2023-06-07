@@ -48,7 +48,7 @@
                                     <li
                                         v-for="(
                                             item, index
-                                        ) in selectedTrainings"
+                                        ) in selectedTrainingsSorted"
                                         :key="item.id"
                                         :class="{ deleting: item.deleting }"
                                     >
@@ -134,7 +134,7 @@ export default {
         },
         valueMultiselect: [],
         selectedTrainings: [],
-        trainingsToDelete: [],
+        trainingsBefore: [],
     }),
     created() {
         this.selectedPlanification = this.planification;
@@ -174,6 +174,14 @@ export default {
         },
     },
 
+    computed: {
+        selectedTrainingsSorted() {
+            return this.selectedTrainings
+                .slice()
+                .sort((a, b) => a.orderNumber - b.orderNumber);
+        },
+    },
+
     async mounted() {
         let response = await localAxios.get("/admin/trainings");
         this.trainings = response.data;
@@ -191,6 +199,19 @@ export default {
             this.selectedTrainings.push(nuevoObjeto);
             this.valueMultiselect = [];
             console.log(this.selectedTrainings);
+        },
+
+        getElementsNotInArray(array1, array2) {
+            const elementsNotInArray = [];
+
+            array1.forEach((element) => {
+                const id = element.id;
+                if (!array2.some((el) => el.id === id)) {
+                    elementsNotInArray.push(element);
+                }
+            });
+
+            return elementsNotInArray;
         },
 
         actualizarOrden() {
@@ -243,47 +264,53 @@ export default {
                                 );
                             }
 
-                            console.log("TRAININGS: ", this.selectedTrainings);
-                            console.log("ID: ", this.selectedPlanification.id);
-
-                            //Aca enviamos la planificacion de los entrenamientos con sus duraciones, orden y minutos
                             await localAxios
-                                .put(
-                                    "/admin/planifications/trainers",
-                                    {
-                                        trainerPlanificationList:
-                                            this.selectedTrainings,
-                                        name: this.form.name,
-                                        id: this.selectedPlanification.id,
-                                    },
-                                    {
-                                        headers: {
-                                            "Content-Type": "application/json",
-                                        },
-                                    }
+                                .post(
+                                    "/admin/planifications/retrieve",
+                                    this.selectedPlanification
                                 )
                                 .then((response) => {
-                                    //Aca borro las cosas que saque de la lista de entrenamientos, es decir si teniamos el
-                                    // entrenamientos 1 2 3 y deje solo 1 2, deberian cargarse esos y eliminarse el 3
-                                    // aca se elimina el 3, arriba se hizo el put para cargar los cambios de esos 2, por ej en sus mins o el name de la planification
-
+                                    this.trainingsBefore = response.data;
+                                    //Aca enviamos la planificacion de los entrenamientos con sus duraciones, orden y minutos
                                     localAxios
-                                        .post(
-                                            "/admin/planifications/retrieve",
-                                            this.selectedPlanification
+                                        .put(
+                                            "/admin/planifications/trainers",
+                                            {
+                                                trainerPlanificationList:
+                                                    this.selectedTrainings,
+                                                name: this.form.name,
+                                                id: this.selectedPlanification
+                                                    .id,
+                                            },
+                                            {
+                                                headers: {
+                                                    "Content-Type":
+                                                        "application/json",
+                                                },
+                                            }
                                         )
-                                        .then((response) => {
-                                            this.trainingsToDelete =
-                                                response.data;
+                                        .then((responsePlanification) => {
+                                            //Aca borro las cosas que saque de la lista de entrenamientos, es decir si teniamos el
+                                            // entrenamientos 1 2 3 y deje solo 1 2, deberian cargarse esos y eliminarse el 3
+                                            // aca se elimina el 3, arriba se hizo el put para cargar los cambios de esos 2, por ej en sus mins o el name de la planification
+
+                                            console.log(
+                                                "ENTRENAMIENTOS TOTALES: "
+                                            );
+                                            console.log(this.trainingsBefore);
+                                            console.log(
+                                                "ENTRENAMIENTOS SELECCIONADOS: "
+                                            );
+                                            console.log(this.selectedTrainings);
 
                                             let elementsToDelete = [];
                                             elementsToDelete =
-                                                this.selectedTrainings.filter(
-                                                    (element) =>
-                                                        !this.trainingsToDelete.includes(
-                                                            element
-                                                        )
+                                                this.getElementsNotInArray(
+                                                    this.trainingsBefore,
+                                                    this.selectedTrainings
                                                 );
+
+                                            console.log(elementsToDelete);
 
                                             if (elementsToDelete.length > 0) {
                                                 localAxios
@@ -296,7 +323,7 @@ export default {
                                                     .then((response2) => {
                                                         this.$emit(
                                                             "saved",
-                                                            response.data
+                                                            responsePlanification.data
                                                         );
                                                         this.closeAll();
                                                     })
@@ -304,15 +331,17 @@ export default {
                                                         // Manejar el error
                                                         console.error(error);
                                                     });
+                                            } else {
+                                                this.$emit(
+                                                    "saved",
+                                                    responsePlanification.data
+                                                );
+                                                this.closeAll();
                                             }
                                         })
                                         .catch((error) => {
-                                            // Manejar el error
-                                            console.error(error);
+                                            // manejar errores
                                         });
-                                })
-                                .catch((error) => {
-                                    // manejar errores
                                 });
                         } else {
                             if (
