@@ -3,7 +3,9 @@ package natbra.appstarter.server.model.menu;
 public enum SubMenu {
 	
 	General("General"),
+	Trainer("Entrenador"),
 	Admin("Administrador");
+
 	
 	private String name;
 	

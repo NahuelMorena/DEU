@@ -78,6 +78,11 @@ const routes = [
                     },
                 ],
             },
+            {
+                path: "/players",
+                name: "Players",
+                component: () => import("@/views/PlayerView"),
+            },
         ],
     },
 ];
