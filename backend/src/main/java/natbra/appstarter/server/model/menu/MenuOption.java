@@ -8,6 +8,7 @@ public enum MenuOption {
 	Home("Home", "/", "mdi-home", SubMenu.General.getName()),
 	About("About", "/about", "mdi-information", SubMenu.General.getName()),
 	Security("Seguridad", "/security", "mdi-key", SubMenu.Admin.getName()),
+	Players("Players", "/players", "mdi-account-multiple", SubMenu.Trainer.getName()),
 	Trainings("Trainings", "/trainings", "mdi-account-multiple", SubMenu.Admin.getName()),
 	Planifications("Planifications", "/planifications", "mdi-account-multiple", SubMenu.Admin.getName()),
 	Users("Users", "/users", "mdi-account-multiple", SubMenu.Admin.getName());

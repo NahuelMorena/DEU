@@ -35,7 +35,7 @@ private final String baseUrl = "/admin/users";
 	}
 
 	@GetMapping(baseUrl + "/get-players")
-	public HttpEntity<List<User>> getUsersOfTrainer(){
+	public HttpEntity<List<User>> getUsersByTrainerId(){
 		return ResponseEntity.ok(userRepository.findAllByTrainerId(utils.getAuthUser().getId()));
 	}
 
