@@ -36,19 +36,12 @@
                                     {{ item.usertype.name }}
                                 </td>
                                 <td v-else>-</td>
-                                <v-tooltip top>
-                                    <template v-slot:activator="{ on, attrs }">
-                                        <v-btn
-                                            v-bind="attrs"
-                                            v-on="on"
-                                            icon
-                                            @click="editPlayer(item)"
-                                        >
-                                            <v-icon>mdi-pencil</v-icon>
-                                        </v-btn>
-                                    </template>
-                                    <span>Editar jugador</span>
-                                </v-tooltip>
+                                <td>
+                                    <v-btn icon @click="editPlayer(item)">
+                                        <v-icon>mdi-pencil</v-icon>
+                                    </v-btn>
+                                </td>
+
                                 <td>
                                     <v-btn icon @click="confirmDelete(item)">
                                         <v-icon>mdi-delete</v-icon>
