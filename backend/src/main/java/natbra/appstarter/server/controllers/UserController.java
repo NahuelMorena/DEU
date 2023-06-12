@@ -9,10 +9,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import natbra.appstarter.server.Utils;
 import natbra.appstarter.server.model.auth.User;
@@ -52,6 +49,11 @@ private final String baseUrl = "/admin/users";
 	@PostMapping(baseUrl)
 	public HttpEntity<User> addUser(@RequestBody User user){
 		user.setPassword(encoder.encode(user.getPassword()));
+		return ResponseEntity.ok(userRepository.save(user));
+	}
+
+	@PutMapping(baseUrl)
+	public HttpEntity<User> editUser(@RequestBody User user){
 		return ResponseEntity.ok(userRepository.save(user));
 	}
 }

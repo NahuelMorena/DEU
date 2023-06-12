@@ -80,8 +80,21 @@ const routes = [
             },
             {
                 path: "/players",
-                name: "Players",
-                component: () => import("@/views/PlayerView"),
+                component: () => import("@/views/PlayersView"),
+                children: [
+                    {
+                        path: "",
+                        name: "Players",
+                        component: () => import("@/views/PlayersView"),
+                    },
+                    {
+                        path: "edit",
+                        name: "Edit_Player",
+                        component: () =>
+                            import("@/views/PlayersView/editPlayer"),
+                        props: true,
+                    },
+                ],
             },
             {
                 path: "/profile",

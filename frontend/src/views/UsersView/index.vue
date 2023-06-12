@@ -60,6 +60,11 @@
                 v-model="dialogs.addUser"
                 @saved="(newUser) => newUserSaved(newUser)"
             />
+            <EditUser
+                v-model="dialogs.editUser.show"
+                :user="dialogs.editUser.user"
+                @saved="savedEditUser"
+            />
             <v-dialog
                 v-model="dialogs.deleteVisit"
                 persistent
@@ -87,12 +92,14 @@
 import { localAxios } from "@/axios";
 import HeaderComponent from "@/components/HeaderComponent.vue";
 import AddUser from "./addUser.vue";
+import EditUser from "./editUser.vue";
 import { SnackbarStore } from "@/store/snackbar";
 
 export default {
     components: {
         HeaderComponent,
         AddUser,
+        EditUser,
     },
     data: () => ({
         snackbarStore: SnackbarStore(),
@@ -117,6 +124,7 @@ export default {
         dialogs: {
             addUser: false,
             deleteVisit: false,
+            editUser: { show: false, user: null },
         },
     }),
     async mounted() {
@@ -125,6 +133,12 @@ export default {
         console.log(response);
     },
     methods: {
+        savedEditUser(newUser) {
+            const index = this.datatable.items.findIndex(
+                (i) => i.id === newUser.id
+            );
+            this.datatable.items.splice(index, 1, newUser);
+        },
         newUserSaved(newUser) {
             this.datatable.items.push(newUser);
             this.snackbarStore.open(
@@ -146,6 +160,10 @@ export default {
                     "Se borró el usuario " + this.userToDelete.username + "."
                 );
             }
+        },
+        async editUser(item) {
+            this.dialogs.editUser.user = item;
+            this.dialogs.editUser.show = true;
         },
     },
 };
