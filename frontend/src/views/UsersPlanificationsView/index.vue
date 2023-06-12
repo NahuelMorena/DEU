@@ -30,22 +30,25 @@
                 </v-text-field>
                 <v-data-table
                     :headers="datatable.headers"
-                    :items="datatable.items"
+                    :items="datatable.filtered"
                     :search="datatable.search"
                     :items-per-page="10"
-                    :sort-by="['date']"
-                    :sort-asc="true"
+                    :sort-by="['planification.name', 'date', 'orderNumber']"
+                    :sort-desc="true"
                     class="elevation-0"
                 >
                     <template v-slot:item="{ item }">
                         <tr>
-                            <td>{{ item.date }}</td>
-                            <td>{{ item.name }}</td>
-                            <td>{{ item.description }}</td>
-                            <td>{{ item.training_type.name }}</td>
-                            <td>{{ item.warmup_time }}</td>
-                            <td>{{ item.repetitions_quantity }}</td>
-                            <td>
+                            <td>{{ formatDate(item.date) }}</td>
+                            <td>{{ item.planification.name }}</td>
+                            <td>{{ item.training.name }}</td>
+                            <td>{{ item.orderNumber }}</td>
+                            <td>{{ item.minutes }}</td>
+                            <td>{{ item.training.description }}</td>
+                            <td>{{ item.training.training_type.name }}</td>
+                            <td>{{ item.training.warmup_time }}</td>
+                            <td>{{ item.training.repetitions_quantity }}</td>
+                            <td v-if="authStore.hasAuthority('TRAINER')">
                                 <v-tooltip top>
                                     <template v-slot:activator="{ on, attrs }">
                                         <v-btn
@@ -60,7 +63,8 @@
                                     <span>Agregar/Editar calificacion</span>
                                 </v-tooltip>
                             </td>
-                            <td>
+                            <td v-else>NOTA</td>
+                            <td v-if="authStore.hasAuthority('TRAINER')">
                                 <v-tooltip top>
                                     <template v-slot:activator="{ on, attrs }">
                                         <v-btn
@@ -135,6 +139,7 @@
 import { localAxios } from "@/axios";
 import HeaderComponent from "@/components/HeaderComponent.vue";
 import { AuthStore } from "@/store/auth";
+import moment from "moment";
 
 export default {
     components: {
@@ -158,36 +163,54 @@ export default {
                 {
                     text: "Fecha",
                     align: "start",
-                    sortable: true,
+                    sortable: null,
                     value: "date",
                     sortIcon: "mdi-arrow-up-down",
                 },
+
                 {
-                    text: "Nombre",
+                    text: "Nombre de planificacion",
                     value: "planification.name",
+                    sortIcon: "mdi-arrow-up-down",
                     sortable: null,
                 },
                 {
+                    text: "Nombre de entrenamiento",
+                    value: "training.name",
+                    sortable: null,
+                },
+                {
+                    text: "Orden",
+                    sortable: null,
+                    value: "orderNumber",
+                    sortIcon: "mdi-arrow-up-down",
+                },
+                {
+                    text: "Minutos",
+                    sortable: null,
+                    value: "minutes",
+                },
+                {
                     text: "Descripcion",
-                    value: "description",
+                    value: "training.description",
                     sortable: null,
                 },
                 {
                     text: "Tipo de entrenamiento",
-                    value: "training_type.name",
+                    value: "training.training_type.name",
                     sortable: null,
                 },
                 {
                     text: "Tiempo de calentamiento",
-                    value: "warmup_time",
+                    value: "training.warmup_time",
                     sortable: null,
                 },
                 {
                     text: "Cantidad de repeticiones",
-                    value: "repetitions_quantity",
+                    value: "training.repetitions_quantity",
                     sortable: null,
                 },
-                { text: "Editar", value: "", sortable: null },
+                { text: "Calificacion", value: "", sortable: null },
                 { text: "Borrar", value: "", sortable: null },
             ],
             trainings: [],
@@ -197,6 +220,7 @@ export default {
     async mounted() {
         this.authStore = AuthStore();
         let response = null;
+        this.datatable.items = [];
         if (this.authStore.hasAuthority("TRAINER")) {
             response = await localAxios.post(
                 "/admin/users/planifications/retrieve-by-trainer",
@@ -218,10 +242,17 @@ export default {
             );
             let responseTrainerPlanifications = await localAxios.post(
                 "/admin/planifications/retrieve-by-trainer",
-                this.authStore.user.user
+                this.authStore.user.user.trainer
             );
 
             this.user_planifications = response.data;
+
+            const headerIndex = this.datatable.headers.findIndex(
+                (header) => header.text === "Borrar"
+            );
+            if (headerIndex !== -1) {
+                this.datatable.headers.splice(headerIndex, 1);
+            }
 
             const filteredTrainerPlanifications =
                 responseTrainerPlanifications.data
@@ -244,11 +275,21 @@ export default {
                         };
                     });
             this.datatable.items = filteredTrainerPlanifications;
+            this.datatable.filtered = filteredTrainerPlanifications;
         }
 
         this.user_planifications = response.data;
     },
     methods: {
+        formatDate(date) {
+            // const formattedDate = moment(date).format("DD/MM/YYYY");
+            // Aquí puedes utilizar alguna librería de manipulación de fechas como moment.js o date-fns
+            const formattedDate = moment(date, "YYYY-MM-DD").format(
+                "DD/MM/YYYY"
+            );
+            return formattedDate;
+        },
+
         getUserTrainerPlanifications() {
             //filtramos los user planifications por el usuario seleccionado
             const filteredUser = this.user_planifications.filter(
