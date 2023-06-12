@@ -41,6 +41,24 @@ const routes = [
                 component: () => import("@/views/SecurityView"),
             },
             {
+                path: "/players",
+                component: () => import("@/views/PlayersView"),
+                children: [
+                    {
+                        path: "",
+                        name: "Players",
+                        component: () => import("@/views/PlayersView"),
+                    },
+                    {
+                        path: "edit",
+                        name: "Edit_Player",
+                        component: () =>
+                            import("@/views/PlayersView/editPlayer"),
+                        props: true,
+                    },
+                ],
+            },
+            {
                 path: "/trainings",
                 component: () => import("@/views/TrainingsView"),
                 children: [
@@ -78,23 +96,22 @@ const routes = [
                     },
                 ],
             },
+            // {
+            //     path: "/users_planifications",
+            //     component: () => import("@/views/UsersPlanificationsView"),
+            //     children: [
+            //         {
+            //             path: "",
+            //             name: "Users_Planifications",
+            //             component: () =>
+            //                 import("@/views/UsersPlanificationsView"),
+            //         },
+            //     ],
+            // },
             {
-                path: "/players",
-                component: () => import("@/views/PlayersView"),
-                children: [
-                    {
-                        path: "",
-                        name: "Players",
-                        component: () => import("@/views/PlayersView"),
-                    },
-                    {
-                        path: "edit",
-                        name: "Edit_Player",
-                        component: () =>
-                            import("@/views/PlayersView/editPlayer"),
-                        props: true,
-                    },
-                ],
+                path: "/users_planifications",
+                name: "Users_Planifications",
+                component: () => import("../views/UsersPlanificationsView"),
             },
         ],
     },

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -35,6 +36,23 @@ public class UserPlanificationController {
     @PostMapping(baseUrl + "/retrieve")
     public HttpEntity<Set<UserPlanification>> getUserPlanificationsById(@RequestBody Planification planification){
         return ResponseEntity.ok(userPlanificationRepository.findAllByPlanificationId(planification.getId()));
+    }
+
+    @PostMapping(baseUrl + "/retrieve-by-user")
+    public HttpEntity<Set<UserPlanification>> getUserPlanificationsByUserId(@RequestBody User user){
+        return ResponseEntity.ok(userPlanificationRepository.findAllByUserId(user.getId()));
+    }
+
+    @PostMapping(baseUrl + "/retrieve-by-trainer")
+    public HttpEntity<Set<UserPlanification>> getUserPlanificationsByTrainerId(@RequestBody User user){
+        List<UserPlanification> userPlanifications = userPlanificationRepository.findAll();
+        Set<UserPlanification> userPlanificationsOfTrainer = new HashSet<UserPlanification>();
+        for (UserPlanification userPlanification : userPlanifications) {
+            if(userPlanification.getUser().getTrainer().getId() == user.getId()){
+                userPlanificationsOfTrainer.add(userPlanification);
+            }
+        }
+        return ResponseEntity.ok(userPlanificationsOfTrainer);
     }
 
     @DeleteMapping(baseUrl)
