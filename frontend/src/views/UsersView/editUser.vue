@@ -5,7 +5,7 @@
                 <v-card-title
                     class="d-flex justify-space-between align-center mb-4"
                 >
-                    <div>Agregar Usuario</div>
+                    <div>Editar Usuario</div>
                     <div>
                         <v-btn icon @click="closeAll()">
                             <v-icon>mdi-close</v-icon>
@@ -148,6 +148,7 @@ import moment from "moment";
 export default {
     props: {
         value: { type: Boolean },
+        user: { type: Object },
     },
     data: () => ({
         localShow: false,
@@ -185,6 +186,10 @@ export default {
         value: function (val) {
             this.localShow = val;
         },
+        user: function (val) {
+            this.form = { ...val };
+            this.form.birthdate = moment(val.birthdate).format("YYYY-MM-DD");
+        },
     },
     async mounted() {
         let response = await localAxios.get("/admin/roles");
@@ -203,7 +208,7 @@ export default {
         },
         async save() {
             this.form.telephone = parseInt(this.form.telephone);
-            let response = await localAxios.post("/admin/users", this.form);
+            let response = await localAxios.put("/admin/users", this.form);
             let newUser = response.data;
             this.$emit("saved", newUser);
             this.closeAll();

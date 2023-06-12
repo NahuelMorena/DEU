@@ -5,7 +5,7 @@
                 <v-card-title
                     class="d-flex justify-space-between align-center mb-4"
                 >
-                    <div>Agregar Usuario</div>
+                    <div>Agregar Jugador</div>
                     <div>
                         <v-btn icon @click="closeAll()">
                             <v-icon>mdi-close</v-icon>
@@ -13,7 +13,7 @@
                     </div>
                 </v-card-title>
                 <v-card-text>
-                    <v-form ref="form">
+                    <v-form ref="form" @submit.prevent="addPlayer">
                         <v-row>
                             <v-col cols="6">
                                 <v-text-field
@@ -37,7 +37,7 @@
                                     label="Fecha de nacimiento"
                                 ></Datepicker>
                             </v-col>
-                            <v-col cols="3">
+                            <v-col cols="6">
                                 <v-text-field
                                     label="Telefono"
                                     v-model="form.telephone"
@@ -45,7 +45,16 @@
                                     type="number"
                                 ></v-text-field>
                             </v-col>
-                            <v-col cols="3">
+                        </v-row>
+                        <v-row>
+                            <v-col cols="6">
+                                <v-text-field
+                                    label="Email"
+                                    v-model="form.email"
+                                    :rules="rules.email"
+                                ></v-text-field>
+                            </v-col>
+                            <v-col cols="6">
                                 <v-select
                                     :rules="rules.user_type"
                                     v-model="form.user_type"
@@ -61,20 +70,11 @@
                         <v-row>
                             <v-col cols="6">
                                 <v-text-field
-                                    label="Email"
-                                    v-model="form.email"
-                                    :rules="rules.email"
-                                ></v-text-field>
-                            </v-col>
-                            <v-col cols="6">
-                                <v-text-field
                                     label="Nombre del usuario"
                                     v-model="form.username"
                                     :rules="rules.username"
                                 ></v-text-field>
                             </v-col>
-                        </v-row>
-                        <v-row>
                             <v-col cols="6">
                                 <v-text-field
                                     v-model="form.password"
@@ -87,38 +87,6 @@
                                     counter
                                     @click:append="showPassword = !showPassword"
                                 ></v-text-field>
-                            </v-col>
-                            <v-col cols="6">
-                                <v-autocomplete
-                                    v-model="form.roles"
-                                    :items="allRoles"
-                                    label="Roles"
-                                    item-text="name"
-                                    return-object
-                                    filled
-                                    rounded
-                                    chips
-                                    multiple
-                                >
-                                    <template v-slot:selection="data">
-                                        <v-chip
-                                            v-bind="data.attrs"
-                                            :input-value="data.selected"
-                                            close
-                                            @click="data.select"
-                                            @click:close="remove(data.item)"
-                                        >
-                                            {{ data.item.name }}
-                                        </v-chip>
-                                    </template>
-                                    <template v-slot:item="data">
-                                        <v-list-item-content>
-                                            <v-list-item-title
-                                                v-html="data.item.name"
-                                            ></v-list-item-title>
-                                        </v-list-item-content>
-                                    </template>
-                                </v-autocomplete>
                             </v-col>
                         </v-row>
                     </v-form>
@@ -161,7 +129,7 @@ export default {
             email: "",
             username: "",
             user_type: null,
-            password: "",
+            password: "clave",
             birthdate: null,
             roles: [],
         },
@@ -202,6 +170,8 @@ export default {
             if (index >= 0) this.form.roles.splice(index, 1);
         },
         async save() {
+            const role = this.allRoles.find((item) => item.name === "USER");
+            this.form.roles.push(role);
             this.form.telephone = parseInt(this.form.telephone);
             let response = await localAxios.post("/admin/users", this.form);
             let newUser = response.data;
