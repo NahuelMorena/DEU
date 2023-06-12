@@ -83,6 +83,16 @@ const routes = [
                 name: "Players",
                 component: () => import("@/views/PlayerView"),
             },
+            {
+                path: "/profile",
+                name: "Profile",
+                component: () => import("@/views/ProfileView"),
+            },
+            {
+                path: "/setting",
+                name: "Setting",
+                component: () => import("@/views/SettingView"),
+            },
         ],
     },
 ];
