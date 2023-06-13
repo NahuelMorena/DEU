@@ -113,6 +113,16 @@ const routes = [
                 name: "Users_Planifications",
                 component: () => import("../views/UsersPlanificationsView"),
             },
+            {
+                path: "/profile",
+                name: "Profile",
+                component: () => import("@/views/ProfileView"),
+            },
+            {
+                path: "/setting",
+                name: "Setting",
+                component: () => import("@/views/SettingView"),
+            },
         ],
     },
 ];

@@ -3,6 +3,7 @@
         <HeaderComponent title="Mis jugadores" />
         <v-container class="general-padding">
             <v-card v-if="datatable.items">
+                <v-card-title> Jugadores </v-card-title>
                 <v-card-text>
                     <v-text-field
                         v-model="datatable.search"
@@ -73,7 +74,7 @@
             >
                 <v-card>
                     <v-card-title class="headline">
-                        ¿Deseas eliminar el usuario seleccionado?
+                        ¿Deseas quitar de la lista al usuario seleccionado?
                     </v-card-title>
                     <v-card-actions>
                         <v-btn color="error" @click="deleteUser"
