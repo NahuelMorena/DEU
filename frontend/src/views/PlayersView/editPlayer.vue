@@ -143,10 +143,6 @@ export default {
         user: function (val) {
             this.form = { ...val };
             this.form.birthdate = moment(val.birthdate).format("YYYY-MM-DD");
-            // Buscar el tipo de usuario correspondiente en el array allTypes
-            this.form.usertype = this.allTypes.find(
-                (type) => type.id === val.usertype.id
-            );
         },
     },
     async mounted() {

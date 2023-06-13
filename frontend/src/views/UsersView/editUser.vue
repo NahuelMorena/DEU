@@ -188,9 +188,6 @@ export default {
         user: function (val) {
             this.form = { ...val };
             this.form.birthdate = moment(val.birthdate).format("YYYY-MM-DD");
-            this.form.usertype = this.allTypes.find(
-                (type) => type.id === val.usertype.id
-            );
         },
     },
     async mounted() {

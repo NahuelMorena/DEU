@@ -19,19 +19,24 @@ import natbra.appstarter.server.repository.UserRepository;
 @Controller
 public class UserController {
 private final String baseUrl = "/admin/users";
-	
+
 	@Autowired UserRepository userRepository;
 
 	@Autowired
 	UserTypeRepository userTypeRepository;
 	@Autowired PasswordEncoder encoder;
 	@Autowired Utils utils;
-	
+
 	@GetMapping(baseUrl)
 	public HttpEntity<List<User>> getUsers(){
 		return ResponseEntity.ok(userRepository.findAll());
 	}
-	
+
+	@GetMapping(baseUrl + "/get-user")
+	public HttpEntity<Optional<User>> getUser(){
+		return ResponseEntity.ok(userRepository.findById(utils.getAuthUser().getId()));
+	}
+
 	@GetMapping(baseUrl + "/get-players")
 	public HttpEntity<List<User>> getUsersByTrainerId(){
 		return ResponseEntity.ok(userRepository.findAllByTrainerId(utils.getAuthUser().getId()));

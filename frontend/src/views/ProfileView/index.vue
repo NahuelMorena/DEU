@@ -47,8 +47,8 @@
                             </v-col>
                             <v-col cols="6">
                                 <v-select
-                                    :rules="rules.user_type"
-                                    v-model="form.user_type"
+                                    :rules="rules.usertype"
+                                    v-model="form.usertype"
                                     :items="allTypes"
                                     item-text="name"
                                     item-value="id"
@@ -141,23 +141,23 @@ export default {
     }),
     async mounted() {
         this.authStore = AuthStore();
-        this.user = this.authStore.user.user;
+        try {
+            let response1 = await localAxios.get("/admin/users/get-user");
+            this.user = response1.data;
+        } catch (error) {
+            console.log(error);
+        }
         let response2 = await localAxios.get("/admin/users/get-types");
         this.allTypes = response2.data;
         this.form = { ...this.user };
         let response = await localAxios.get("/admin/roles");
         this.allRoles = response.data;
-
-        // Buscar el tipo de usuario correspondiente en el array allTypes
-        this.form.user_type = this.allTypes.find(
-            (type) => type.id === this.user.usertype.id
-        );
+        console.log(this.user);
     },
     methods: {
         async save() {
             this.form.telephone = parseInt(this.form.telephone);
-            const role = this.allRoles.find((item) => item.name === "USER");
-            this.form.roles.push(role);
+
             let response = await localAxios.put("/admin/users", this.form);
         },
     },

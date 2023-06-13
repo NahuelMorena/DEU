@@ -7,14 +7,14 @@ public enum MenuOption {
 
 	Home("Home", "/", "mdi-home", SubMenu.General.getName()),
 	About("About", "/about", "mdi-information", SubMenu.General.getName()),
-	Profile("Profile", "/profile", "mdi-account", SubMenu.General.getName()),
-	Setting("Setting", "/setting", "mdi-cog", SubMenu.General.getName()),
-	Users("Users", "/users", "mdi-account-multiple", SubMenu.Admin.getName()),
+	Profile("Perfil", "/profile", "mdi-account", SubMenu.General.getName()),
+	Setting("Configuracion", "/setting", "mdi-cog", SubMenu.General.getName()),
+	Users("Usuarios", "/users", "mdi-account-multiple", SubMenu.Admin.getName()),
 	Security("Seguridad", "/security", "mdi-key", SubMenu.Admin.getName()),
-	Players("Players", "/players", "mdi-account-multiple", SubMenu.Trainer.getName()),
-	Trainings("Trainings", "/trainings", "mdi-account-multiple", SubMenu.Trainer.getName()),
-	Planifications("Planifications", "/planifications", "mdi-account-multiple", SubMenu.Trainer.getName()),
-	UsersPlanifications("UsersPlanifications", "/users_planifications", "mdi-account-multiple",
+	Players("Jugadores", "/players", "mdi-account-multiple", SubMenu.Trainer.getName()),
+	Trainings("Entrenamientos", "/trainings", "mdi-account-multiple", SubMenu.Trainer.getName()),
+	Planifications("Planificaciones", "/planifications", "mdi-account-multiple", SubMenu.Trainer.getName()),
+	UsersPlanifications("Planificaciones de usuarios", "/users_planifications", "mdi-account-multiple",
 			SubMenu.Trainer.getName());
 
 	private String name;
