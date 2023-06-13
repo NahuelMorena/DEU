@@ -14,6 +14,7 @@
                             <v-btn
                                 color="rgba(34, 56, 67, 0.85)"
                                 dark
+                                aria-label="Agregar jugador"
                                 @click="dialogs.addUser = true"
                             >
                                 Agregar Jugador
@@ -38,13 +39,21 @@
                                 </td>
                                 <td v-else>-</td>
                                 <td>
-                                    <v-btn icon @click="editPlayer(item)">
+                                    <v-btn
+                                        icon
+                                        @click="editPlayer(item)"
+                                        aria-label="Editar"
+                                    >
                                         <v-icon>mdi-pencil</v-icon>
                                     </v-btn>
                                 </td>
 
                                 <td>
-                                    <v-btn icon @click="confirmDelete(item)">
+                                    <v-btn
+                                        icon
+                                        @click="confirmDelete(item)"
+                                        aria-label="Borrar"
+                                    >
                                         <v-icon>mdi-delete</v-icon>
                                     </v-btn>
                                 </td>
@@ -67,20 +76,22 @@
                 @saved="savedEditUser"
             />
 
-            <v-dialog
-                v-model="dialogs.deleteVisit"
-                persistent
-                max-width="600px"
-            >
+            <v-dialog v-model="dialogs.deleteUser" persistent max-width="600px">
                 <v-card>
                     <v-card-title class="headline">
                         ¿Deseas quitar de la lista al usuario seleccionado?
                     </v-card-title>
                     <v-card-actions>
-                        <v-btn color="error" @click="deleteUser"
+                        <v-btn
+                            color="error"
+                            @click="deleteUser"
+                            aria-label="Eliminar"
                             >Eliminar</v-btn
                         >
-                        <v-btn text @click="dialogs.deleteVisit = false"
+                        <v-btn
+                            text
+                            @click="dialogs.deleteUser = false"
+                            aria-label="Cancelar"
                             >Cancelar</v-btn
                         >
                     </v-card-actions>
@@ -125,7 +136,7 @@ export default {
         },
         dialogs: {
             addUser: false,
-            deleteVisit: false,
+            deleteUser: false,
             editPlayer: { show: false, user: null },
         },
     }),
@@ -148,7 +159,7 @@ export default {
             );
         },
         confirmDelete(item) {
-            this.dialogs.deleteVisit = true;
+            this.dialogs.deleteUser = true;
             this.userToDelete = item;
         },
         async deleteUser() {
@@ -162,6 +173,7 @@ export default {
                     "Se borró el usuario " + this.userToDelete.username + "."
                 );
             }
+            this.dialogs.deleteUser = false;
         },
         async editPlayer(item) {
             this.dialogs.editPlayer.user = item;

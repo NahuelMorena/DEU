@@ -7,7 +7,7 @@
                 >
                     <div>Agregar Jugador</div>
                     <div>
-                        <v-btn icon @click="closeAll()">
+                        <v-btn icon @click="closeAll()" aria-label="Cerrar">
                             <v-icon>mdi-close</v-icon>
                         </v-btn>
                     </div>
@@ -56,8 +56,8 @@
                             </v-col>
                             <v-col cols="6">
                                 <v-select
-                                    :rules="rules.user_type"
-                                    v-model="form.user_type"
+                                    :rules="rules.usertype"
+                                    v-model="form.usertype"
                                     :items="allTypes"
                                     item-text="name"
                                     item-value="id"
@@ -95,6 +95,7 @@
                     <v-btn
                         color="rgba(34, 56, 67, 0.85)"
                         dark
+                        aria-label="Guardar"
                         @click="
                             if ($refs.form.validate()) {
                                 save();
@@ -111,6 +112,7 @@
 <script>
 import { localAxios } from "@/axios";
 import Datepicker from "@/components/datepicker.vue";
+import { AuthStore } from "@/store/auth";
 import moment from "moment";
 
 export default {
@@ -122,13 +124,15 @@ export default {
         showPassword: false,
         allRoles: null,
         allTypes: null,
+        authStore: null,
         form: {
             name: "",
             surname: "",
             telephone: "",
             email: "",
+            trainer: "",
             username: "",
-            user_type: null,
+            usertype: null,
             password: "clave",
             birthdate: null,
             roles: [],
@@ -145,7 +149,7 @@ export default {
             ],
             birthdate: [(v) => !!v || "Se requiere una fecha de nacimiento"],
             username: [(v) => !!v || "Se requiere un nombre de usuario"],
-            user_type: [(v) => !!v || "Se requiere la seleccion del tipo"],
+            usertype: [(v) => !!v || "Se requiere la seleccion del tipo"],
             password: [(v) => !!v || "Se requiere una contraseña"],
         },
     }),
@@ -155,6 +159,7 @@ export default {
         },
     },
     async mounted() {
+        this.authStore = AuthStore();
         let response = await localAxios.get("/admin/roles");
         this.allRoles = response.data;
         let response2 = await localAxios.get("/admin/users/get-types");
@@ -170,8 +175,12 @@ export default {
             if (index >= 0) this.form.roles.splice(index, 1);
         },
         async save() {
-            const role = this.allRoles.find((item) => item.name === "USER");
-            this.form.roles.push(role);
+            if (Number.isInteger(this.form.usertype)) {
+                this.form.usertype = this.allTypes.find(
+                    (usertype) => usertype.id === this.form.usertype
+                );
+            }
+            this.form.trainer = this.authStore.user.user;
             this.form.telephone = parseInt(this.form.telephone);
             let response = await localAxios.post("/admin/users", this.form);
             let newUser = response.data;

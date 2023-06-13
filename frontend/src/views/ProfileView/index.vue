@@ -84,6 +84,7 @@
                 </v-card-text>
                 <v-card-actions class="d-flex justify-end">
                     <v-btn
+                        aria-label="Guardar"
                         color="rgba(34, 56, 67, 0.85)"
                         dark
                         @click="

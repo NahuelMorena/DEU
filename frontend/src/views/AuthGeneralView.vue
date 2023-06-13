@@ -2,11 +2,16 @@
     <div>
         <v-app-bar app flat clipped-left border>
             <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
-            <v-toolbar-title>AppStarter</v-toolbar-title>
+            <v-toolbar-title>Deportes App</v-toolbar-title>
 
             <v-spacer></v-spacer>
 
-            <v-btn class="black--text" icon @click="logout()">
+            <v-btn
+                class="black--text"
+                aria-label="Cerrar sesion"
+                icon
+                @click="logout()"
+            >
                 <v-icon>mdi-logout</v-icon>
             </v-btn>
         </v-app-bar>

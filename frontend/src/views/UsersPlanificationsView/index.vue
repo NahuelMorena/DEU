@@ -55,6 +55,7 @@
                                             v-bind="attrs"
                                             v-on="on"
                                             icon
+                                            aria-label="Agregar Calificacion"
                                             @click="AddCalification(item)"
                                         >
                                             <v-icon>mdi-pencil</v-icon>
@@ -70,6 +71,7 @@
                                         <v-btn
                                             v-bind="attrs"
                                             v-on="on"
+                                            aria-label="Borrar Calificacion"
                                             icon
                                             @click="deleteCalification(item)"
                                         >
@@ -94,7 +96,7 @@
                     <div>Agregar/Editar calificacion</div>
 
                     <div>
-                        <v-btn icon @click="close()">
+                        <v-btn icon @click="close()" aria-label="Cerrar">
                             <v-icon>mdi-close</v-icon>
                         </v-btn>
                     </div>
@@ -131,8 +133,16 @@
                     ¿Deseas eliminar el entrenamiento seleccionado?
                 </v-card-title>
                 <v-card-actions>
-                    <v-btn color="error" @click="confirmDelete">Eliminar</v-btn>
-                    <v-btn text @click="dialogs.deleteCalification = false"
+                    <v-btn
+                        aria-label="Eliminar"
+                        color="error"
+                        @click="confirmDelete"
+                        >Eliminar</v-btn
+                    >
+                    <v-btn
+                        aria-label="Cancelar"
+                        text
+                        @click="dialogs.deleteCalification = false"
                         >Cancelar</v-btn
                     >
                 </v-card-actions>

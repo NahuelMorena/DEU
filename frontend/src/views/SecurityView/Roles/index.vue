@@ -47,6 +47,7 @@
                                             v-bind="attrs"
                                             v-on="on"
                                             icon
+                                            aria-label="Borrar rol"
                                             @click="deleteRole(item)"
                                         >
                                             <v-icon>mdi-delete</v-icon>

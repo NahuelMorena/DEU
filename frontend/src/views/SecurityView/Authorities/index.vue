@@ -12,6 +12,7 @@
                         <v-btn
                             color="rgba(34, 56, 67, 0.85)"
                             dark
+                            aria-label="Agregar permiso"
                             @click="dialogs.addAuthority = true"
                         >
                             Agregar permiso
@@ -34,6 +35,7 @@
                                             v-bind="attrs"
                                             v-on="on"
                                             icon
+                                            aria-label="Borrar permiso"
                                             @click="deleteAuthority(item)"
                                         >
                                             <v-icon>mdi-delete</v-icon>

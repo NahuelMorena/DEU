@@ -45,7 +45,11 @@
                                     >
                                 </td>
                                 <td>
-                                    <v-btn icon @click="confirmDelete(item)">
+                                    <v-btn
+                                        icon
+                                        @click="confirmDelete(item)"
+                                        aria-label="Borrar usuario"
+                                    >
                                         <v-icon>mdi-delete</v-icon>
                                     </v-btn>
                                 </td>
@@ -75,10 +79,16 @@
                         ¿Deseas eliminar el usuario seleccionado?
                     </v-card-title>
                     <v-card-actions>
-                        <v-btn color="error" @click="deleteUser"
+                        <v-btn
+                            color="error"
+                            @click="deleteUser"
+                            aria-label="Eliminar"
                             >Eliminar</v-btn
                         >
-                        <v-btn text @click="dialogs.deleteVisit = false"
+                        <v-btn
+                            text
+                            @click="dialogs.deleteVisit = false"
+                            aria-label="Cancelar"
                             >Cancelar</v-btn
                         >
                     </v-card-actions>

@@ -7,7 +7,7 @@
                 >
                     <div>Agregar usuarios a la planificacion</div>
                     <div>
-                        <v-btn icon @click="closeAll()">
+                        <v-btn icon @click="closeAll()" aria-label="Cerrar">
                             <v-icon>mdi-close</v-icon>
                         </v-btn>
                     </div>
@@ -70,6 +70,7 @@
                     <v-btn
                         type="submit"
                         @click="save()"
+                        aria-label="Guardar"
                         color="rgba(34, 56, 67, 0.85)"
                         dark
                         >Agregar</v-btn

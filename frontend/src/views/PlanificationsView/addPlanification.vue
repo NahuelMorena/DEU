@@ -7,82 +7,79 @@
                 >
                     <div>Agregar Planificacion</div>
                     <div>
-                        <v-btn icon @click="closeAll()">
+                        <v-btn icon @click="closeAll()" aria-label="Cerrar">
                             <v-icon>mdi-close</v-icon>
                         </v-btn>
                     </div>
                 </v-card-title>
                 <v-card-text>
-                    <v-form ref="form" @submit.prevent="addPlanification">
-                        <v-row>
-                            <v-col cols="12">
-                                <v-text-field
-                                    v-model="form.name"
-                                    :rules="rules.name"
-                                    label="Nombre"
-                                    required
-                                ></v-text-field>
-                            </v-col>
-                        </v-row>
+                    <v-row>
+                        <v-col cols="12">
+                            <v-text-field
+                                v-model="name"
+                                :rules="rules.name"
+                                label="Nombre"
+                                required
+                            ></v-text-field>
+                        </v-col>
+                    </v-row>
 
-                        <v-row>
-                            <v-col cols="12">
-                                <multiselect
-                                    v-model="valueMultiselect"
-                                    placeholder="Seleccione entrenamiento"
-                                    label="name"
-                                    :options="trainings"
-                                    :multiple="true"
-                                    :close-on-select="false"
-                                    @input="onSelect"
+                    <v-row>
+                        <v-col cols="12">
+                            <multiselect
+                                v-model="valueMultiselect"
+                                placeholder="Seleccione entrenamiento"
+                                label="name"
+                                :options="trainings"
+                                :multiple="true"
+                                :close-on-select="false"
+                                @input="onSelect"
+                            >
+                            </multiselect>
+                        </v-col>
+                    </v-row>
+                    <v-row
+                        ><v-col cols="12">
+                            <draggable
+                                v-model="selectedTrainings"
+                                :element="'ul'"
+                                class="sortable-list"
+                                @end="actualizarOrden"
+                            >
+                                <li
+                                    v-for="(item, index) in selectedTrainings"
+                                    :key="item.id"
+                                    :class="{ deleting: item.deleting }"
                                 >
-                                </multiselect>
-                            </v-col>
-                        </v-row>
-                        <v-row
-                            ><v-col cols="12">
-                                <draggable
-                                    v-model="selectedTrainings"
-                                    :element="'ul'"
-                                    class="sortable-list"
-                                    @end="actualizarOrden"
-                                >
-                                    <li
-                                        v-for="(
-                                            item, index
-                                        ) in selectedTrainings"
-                                        :key="item.id"
-                                        :class="{ deleting: item.deleting }"
-                                    >
-                                        <div class="item-container">
-                                            <input
-                                                type="number"
-                                                v-model="item.minutes"
-                                                class="item-minutes"
-                                                min="0"
-                                                placeholder="Minutos"
-                                            />
-                                            <span
-                                                class="item-name"
-                                                style="padding: 1%"
-                                                >{{ item.training.name }}</span
-                                            >
-                                        </div>
-                                        <button
-                                            class="delete-button"
-                                            @click="borrarItem(index)"
+                                    <div class="item-container">
+                                        <input
+                                            type="number"
+                                            v-model="item.minutes"
+                                            class="item-minutes"
+                                            min="0"
+                                            placeholder="Minutos"
+                                        />
+                                        <span
+                                            class="item-name"
+                                            style="padding: 1%"
+                                            >{{ item.training.name }}</span
                                         >
-                                            Borrar
-                                        </button>
-                                    </li>
-                                </draggable>
-                            </v-col></v-row
-                        >
-                    </v-form>
+                                    </div>
+                                    <button
+                                        class="delete-button"
+                                        @click="borrarItem(index)"
+                                    >
+                                        Borrar
+                                    </button>
+                                </li>
+                            </draggable>
+                        </v-col></v-row
+                    >
                 </v-card-text>
                 <v-card-actions class="d-flex justify-end">
                     <v-btn
                         type="submit"
+                        aria-label="Agregar"
                         @click="save()"
                         color="rgba(34, 56, 67, 0.85)"
                         dark
@@ -112,12 +109,9 @@ export default {
         localShow: false,
         trainings: [],
         players: [],
-        form: {
-            name: "",
-        },
+        name: "",
         rules: {
             name: [(v) => !!v || "Se requiere un nombre"],
-            date: [(v) => !!v || "Se requiere una fecha"],
         },
 
         valueMultiselect: [],
@@ -159,15 +153,14 @@ export default {
         },
 
         closeAll() {
-            this.$refs.form.reset();
+            this.name = "";
             this.valueMultiselect = [];
             this.selectedTrainings = [];
             this.$emit("input", false);
         },
         async save() {
             console.log(this.form);
-            const isValid = await this.$refs.form.validate();
-            if (isValid) {
+            if (this.name !== "") {
                 if (this.selectedTrainings.length > 0) {
                     for (const element of this.selectedTrainings) {
                         if (
@@ -194,7 +187,7 @@ export default {
                                     {
                                         trainerPlanificationList:
                                             this.selectedTrainings,
-                                        name: this.form.name,
+                                        name: this.name,
                                     },
                                     {
                                         headers: {
@@ -230,7 +223,7 @@ export default {
                     );
                 }
             } else {
-                alert("Escribe un nombre y fecha");
+                alert("Escribe un nombre");
             }
         },
     },

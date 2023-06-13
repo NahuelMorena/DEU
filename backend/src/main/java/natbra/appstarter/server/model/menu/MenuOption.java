@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 public enum MenuOption {
 
 	Home("Home", "/", "mdi-home", SubMenu.General.getName()),
-	About("About", "/about", "mdi-information", SubMenu.General.getName()),
 	Profile("Perfil", "/profile", "mdi-account", SubMenu.General.getName()),
 	Setting("Configuracion", "/setting", "mdi-cog", SubMenu.General.getName()),
 	Users("Usuarios", "/users", "mdi-account-multiple", SubMenu.Admin.getName()),

@@ -7,7 +7,7 @@
                 >
                     <div>Editar Entrenamiento</div>
                     <div>
-                        <v-btn icon @click="closeAll()">
+                        <v-btn icon @click="closeAll()" aria-label="Cerrar">
                             <v-icon>mdi-close</v-icon>
                         </v-btn>
                     </div>
@@ -80,6 +80,7 @@
                 <v-card-actions class="d-flex justify-end">
                     <v-btn
                         type="submit"
+                        aria-label="Guardar"
                         @click="save()"
                         color="rgba(34, 56, 67, 0.85)"
                         dark

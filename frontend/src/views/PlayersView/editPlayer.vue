@@ -7,7 +7,7 @@
                 >
                     <div>Editar Jugador</div>
                     <div>
-                        <v-btn icon @click="closeAll()">
+                        <v-btn icon @click="closeAll()" aria-label="Cerrar">
                             <v-icon>mdi-close</v-icon>
                         </v-btn>
                     </div>
@@ -82,6 +82,7 @@
                     <v-btn
                         color="rgba(34, 56, 67, 0.85)"
                         dark
+                        aria-label="Guardar"
                         @click="
                             if ($refs.form.validate()) {
                                 save();
@@ -164,6 +165,12 @@ export default {
             if (index >= 0) this.form.roles.splice(index, 1);
         },
         async save() {
+            if (Number.isInteger(this.form.usertype)) {
+                this.form.usertype = this.allTypes.find(
+                    (usertype) => usertype.id === this.form.usertype
+                );
+            }
+
             this.form.telephone = parseInt(this.form.telephone);
             let response = await localAxios.put("/admin/users", this.form);
             let newUser = response.data;

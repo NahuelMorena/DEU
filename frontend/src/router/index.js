@@ -25,11 +25,7 @@ const routes = [
                 name: "Home",
                 component: HomeView,
             },
-            {
-                path: "/about",
-                name: "About",
-                component: () => import("@/views/AboutView.vue"),
-            },
+
             {
                 path: "/users",
                 name: "Users",

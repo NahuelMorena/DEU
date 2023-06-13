@@ -43,6 +43,7 @@
                                             v-bind="attrs"
                                             v-on="on"
                                             icon
+                                            aria-label="Editar entrenamiento"
                                             @click="editTraining(item)"
                                         >
                                             <v-icon>mdi-pencil</v-icon>
@@ -58,6 +59,7 @@
                                             v-bind="attrs"
                                             v-on="on"
                                             icon
+                                            aria-label="Borrar entrenamiento"
                                             @click="deleteTraining(item)"
                                         >
                                             <v-icon>mdi-delete</v-icon>
@@ -83,8 +85,16 @@
                     ¿Deseas eliminar el entrenamiento seleccionado?
                 </v-card-title>
                 <v-card-actions>
-                    <v-btn color="error" @click="confirmDelete">Eliminar</v-btn>
-                    <v-btn text @click="dialogs.deleteTraining = false"
+                    <v-btn
+                        color="error"
+                        @click="confirmDelete"
+                        aria-label="Eliminar"
+                        >Eliminar</v-btn
+                    >
+                    <v-btn
+                        text
+                        @click="dialogs.deleteTraining = false"
+                        aria-label="Cancelar"
                         >Cancelar</v-btn
                     >
                 </v-card-actions>

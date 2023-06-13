@@ -7,69 +7,69 @@
                 >
                     <div>Agregar usuarios a la planificacion</div>
                     <div>
-                        <v-btn icon @click="closeAll()">
+                        <v-btn icon @click="closeAll()" aria-label="Cerrar">
                             <v-icon>mdi-close</v-icon>
                         </v-btn>
                     </div>
                 </v-card-title>
                 <v-card-text>
-                    <v-form ref="form" @submit.prevent="addUserPlanification">
-                        <v-row>
-                            <v-col cols="12">
-                                <multiselect
-                                    v-model="valueMultiselect"
-                                    placeholder="Seleccione jugadores a los que se les asignara"
-                                    label="name"
-                                    track-by="id"
-                                    :options="players"
-                                    :multiple="true"
-                                    :close-on-select="false"
-                                    @input="onSelect"
-                                    @remove="customRemoveTag"
-                                >
-                                </multiselect>
-                            </v-col>
-                        </v-row>
-                        <v-row>
-                            <v-col cols="12">
-                                <li
-                                    v-for="(item, index) in selectedPlayers"
-                                    :key="item.id"
-                                    :class="{ deleting: item.deleting }"
-                                >
-                                    <div class="item-container">
-                                        <Datepicker
-                                            :rules="rules.date"
-                                            v-model="item.date"
-                                            :label="'Fecha'"
-                                        ></Datepicker>
-                                        <span
-                                            class="item-name"
-                                            style="padding: 1%"
-                                            >{{
-                                                item.user.name +
-                                                " " +
-                                                item.user.surname
-                                            }}</span
-                                        >
-                                    </div>
-                                    <button
-                                        class="delete-button"
-                                        @click="borrarItem(index)"
+                    <v-row>
+                        <v-col cols="12">
+                            <multiselect
+                                v-model="valueMultiselect"
+                                placeholder="Seleccione jugadores a los que se les asignara"
+                                label="name"
+                                track-by="id"
+                                :options="players"
+                                :multiple="true"
+                                :close-on-select="false"
+                                @input="onSelect"
+                                @remove="customRemoveTag"
+                            >
+                            </multiselect>
+                        </v-col>
+                    </v-row>
+                    <v-row>
+                        <v-col cols="12">
+                            <li
+                                v-for="(item, index) in selectedPlayers"
+                                :key="item.id"
+                                :class="{ deleting: item.deleting }"
+                            >
+                                <div class="item-container">
+                                    <Datepicker
+                                        :rules="rules.date"
+                                        v-model="item.date"
+                                        :label="'Fecha'"
+                                    ></Datepicker>
+                                    <span
+                                        class="item-name"
+                                        style="padding: 1%"
+                                        >{{
+                                            item.user.name +
+                                            " " +
+                                            item.user.surname
+                                        }}</span
                                     >
-                                        Borrar<v-icon color="red"
-                                            >mdi-alpha-x</v-icon
-                                        >
-                                    </button>
-                                </li>
-                            </v-col>
-                        </v-row>
-                    </v-form>
+                                </div>
+                                <button
+                                    class="delete-button"
+                                    @click="borrarItem(index)"
+                                    aria-label="Borrar"
+                                >
+                                    Borrar<v-icon color="red"
+                                        >mdi-alpha-x</v-icon
+                                    >
+                                </button>
+                            </li>
+                        </v-col>
+                    </v-row>
                 </v-card-text>
                 <v-card-actions class="d-flex justify-end">
                     <v-btn
                         type="submit"
                         @click="save()"
+                        aria-label="Agregar"
                         color="rgba(34, 56, 67, 0.85)"
                         dark
                         >Agregar</v-btn
@@ -100,9 +100,6 @@ export default {
         selectedPlanification: [],
         selectedPlayers: [],
         players: [],
-        rules: {
-            date: [(v) => !!v || "Se requiere una fecha"],
-        },
 
         valueMultiselect: [],
     }),
@@ -152,65 +149,55 @@ export default {
         },
 
         closeAll() {
-            this.$refs.form.reset();
             this.valueMultiselect = [];
             this.selectedPlayers = [];
             this.$emit("input", false);
         },
 
         async save() {
-            const isValid = await this.$refs.form.validate();
-            if (isValid) {
-                if (this.selectedPlayers.length > 0) {
-                    for (const element of this.selectedPlayers) {
-                        if (
-                            element.date != null &&
-                            this.selectedPlayers.indexOf(element) ===
-                                this.selectedPlayers.length - 1
-                        ) {
-                            for (
-                                let i = 0;
-                                i < this.selectedPlayers.length;
-                                i++
-                            ) {
-                                this.selectedPlayers[i].planification =
-                                    this.selectedPlanification;
-                            }
+            if (this.selectedPlayers.length > 0) {
+                for (const element of this.selectedPlayers) {
+                    if (
+                        element.date != null &&
+                        this.selectedPlayers.indexOf(element) ===
+                            this.selectedPlayers.length - 1
+                    ) {
+                        for (let i = 0; i < this.selectedPlayers.length; i++) {
+                            this.selectedPlayers[i].planification =
+                                this.selectedPlanification;
+                        }
 
-                            //Aca enviamos la planificacion asociada a los jugadores
-                            let response = await localAxios
-                                .post(
-                                    "/admin/users/planifications",
-                                    this.selectedPlayers
-                                )
-                                .then((response) => {
-                                    console.log("RESPONSE FINAL");
-                                    console.log(response);
-                                    // manejar la respuesta del servidor
-                                    this.$emit("saved", response.data);
-                                    this.closeAll();
-                                })
-                                .catch((error) => {
-                                    // manejar errores
-                                });
-                        } else {
-                            if (
-                                this.selectedPlayers.indexOf(element) ===
-                                this.selectedPlayers.length - 1
-                            ) {
-                                alert(
-                                    "Debes ingresar las fechas de la planificacion para cada jugador"
-                                );
-                            }
+                        //Aca enviamos la planificacion asociada a los jugadores
+                        let response = await localAxios
+                            .post(
+                                "/admin/users/planifications",
+                                this.selectedPlayers
+                            )
+                            .then((response) => {
+                                console.log("RESPONSE FINAL");
+                                console.log(response);
+                                // manejar la respuesta del servidor
+                                this.$emit("saved", response.data);
+                                this.closeAll();
+                            })
+                            .catch((error) => {
+                                // manejar errores
+                            });
+                    } else {
+                        if (
+                            this.selectedPlayers.indexOf(element) ===
+                            this.selectedPlayers.length - 1
+                        ) {
+                            alert(
+                                "Debes ingresar las fechas de la planificacion para cada jugador"
+                            );
                         }
                     }
-                } else {
-                    alert(
-                        "Se requieren los jugadores y/o entrenamientos que asignara la planificacion"
-                    );
                 }
             } else {
-                alert("Escribe un nombre y fecha");
+                alert(
+                    "Se requieren los jugadores y/o entrenamientos que asignara la planificacion"
+                );
             }
         },
     },

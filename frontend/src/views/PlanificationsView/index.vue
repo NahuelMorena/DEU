@@ -13,6 +13,7 @@
                         <v-btn
                             color="rgba(34, 56, 67, 0.85)"
                             dark
+                            aria-label="Agregar planificacion"
                             @click="dialogs.addPlanification = true"
                         >
                             Agregar planificacion
@@ -39,6 +40,7 @@
                                             v-bind="attrs"
                                             v-on="on"
                                             icon
+                                            aria-label="Agregar usuarios a planificacion"
                                             @click="addUserPlanification(item)"
                                         >
                                             <v-icon>mdi-account-plus</v-icon>
@@ -57,6 +59,7 @@
                                             v-bind="attrs"
                                             v-on="on"
                                             icon
+                                            aria-label="Editar asignacion de usuarios a planificacion"
                                             @click="editUserPlanification(item)"
                                         >
                                             <v-icon>mdi-account-edit</v-icon>
@@ -75,6 +78,7 @@
                                             v-bind="attrs"
                                             v-on="on"
                                             icon
+                                            aria-label="Editar planificacion"
                                             @click="editPlanification(item)"
                                         >
                                             <v-icon>mdi-pencil</v-icon>
@@ -90,6 +94,7 @@
                                             v-bind="attrs"
                                             v-on="on"
                                             icon
+                                            aria-label="Borrar planificacion"
                                             @click="deletePlanification(item)"
                                         >
                                             <v-icon>mdi-delete</v-icon>
@@ -133,7 +138,7 @@
                 </v-card-title>
                 <v-card-actions>
                     <v-btn color="error" @click="confirmDelete">Eliminar</v-btn>
-                    <v-btn text @click="dialogs.deleteTraining = false"
+                    <v-btn text @click="dialogs.deletePlanification = false"
                         >Cancelar</v-btn
                     >
                 </v-card-actions>
