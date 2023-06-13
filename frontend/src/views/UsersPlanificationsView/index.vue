@@ -91,7 +91,13 @@
         >
             <v-card>
                 <v-card-title class="headline">
-                    Agregar/Editar calificacion
+                    <div>Agregar/Editar calificacion</div>
+
+                    <div>
+                        <v-btn icon @click="close()">
+                            <v-icon>mdi-close</v-icon>
+                        </v-btn>
+                    </div>
                 </v-card-title>
                 <v-card-text>
                     <v-form ref="form">
@@ -281,6 +287,9 @@ export default {
         this.user_planifications = response.data;
     },
     methods: {
+        close() {
+            this.dialogs.AddCalification.show = false;
+        },
         formatDate(date) {
             // const formattedDate = moment(date).format("DD/MM/YYYY");
             // Aquí puedes utilizar alguna librería de manipulación de fechas como moment.js o date-fns

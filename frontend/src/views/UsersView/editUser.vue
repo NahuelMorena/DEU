@@ -47,8 +47,8 @@
                             </v-col>
                             <v-col cols="3">
                                 <v-select
-                                    :rules="rules.user_type"
-                                    v-model="form.user_type"
+                                    :rules="rules.usertype"
+                                    v-model="form.usertype"
                                     :items="allTypes"
                                     item-text="name"
                                     item-value="id"
@@ -161,7 +161,7 @@ export default {
             telephone: "",
             email: "",
             username: "",
-            user_type: null,
+            usertype: null,
             password: "",
             birthdate: null,
             roles: [],
@@ -188,6 +188,9 @@ export default {
         user: function (val) {
             this.form = { ...val };
             this.form.birthdate = moment(val.birthdate).format("YYYY-MM-DD");
+            this.form.usertype = this.allTypes.find(
+                (type) => type.id === val.usertype.id
+            );
         },
     },
     async mounted() {

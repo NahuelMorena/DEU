@@ -56,8 +56,8 @@
                             </v-col>
                             <v-col cols="6">
                                 <v-select
-                                    :rules="rules.user_type"
-                                    v-model="form.user_type"
+                                    :rules="rules.usertype"
+                                    v-model="form.usertype"
                                     :items="allTypes"
                                     item-text="name"
                                     item-value="id"
@@ -116,7 +116,7 @@ export default {
             telephone: "",
             email: "",
             username: "",
-            user_type: null,
+            usertype: null,
             password: "",
             birthdate: null,
             roles: [],
@@ -133,7 +133,7 @@ export default {
             ],
             birthdate: [(v) => !!v || "Se requiere una fecha de nacimiento"],
             username: [(v) => !!v || "Se requiere un nombre de usuario"],
-            user_type: [(v) => !!v || "Se requiere la seleccion del tipo"],
+            usertype: [(v) => !!v || "Se requiere la seleccion del tipo"],
         },
     }),
     watch: {
@@ -143,15 +143,24 @@ export default {
         user: function (val) {
             this.form = { ...val };
             this.form.birthdate = moment(val.birthdate).format("YYYY-MM-DD");
+            // Buscar el tipo de usuario correspondiente en el array allTypes
+            this.form.usertype = this.allTypes.find(
+                (type) => type.id === val.usertype.id
+            );
         },
     },
     async mounted() {
         let response2 = await localAxios.get("/admin/users/get-types");
         this.allTypes = response2.data;
+        let response = await localAxios.get("/admin/roles");
+        this.allRoles = response.data;
     },
     methods: {
         closeAll() {
-            this.$refs.form.reset();
+            this.form = { ...this.user };
+            this.form.birthdate = moment(this.user.birthdate).format(
+                "YYYY-MM-DD"
+            );
             this.$emit("input", false);
         },
         remove(role) {

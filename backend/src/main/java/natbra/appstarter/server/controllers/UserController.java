@@ -31,12 +31,7 @@ private final String baseUrl = "/admin/users";
 	public HttpEntity<List<User>> getUsers(){
 		return ResponseEntity.ok(userRepository.findAll());
 	}
-
-	@GetMapping(baseUrl + "/get-user")
-	public HttpEntity<Optional<User>> getUser(){
-		return ResponseEntity.ok(userRepository.findById(utils.getAuthUser().getId()));
-	}
-
+	
 	@GetMapping(baseUrl + "/get-players")
 	public HttpEntity<List<User>> getUsersByTrainerId(){
 		return ResponseEntity.ok(userRepository.findAllByTrainerId(utils.getAuthUser().getId()));
