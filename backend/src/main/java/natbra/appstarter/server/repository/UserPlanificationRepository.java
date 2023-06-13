@@ -7,4 +7,7 @@ import java.util.Set;
 
 public interface UserPlanificationRepository extends JpaRepository<UserPlanification, Long> {
     Set<UserPlanification> findAllByPlanificationId(Long planificationId);
+
+    Set<UserPlanification> findAllByUserId(Long planificationId);
+
 }

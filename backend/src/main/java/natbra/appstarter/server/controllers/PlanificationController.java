@@ -1,6 +1,7 @@
 package natbra.appstarter.server.controllers;
 
 import natbra.appstarter.server.Utils;
+import natbra.appstarter.server.model.auth.User;
 import natbra.appstarter.server.model.train.Planification;
 import natbra.appstarter.server.model.train.TrainerPlanification;
 import natbra.appstarter.server.model.train.UserPlanification;
@@ -42,6 +43,19 @@ public class PlanificationController {
     @PostMapping(baseUrl + "/retrieve")
     public HttpEntity<Set<TrainerPlanification>> getPlanifications(@RequestBody Planification planification){
         return ResponseEntity.ok(trainerPlanificationRepository.findAllByPlanificationId(planification.getId()));
+    }
+
+    @PostMapping(baseUrl + "/retrieve-by-trainer")
+    public HttpEntity<Set<TrainerPlanification>> getPlanificationsByTrainer(@RequestBody User user){
+
+        List<TrainerPlanification> trainerPlanifications = trainerPlanificationRepository.findAll();
+        Set<TrainerPlanification> trainerPlanificationsOfTrainer = new HashSet<TrainerPlanification>();
+        for (TrainerPlanification trainerPlanification : trainerPlanifications) {
+            if(trainerPlanification.getTraining().getUser().getId() == user.getId()){
+                trainerPlanificationsOfTrainer.add(trainerPlanification);
+            }
+        }
+        return ResponseEntity.ok(trainerPlanificationsOfTrainer);
     }
 
     @DeleteMapping(baseUrl)
