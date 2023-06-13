@@ -164,8 +164,6 @@ export default {
             if (index >= 0) this.form.roles.splice(index, 1);
         },
         async save() {
-            const role = this.allRoles.find((item) => item.name === "USER");
-            this.form.roles.push(role);
             this.form.telephone = parseInt(this.form.telephone);
             let response = await localAxios.put("/admin/users", this.form);
             let newUser = response.data;
