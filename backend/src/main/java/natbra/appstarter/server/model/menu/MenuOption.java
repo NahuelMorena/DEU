@@ -14,7 +14,7 @@ public enum MenuOption {
 	Players("Players", "/players", "mdi-account-multiple", SubMenu.Trainer.getName()),
 	Trainings("Trainings", "/trainings", "mdi-account-multiple", SubMenu.Trainer.getName()),
 	Planifications("Planifications", "/planifications", "mdi-account-multiple", SubMenu.Trainer.getName()),
-	UserPlanifications("Users_Planifications", "/users_planifications", "mdi-account-multiple",
+	UsersPlanifications("UsersPlanifications", "/users_planifications", "mdi-account-multiple",
 			SubMenu.Trainer.getName());
 
 	private String name;
