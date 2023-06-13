@@ -110,7 +110,7 @@ const routes = [
             // },
             {
                 path: "/users_planifications",
-                name: "Users_Planifications",
+                name: "UsersPlanifications",
                 component: () => import("../views/UsersPlanificationsView"),
             },
             {
