@@ -71,6 +71,12 @@ public class UserPlanificationController {
         }
     }
 
+    @DeleteMapping(baseUrl + "/calification")
+    public HttpEntity<Calification> deleteCalification(@RequestBody Calification calification){
+        calificationsRepository.delete(calification);
+        return ResponseEntity.ok(calification);
+    }
+
     @PostMapping(baseUrl + "/calification/get-by-players")
     public HttpEntity<Set<Calification>> getCalificationsByPlayers(@RequestBody Set<User> users){
         Set<Calification> califications = new HashSet<Calification>();

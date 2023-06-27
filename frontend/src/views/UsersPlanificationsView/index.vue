@@ -474,22 +474,22 @@ export default {
         },
         deleteCalification(item) {
             this.dialogs.deleteCalification = true;
-            this.calificationToDelete = item;
+            this.calificationToDelete = item.calification;
         },
+
         async confirmDelete() {
             this.dialogs.deleteCalification = false;
-            // let response = await localAxios.delete(
-            //     "/admin/users/planifications/calification",
-            //     {
-            //         data: this.calificationToDelete,
-            //     }
-            // );
-            // if (response.status == 200) {
-            //     const index = this.datatable.items.indexOf(
-            //         this.calificationToDelete
-            //     );
-            //     if (index >= 0) this.datatable.items.splice(index, 1);
-            // }
+            let response = await localAxios.delete(
+                "/admin/users/planifications/calification",
+                { data: this.calificationToDelete }
+            );
+            if (response.status == 200) {
+                const index = this.califications.indexOf(
+                    this.calificationToDelete
+                );
+                if (index >= 0) this.califications.splice(index, 1);
+                this.getUserTrainerPlanifications();
+            }
             this.calificationToDelete = null;
         },
         async AddCalification(item) {
