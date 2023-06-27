@@ -51,6 +51,7 @@
                             <td v-if="authStore.hasAuthority('TRAINER')">
                                 <v-tooltip top>
                                     <template v-slot:activator="{ on, attrs }">
+                                        {{ item.calification }}
                                         <v-btn
                                             v-bind="attrs"
                                             v-on="on"
@@ -172,6 +173,7 @@ export default {
         selectedUser: null,
         users: [],
         authStore: null,
+        califications: null,
         user_planifications: [],
         datatable: {
             items: [],
@@ -226,7 +228,7 @@ export default {
                     value: "training.repetitions_quantity",
                     sortable: null,
                 },
-                { text: "Calificacion", value: "", sortable: null },
+                { text: "Calificacion", value: "calification", sortable: null },
                 { text: "Borrar", value: "", sortable: null },
             ],
             trainings: [],
@@ -245,11 +247,17 @@ export default {
             let responseUsers = await localAxios.get(
                 "/admin/users/get-players"
             );
+
+            let responseCalifications = await localAxios.post(
+                "/admin/users/planifications/calification/get-by-players",
+                responseUsers.data
+            );
             this.users = responseUsers.data;
             let responseTrainerPlanifications = await localAxios.post(
                 "/admin/planifications/retrieve-by-trainer",
                 this.authStore.user.user
             );
+            this.califications = responseCalifications.data;
             this.datatable.items = responseTrainerPlanifications.data;
         } else if (this.authStore.hasAuthority("USER")) {
             response = await localAxios.post(
@@ -260,6 +268,13 @@ export default {
                 "/admin/planifications/retrieve-by-trainer",
                 this.authStore.user.user.trainer
             );
+
+            let responseCalifications = await localAxios.post(
+                "/admin/users/planifications/calification/get-by-player",
+                this.authStore.user.user.id
+            );
+
+            this.califications = responseCalifications.data;
 
             this.user_planifications = response.data;
 
@@ -291,6 +306,7 @@ export default {
                         };
                     });
             this.datatable.items = filteredTrainerPlanifications;
+
             this.datatable.filtered = filteredTrainerPlanifications;
         }
 
@@ -338,15 +354,82 @@ export default {
                 });
             this.datatable.filtered = filteredTrainerPlanifications;
 
+            if (this.authStore.hasAuthority("TRAINER")) {
+                this.datatable.filtered.forEach((item) => {
+                    console.log(item);
+                    // Encontrar la calificación correspondiente por el user_id
+                    let calification = this.califications.find(
+                        (cal) =>
+                            cal.user.id === this.selectedUser.id &&
+                            cal.training.id === item.training.id
+                    );
+                    console.log("ENTRO? ", calification);
+                    // Agregar la propiedad responseCalifications al elemento de datatable.items
+                    if (calification) {
+                        item.calification = calification.note;
+                    } else {
+                        item.calification = null;
+                    }
+                });
+            } else if (this.authStore.hasAuthority("USER")) {
+                //cargamos las calificaciones
+                this.datatable.filtered.forEach((item) => {
+                    let calification = this.califications.find(
+                        (cal) => cal.training.id === item.training.id
+                    );
+
+                    if (calification) {
+                        item.calification = calification.note;
+                    } else {
+                        item.calification = null;
+                    }
+                });
+            }
+
             console.log("ITEMS: ");
             console.log(this.datatable.filtered);
             console.log("USUARIO: ");
             console.log(this.selectedUser);
+            console.log("CALIFICACIONES: ");
+            console.log(this.califications);
         },
 
-        saveCalification() {
-            //aca hay que mandar el post a la base de datos
-            //recibir el resultado y de alguna manera dejarlo mostrado en la tabla, actualizar tabla basicamente con ese resultado
+        async saveCalification() {
+            this.calification = parseInt(this.calification);
+            console.log("NOTA : ", this.calification);
+            console.log("USUARIO : ", this.selectedUser);
+            console.log(
+                "ENTRENAMIENTO : ",
+                this.dialogs.AddCalification.userPlan.training
+            );
+
+            if (this.calification > 0 && this.calification <= 10) {
+                //ARREGLAR
+                await localAxios.put(
+                    "/admin/users/planifications/calification",
+                    {
+                        user_id: this.selectedUser.id,
+                        note: this.calification,
+                        training_id:
+                            this.dialogs.AddCalification.userPlan.training.id,
+                    }
+                );
+
+                const elementoEncontrado = this.datatable.filtered.find(
+                    (item) =>
+                        item.training.id ===
+                        this.dialogs.AddCalification.userPlan.training.id
+                );
+
+                if (elementoEncontrado) {
+                    elementoEncontrado.calification = this.calification;
+                }
+
+                console.log("ITEMS: ");
+                console.log(this.datatable.filtered);
+            } else {
+                alert("Ingrese un numero entre 0 y 10");
+            }
         },
         requestBloqueado() {
             localAxios.get("/api/blocked").then(() => {});

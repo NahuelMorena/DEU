@@ -1,20 +1,23 @@
 package natbra.appstarter.server.controllers;
 
 import natbra.appstarter.server.Utils;
+import natbra.appstarter.server.controllers.requests.AddCalification;
 import natbra.appstarter.server.model.auth.User;
-import natbra.appstarter.server.model.train.Planification;
-import natbra.appstarter.server.model.train.TrainerPlanification;
-import natbra.appstarter.server.model.train.UserPlanification;
+import natbra.appstarter.server.model.train.*;
+import natbra.appstarter.server.repository.CalificationsRepository;
+import natbra.appstarter.server.repository.TrainingRepository;
 import natbra.appstarter.server.repository.UserPlanificationRepository;
+import natbra.appstarter.server.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
+import java.util.NoSuchElementException;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Controller
@@ -25,6 +28,13 @@ public class UserPlanificationController {
     @Autowired
     UserPlanificationRepository userPlanificationRepository;
 
+    @Autowired
+    CalificationsRepository calificationsRepository;
+
+    @Autowired
+    UserRepository userRepository;
+    @Autowired
+    TrainingRepository trainingRepository;
     @Autowired
     Utils utils;
 
@@ -43,6 +53,35 @@ public class UserPlanificationController {
         return ResponseEntity.ok(userPlanificationRepository.findAllByUserId(user.getId()));
     }
 
+    @PutMapping(baseUrl + "/calification")
+    public HttpEntity<Calification> getUserPlanificationsByUserId(@RequestBody AddCalification addCalification){
+        Calification calification = new Calification();
+        User user = userRepository.findById(addCalification.getUser_id()).orElseThrow(NoSuchElementException::new);
+        Training training = trainingRepository.findById(addCalification.getTraining_id()).orElseThrow(NoSuchElementException::new);
+        calification.setNote(addCalification.getNote());
+        calification.setUser(user);
+        calification.setTraining(training);
+        return ResponseEntity.ok(calificationsRepository.save(calification));
+    }
+
+    @PostMapping(baseUrl + "/calification/get-by-players")
+    public HttpEntity<Set<Calification>> getCalificationsByPlayers(@RequestBody Set<User> users){
+        Set<Calification> califications = new HashSet<Calification>();
+        Calification calification;
+        for (User user : users) {
+            califications.addAll(calificationsRepository.findAllByUserId(user.getId()));
+//            for(Calification calification1: calificationsRepository.findAllByUserId(user.getId())){
+//                califications.add(calification1);
+//            }
+        }
+        return ResponseEntity.ok(califications);
+    }
+
+    @PostMapping(baseUrl + "/calification/get-by-player")
+    public HttpEntity<List<Calification>> getCalificationsByPlayer(@RequestBody Long id){
+
+        return ResponseEntity.ok(calificationsRepository.findAllByUserId(id));
+    }
     @PostMapping(baseUrl + "/retrieve-by-trainer")
     public HttpEntity<Set<UserPlanification>> getUserPlanificationsByTrainerId(@RequestBody User user){
         List<UserPlanification> userPlanifications = userPlanificationRepository.findAll();

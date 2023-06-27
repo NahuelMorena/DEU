@@ -1,7 +1,11 @@
 package natbra.appstarter.server.model.auth;
 
+import natbra.appstarter.server.model.train.Calification;
+import natbra.appstarter.server.model.train.TrainerPlanification;
+
 import java.sql.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.*;
 
@@ -35,6 +39,9 @@ public class User {
     @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name = "id_user_type")
     private UserType usertype;
+
+    @OneToMany(mappedBy = "user",fetch=FetchType.EAGER)
+    private Set<Calification> califications;
 
     public User() {}
 

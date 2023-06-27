@@ -35,6 +35,9 @@ public class Training {
     @JoinColumn(name = "id_user")
     private User user;
 
+	@OneToMany(mappedBy = "training")
+	private Set<Calification> califications;
+
 	public Training() {
 		// TODO Auto-generated constructor stub
 	}
