@@ -3,6 +3,8 @@ package natbra.appstarter.server.model.train;
 import natbra.appstarter.server.model.auth.User;
 
 import javax.persistence.*;
+import java.util.List;
+
 @Entity
 @Table(name="trainer_planifications")
 public class TrainerPlanification {
@@ -19,6 +21,9 @@ public class TrainerPlanification {
     @ManyToOne(fetch= FetchType.EAGER)
     @JoinColumn(name = "id_planification")
     private Planification planification;
+
+    @OneToMany(mappedBy = "trainerPlanification")
+    private List<Calification> califications;
 
     private Integer orderNumber;
 

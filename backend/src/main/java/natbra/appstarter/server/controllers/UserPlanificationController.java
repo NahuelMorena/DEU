@@ -4,10 +4,7 @@ import natbra.appstarter.server.Utils;
 import natbra.appstarter.server.controllers.requests.AddCalification;
 import natbra.appstarter.server.model.auth.User;
 import natbra.appstarter.server.model.train.*;
-import natbra.appstarter.server.repository.CalificationsRepository;
-import natbra.appstarter.server.repository.TrainingRepository;
-import natbra.appstarter.server.repository.UserPlanificationRepository;
-import natbra.appstarter.server.repository.UserRepository;
+import natbra.appstarter.server.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +27,8 @@ public class UserPlanificationController {
 
     @Autowired
     CalificationsRepository calificationsRepository;
-
+    @Autowired
+    TrainerPlanificationRepository trainerPlanificationRepository;
     @Autowired
     UserRepository userRepository;
     @Autowired
@@ -58,10 +56,19 @@ public class UserPlanificationController {
         Calification calification = new Calification();
         User user = userRepository.findById(addCalification.getUser_id()).orElseThrow(NoSuchElementException::new);
         Training training = trainingRepository.findById(addCalification.getTraining_id()).orElseThrow(NoSuchElementException::new);
+        TrainerPlanification trainerPlanification = trainerPlanificationRepository.findById(addCalification.getTrainer_planification_id()).orElseThrow(NoSuchElementException::new);
         calification.setNote(addCalification.getNote());
         calification.setUser(user);
+        calification.setTrainerPlanification(trainerPlanification);
         calification.setTraining(training);
-        return ResponseEntity.ok(calificationsRepository.save(calification));
+
+        if(calificationsRepository.existsByUserAndTrainingAndTrainerPlanification(calification.getUser(),calification.getTraining(),calification.getTrainerPlanification())){
+            Calification calificationToReplace = calificationsRepository.findByUserAndTrainingAndTrainerPlanification(calification.getUser(),calification.getTraining(),calification.getTrainerPlanification());
+            calificationToReplace.setNote(addCalification.getNote());
+            return ResponseEntity.ok(calificationsRepository.save(calificationToReplace));
+        }else{
+            return ResponseEntity.ok(calificationsRepository.save(calification));
+        }
     }
 
     @PostMapping(baseUrl + "/calification/get-by-players")
@@ -78,9 +85,9 @@ public class UserPlanificationController {
     }
 
     @PostMapping(baseUrl + "/calification/get-by-player")
-    public HttpEntity<List<Calification>> getCalificationsByPlayer(@RequestBody Long id){
+    public HttpEntity<Set<Calification>> getCalificationsByPlayer(@RequestBody User user){
 
-        return ResponseEntity.ok(calificationsRepository.findAllByUserId(id));
+        return ResponseEntity.ok(calificationsRepository.findAllByUserId(user.getId()));
     }
     @PostMapping(baseUrl + "/retrieve-by-trainer")
     public HttpEntity<Set<UserPlanification>> getUserPlanificationsByTrainerId(@RequestBody User user){

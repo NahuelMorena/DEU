@@ -22,6 +22,9 @@ public class Calification {
     private User user;
 
     @ManyToOne(fetch= FetchType.EAGER)
+    @JoinColumn(name = "id_trainer_planification")
+    private TrainerPlanification trainerPlanification;
+    @ManyToOne(fetch= FetchType.EAGER)
     @JoinColumn(name = "id_training")
     private Training training;
 
@@ -29,10 +32,11 @@ public class Calification {
 
     }
 
-    public Calification(Long id, Integer note, User user, Training training) {
+    public Calification(Long id, Integer note, User user, TrainerPlanification trainerPlanification, Training training) {
         this.id = id;
         this.note = note;
         this.user = user;
+        this.trainerPlanification = trainerPlanification;
         this.training = training;
     }
 
@@ -58,6 +62,14 @@ public class Calification {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public TrainerPlanification getTrainerPlanification() {
+        return trainerPlanification;
+    }
+
+    public void setTrainerPlanification(TrainerPlanification trainerPlanification) {
+        this.trainerPlanification = trainerPlanification;
     }
 
     public Training getTraining() {

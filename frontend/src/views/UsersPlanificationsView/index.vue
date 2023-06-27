@@ -65,7 +65,7 @@
                                     <span>Agregar/Editar calificacion</span>
                                 </v-tooltip>
                             </td>
-                            <td v-else>NOTA</td>
+                            <td v-else>{{ item.calification }}</td>
                             <td v-if="authStore.hasAuthority('TRAINER')">
                                 <v-tooltip top>
                                     <template v-slot:activator="{ on, attrs }">
@@ -271,7 +271,7 @@ export default {
 
             let responseCalifications = await localAxios.post(
                 "/admin/users/planifications/calification/get-by-player",
-                this.authStore.user.user.id
+                this.authStore.user.user
             );
 
             this.califications = responseCalifications.data;
@@ -300,10 +300,27 @@ export default {
                                 userPlanification.planification.id ===
                                 filteredPlanification.planification.id
                         );
-                        return {
+                        const calificationFound = this.califications.find(
+                            (cal) =>
+                                cal.user.id === this.authStore.user.user.id &&
+                                cal.training.id ===
+                                    filteredPlanification.training.id &&
+                                cal.trainerPlanification.id ===
+                                    filteredPlanification.id
+                        );
+
+                        const modifiedPlanification = {
                             ...filteredPlanification,
                             date: userPlanification.date,
+                            calification: null, // Initialize calification as null
                         };
+
+                        if (calificationFound) {
+                            modifiedPlanification.calification =
+                                calificationFound.note;
+                        }
+
+                        return modifiedPlanification;
                     });
             this.datatable.items = filteredTrainerPlanifications;
 
@@ -331,8 +348,14 @@ export default {
                 (item) => item.user.id === this.selectedUser.id
             );
 
+            let noteToSave = null;
+
+            console.log("CALIFICACIONES: ");
+            console.log(this.califications);
+
             //filtramos los trainer planifications del usuario seleccionado (por medio de los user planifications filtrados arriba)
             //tambien le agarramos el date a esos userplanifications y lo cargamos en el vector para poder mostrar
+            //tambien le agarramos la calificacion a esa trainer planification, trainer y usuario.
             const filteredTrainerPlanifications = this.datatable.items
                 .filter((trainer_planification) =>
                     filteredUser.some(
@@ -347,86 +370,101 @@ export default {
                             userPlanification.planification.id ===
                             filteredPlanification.planification.id
                     );
-                    return {
+                    const calificationFound = this.califications.find(
+                        (cal) =>
+                            cal.user.id === this.selectedUser.id &&
+                            cal.training.id ===
+                                filteredPlanification.training.id &&
+                            cal.trainerPlanification.id ===
+                                filteredPlanification.id
+                    );
+
+                    const modifiedPlanification = {
                         ...filteredPlanification,
                         date: userPlanification.date,
+                        calification: null, // Initialize calification as null
                     };
+
+                    if (calificationFound) {
+                        modifiedPlanification.calification =
+                            calificationFound.note;
+                    }
+
+                    return modifiedPlanification;
                 });
             this.datatable.filtered = filteredTrainerPlanifications;
 
-            if (this.authStore.hasAuthority("TRAINER")) {
-                this.datatable.filtered.forEach((item) => {
-                    console.log(item);
-                    // Encontrar la calificación correspondiente por el user_id
-                    let calification = this.califications.find(
-                        (cal) =>
-                            cal.user.id === this.selectedUser.id &&
-                            cal.training.id === item.training.id
-                    );
-                    console.log("ENTRO? ", calification);
-                    // Agregar la propiedad responseCalifications al elemento de datatable.items
-                    if (calification) {
-                        item.calification = calification.note;
-                    } else {
-                        item.calification = null;
-                    }
-                });
-            } else if (this.authStore.hasAuthority("USER")) {
-                //cargamos las calificaciones
-                this.datatable.filtered.forEach((item) => {
-                    let calification = this.califications.find(
-                        (cal) => cal.training.id === item.training.id
-                    );
+            // if (this.authStore.hasAuthority("TRAINER")) {
+            //     this.datatable.filtered.forEach((item) => {
+            //         console.log("ITEM: ", item);
+            //         // Encontrar la calificación correspondiente por el user_id
+            //         let calification = this.califications.find(
+            //             (cal) =>
+            //                 cal.user.id === this.selectedUser.id &&
+            //                 cal.training.id === item.training.id &&
+            //                 cal.trainerPlanification.id === item.id
+            //         );
+            //         console.log("ENTRO? ", calification);
+            //         // Agregar la propiedad responseCalifications al elemento de datatable.items
+            //         if (calification) {
+            //             item.calification = calification.note;
+            //         } else {
+            //             item.calification = null;
+            //         }
+            //     });
+            // } else if (this.authStore.hasAuthority("USER")) {
+            //     //cargamos las calificaciones
+            //     this.datatable.filtered.forEach((item) => {
+            //         let calification = this.califications.find(
+            //             (cal) =>
+            //                 cal.training.id === item.training.id &&
+            //                 cal.trainerPlanification.id === item.id
+            //         );
 
-                    if (calification) {
-                        item.calification = calification.note;
-                    } else {
-                        item.calification = null;
-                    }
-                });
-            }
+            //         if (calification) {
+            //             item.calification = calification.note;
+            //         } else {
+            //             item.calification = null;
+            //         }
+            //     });
+            // }
 
-            console.log("ITEMS: ");
-            console.log(this.datatable.filtered);
-            console.log("USUARIO: ");
-            console.log(this.selectedUser);
-            console.log("CALIFICACIONES: ");
-            console.log(this.califications);
+            // console.log("ITEMS: ");
+            // console.log(this.datatable.filtered);
+            // console.log("USUARIO: ");
+            // console.log(this.selectedUser);
+            // console.log("CALIFICACIONES: ");
+            // console.log(this.califications);
         },
 
         async saveCalification() {
             this.calification = parseInt(this.calification);
-            console.log("NOTA : ", this.calification);
-            console.log("USUARIO : ", this.selectedUser);
-            console.log(
-                "ENTRENAMIENTO : ",
-                this.dialogs.AddCalification.userPlan.training
-            );
 
             if (this.calification > 0 && this.calification <= 10) {
                 //ARREGLAR
-                await localAxios.put(
+                let newCalification = await localAxios.put(
                     "/admin/users/planifications/calification",
                     {
                         user_id: this.selectedUser.id,
                         note: this.calification,
                         training_id:
                             this.dialogs.AddCalification.userPlan.training.id,
+                        trainer_planification_id:
+                            this.dialogs.AddCalification.userPlan.id,
                     }
                 );
 
-                const elementoEncontrado = this.datatable.filtered.find(
-                    (item) =>
-                        item.training.id ===
-                        this.dialogs.AddCalification.userPlan.training.id
+                let calificationToReplace = this.califications.find(
+                    (cal) => cal.id === newCalification.data.id
                 );
 
-                if (elementoEncontrado) {
-                    elementoEncontrado.calification = this.calification;
+                if (calificationToReplace) {
+                    calificationToReplace.note = newCalification.data.note;
+                } else {
+                    this.califications.push(newCalification.data);
                 }
-
-                console.log("ITEMS: ");
-                console.log(this.datatable.filtered);
+                this.getUserTrainerPlanifications();
+                this.dialogs.AddCalification.show = false;
             } else {
                 alert("Ingrese un numero entre 0 y 10");
             }
