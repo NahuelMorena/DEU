@@ -27,6 +27,10 @@
                     >
                         Ingresar
                     </v-btn>
+                    <div class="text-center mt-3">
+                        ¿No tienes una cuenta?
+                        <a href="#" class="register-link">Registrarse</a>
+                    </div>
                     <v-alert
                         class="mt-3"
                         v-model="loginError"
@@ -66,6 +70,25 @@ export default {
                     console.log(err);
                 });
         },
+        registrarse() {
+            this.$router.push({ name: "Register" });
+        },
     },
 };
 </script>
+
+<style>
+.register-link {
+    color: #2196f3;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.register-link:hover {
+    text-decoration: underline;
+}
+
+.v-btn {
+    margin-top: 20px;
+}
+</style>

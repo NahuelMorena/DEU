@@ -3,6 +3,8 @@ import { AuthStore } from "@/store/auth";
 import { ForbiddenError } from "@/store/errors/forbiddenError";
 import AuthGeneralViewVue from "@/views/AuthGeneralView.vue";
 import LoginViewVue from "@/views/LoginView.vue";
+import RegisterViewVue from "@/views/RegisterView.vue";
+import PlayersRequestsViewVue from "@/views/PlayersRequestsView";
 import Vue from "vue";
 import VueRouter from "vue-router";
 import HomeView from "../views/HomeView.vue";
@@ -15,6 +17,11 @@ const routes = [
         path: "/login",
         name: "Login",
         component: LoginViewVue,
+    },
+    {
+        path: "/register",
+        name: "Register",
+        component: RegisterViewVue,
     },
     {
         path: "/",
@@ -31,10 +38,16 @@ const routes = [
                 name: "Users",
                 component: () => import("../views/UsersView"),
             },
+
             {
                 path: "/security",
                 name: "Security",
                 component: () => import("@/views/SecurityView"),
+            },
+            {
+                path: "/players/requests",
+                name: "PlayersRequests",
+                component: PlayersRequestsViewVue,
             },
             {
                 path: "/players",
