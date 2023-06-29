@@ -29,7 +29,9 @@
                     </v-btn>
                     <div class="text-center mt-3">
                         ¿No tienes una cuenta?
-                        <a href="#" class="register-link">Registrarse</a>
+                        <a href="#" class="register-link" @click="registrarse()"
+                            >Registrarse</a
+                        >
                     </div>
                     <v-alert
                         class="mt-3"
@@ -71,7 +73,7 @@ export default {
                 });
         },
         registrarse() {
-            this.$router.push({ name: "Register" });
+            this.$router.push("/register");
         },
     },
 };

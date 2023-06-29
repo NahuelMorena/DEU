@@ -35,7 +35,7 @@ private final String baseUrl = "/admin/users";
 		return ResponseEntity.ok(userRepository.findAll());
 	}
 
-	@PostMapping(baseUrl + "/register")
+	@PostMapping("/register")
 	public HttpEntity<Boolean> createUserIfNotExists(@RequestBody User user){
 		if(userRepository.existsByUsernameOrEmail(user.getUsername(),user.getEmail())){
 			return ResponseEntity.ok(false);
@@ -47,7 +47,7 @@ private final String baseUrl = "/admin/users";
 
 	}
 
-	@PutMapping(baseUrl + "/register")
+	@PutMapping("/register")
 	public HttpEntity<User> acceptUser(@RequestBody User user){
 		User player = userRepository.findById(user.getId()).orElseThrow(NoSuchElementException::new);
 		Set<Role> roles = new HashSet<>();
@@ -87,7 +87,8 @@ private final String baseUrl = "/admin/users";
 		for(User user : users){
 			roles = user.getRoles();
 			for(Role role : roles){
-				if(role.getName()== "TRAINER"){
+				//Si no anda con ese agarrar ID y comparar con 3L que es lo mismo y me anduvo
+				if(role.getName().equals("TRAINER")){
 					trainers.add(user);
 				}
 			}
@@ -108,8 +109,13 @@ private final String baseUrl = "/admin/users";
 	
 	@PostMapping(baseUrl)
 	public HttpEntity<User> addUser(@RequestBody User user){
-		user.setPassword(encoder.encode(user.getPassword()));
-		return ResponseEntity.ok(userRepository.save(user));
+		if(userRepository.existsByUsernameOrEmail(user.getUsername(),user.getEmail())){
+			return ResponseEntity.ok(null);
+		}else{
+			user.setPassword(encoder.encode(user.getPassword()));
+			return ResponseEntity.ok(userRepository.save(user));
+		}
+
 	}
 
 	@PutMapping(baseUrl)

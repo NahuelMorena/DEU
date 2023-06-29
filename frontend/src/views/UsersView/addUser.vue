@@ -47,8 +47,8 @@
                             </v-col>
                             <v-col cols="3">
                                 <v-select
-                                    :rules="rules.user_type"
-                                    v-model="form.user_type"
+                                    :rules="rules.usertype"
+                                    v-model="form.usertype"
                                     :items="allTypes"
                                     item-text="name"
                                     item-value="id"
@@ -161,7 +161,7 @@ export default {
             telephone: "",
             email: "",
             username: "",
-            user_type: null,
+            usertype: null,
             password: "",
             birthdate: null,
             roles: [],
@@ -178,7 +178,7 @@ export default {
             ],
             birthdate: [(v) => !!v || "Se requiere una fecha de nacimiento"],
             username: [(v) => !!v || "Se requiere un nombre de usuario"],
-            user_type: [(v) => !!v || "Se requiere la seleccion del tipo"],
+            usertype: [(v) => !!v || "Se requiere la seleccion del tipo"],
             password: [(v) => !!v || "Se requiere una contraseña"],
         },
     }),

@@ -122,7 +122,7 @@ export default {
     },
     methods: {
         async acceptPlayer(user) {
-            let response = await localAxios.put("/admin/users/register", user);
+            let response = await localAxios.put("/register", user);
             console.log(response);
             const index = this.datatable.items.indexOf(user);
             if (index >= 0) this.datatable.items.splice(index, 1);

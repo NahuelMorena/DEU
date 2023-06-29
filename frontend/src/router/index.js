@@ -144,10 +144,11 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
     const authStore = AuthStore(pinia);
-    if (!authStore.isLogged() && to.name != "Login") {
+    if (!authStore.isLogged() && to.name != "Login" && to.name != "Register") {
         next({ name: "Login" });
     } else if (
         to.name != "Login" &&
+        to.name != "Register" &&
         !authStore.hasAuthority("CAN_VIEW_" + to.name)
     ) {
         let forbiddenError = ForbiddenError();

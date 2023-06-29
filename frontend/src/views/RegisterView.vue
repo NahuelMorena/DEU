@@ -3,7 +3,7 @@
         <v-col class="d-flex justify-center align-center">
             <v-card style="width: 500px" v-on:keyup.enter="logearse">
                 <v-card-title primary-title class="mb-7">
-                    <div class="text-h4">Iniciar sesion</div>
+                    <div class="text-h4">Registrarse</div>
                 </v-card-title>
                 <v-card-text>
                     <v-form ref="form">
@@ -72,6 +72,7 @@
                                     data-vv-name="select"
                                     label="Tipo de jugador"
                                     required
+                                    return-object
                                 ></v-select>
                             </v-col>
                         </v-row>
@@ -110,7 +111,7 @@
                     </v-card-actions>
                     <div class="text-center mt-3">
                         ¿Ya tienes cuenta?
-                        <a href="#" @click="login" class="register-link"
+                        <a href="#" @click="login()" class="register-link"
                             >Ingresar</a
                         >
                     </div>
@@ -130,11 +131,14 @@
 <script>
 import { localAxios } from "@/axios";
 import { AuthStore } from "../store/auth";
+import Datepicker from "@/components/datepicker.vue";
 export default {
+    components: { Datepicker },
     data: () => ({
         loginError: false,
         showPassword: null,
-        allTypes: null,
+        allTypes: [],
+        allTrainers: [],
         form: {
             name: "",
             surname: "",
@@ -178,7 +182,14 @@ export default {
             localAxios
                 .post("/register", this.form)
                 .then((response) => {
-                    alert("Tu solicitud ha sido enviada al profesor");
+                    console.log(response);
+                    if (response.data) {
+                        alert("Tu solicitud ha sido enviada al profesor");
+                    } else {
+                        alert(
+                            "Este email/username ya hizo el pedido de registrarse o ya esta registrado"
+                        );
+                    }
                 })
                 .catch((err) => {
                     this.loginError = true;
@@ -186,7 +197,7 @@ export default {
                 });
         },
         login() {
-            this.$router.push({ name: "Login" });
+            this.$router.push("/login");
         },
     },
 };
