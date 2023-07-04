@@ -1,6 +1,17 @@
 <template>
     <div>
-        <v-app-bar app flat clipped-left border>
+        <v-app-bar
+            app
+            flat
+            clipped-left
+            border
+            v-if="storeConfig"
+            ref="appBar"
+            :style="{
+                backgroundColor: storeConfig.$state.colorPalette.background,
+                color: storeConfig.$state.colorPalette.text,
+            }"
+        >
             <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
             <v-toolbar-title>Deportes App</v-toolbar-title>
 
@@ -16,7 +27,19 @@
             </v-btn>
         </v-app-bar>
 
-        <v-navigation-drawer persistent :mini-variant="drawer" app clipped dark>
+        <v-navigation-drawer
+            ref="navigationDrawer"
+            persistent
+            v-if="storeConfig"
+            :mini-variant="drawer"
+            app
+            clipped
+            dark
+            :style="{
+                backgroundColor: storeConfig.$state.colorPalette.background,
+                color: storeConfig.$state.colorPalette.text,
+            }"
+        >
             <v-list dense nav v-for="subMenu in subMenuKeys" :key="subMenu">
                 <v-subheader>{{ subMenu }}</v-subheader>
                 <v-list-item
@@ -47,10 +70,12 @@
 <script>
 import { AuthStore } from "@/store/auth";
 import { localAxios } from "@/axios";
+import { StoreConfig } from "@/store/store";
 export default {
     data: () => ({
         items: [],
         drawer: null,
+        storeConfig: null,
     }),
     computed: {
         currentRoute: function () {
@@ -61,6 +86,7 @@ export default {
         },
     },
     mounted() {
+        this.storeConfig = StoreConfig();
         localAxios.get("/menu").then((response) => {
             this.items = this.splitInSubGroups(response.data);
         });
