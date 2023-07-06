@@ -179,22 +179,28 @@ export default {
             // let formdata = new FormData();
             // formdata.append("username", this.username);
             // formdata.append("password", this.password);
-            localAxios
-                .post("/register", this.form)
-                .then((response) => {
-                    console.log(response);
-                    if (response.data) {
-                        alert("Tu solicitud ha sido enviada al profesor");
-                    } else {
-                        alert(
-                            "Este email/username ya hizo el pedido de registrarse o ya esta registrado"
-                        );
-                    }
-                })
-                .catch((err) => {
-                    this.loginError = true;
-                    console.log(err);
-                });
+            const valid = this.$refs.form.validate();
+            if (valid) {
+                console.log("ASd");
+                localAxios
+                    .post("/register", this.form)
+                    .then((response) => {
+                        console.log(response);
+                        if (response.data) {
+                            alert("Tu solicitud ha sido enviada al profesor");
+                        } else {
+                            alert(
+                                "Este email/username ya hizo el pedido de registrarse o ya esta registrado"
+                            );
+                        }
+                    })
+                    .catch((err) => {
+                        this.loginError = true;
+                        console.log(err);
+                    });
+            } else {
+                alert("Ingrese todos los datos correctamente");
+            }
         },
         login() {
             this.$router.push("/login");

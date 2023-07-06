@@ -204,19 +204,27 @@ export default {
         },
         async save() {
             this.form.telephone = parseInt(this.form.telephone);
-            let response = await localAxios
-                .post("/admin/users", this.form)
-                .then((response) => {
-                    if (response.data != null) {
-                        alert("Se creo con exito el usuario");
-                    } else {
-                        alert("Ya existia una cuenta con ese username/email");
-                    }
-                });
+            const valid = this.$refs.form.validate();
+            if (valid) {
+                let response = await localAxios
+                    .post("/admin/users", this.form)
+                    .then((response) => {
+                        if (response.data != null) {
+                            alert("Se creo con exito el usuario");
+                        } else {
+                            alert(
+                                "Ya existia una cuenta con ese username/email"
+                            );
+                        }
+                    });
 
-            let newUser = response.data;
-            this.$emit("saved", newUser);
-            this.closeAll();
+                let newUser = response.data;
+                this.$emit("saved", newUser);
+                this.closeAll();
+            } else {
+                alert("Ingrese todos los datos correctamente");
+                this.$emit("input", false);
+            }
         },
     },
     components: { Datepicker },

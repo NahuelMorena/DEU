@@ -11,10 +11,10 @@ public enum MenuOption {
 	Users("Usuarios", "/users", "mdi-account-multiple", SubMenu.Admin.getName()),
 	Security("Seguridad", "/security", "mdi-key", SubMenu.Admin.getName()),
 	Players("Jugadores", "/players", "mdi-account-multiple", SubMenu.Trainer.getName()),
-	PlayersRequests("Pedidos de jugadores", "/players/requests", "mdi-account-multiple", SubMenu.Trainer.getName()),
-	Trainings("Entrenamientos", "/trainings", "mdi-account-multiple", SubMenu.Trainer.getName()),
-	Planifications("Planificaciones", "/planifications", "mdi-account-multiple", SubMenu.Trainer.getName()),
-	UsersPlanifications("Planificaciones de usuarios", "/users_planifications", "mdi-account-multiple",
+	PlayersRequests("Pedidos de jugadores", "/players/requests", "mdi-account-alert", SubMenu.Trainer.getName()),
+	Trainings("Entrenamientos", "/trainings", "mdi-run", SubMenu.Trainer.getName()),
+	Planifications("Planificaciones", "/planifications", "mdi-file-account", SubMenu.Trainer.getName()),
+	UsersPlanifications("Planificaciones de usuarios", "/users_planifications", "mdi-account-outline",
 			SubMenu.Trainer.getName());
 
 	private String name;

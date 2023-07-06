@@ -5,6 +5,7 @@ export const StoreConfig = defineStore("store", {
         colorPalette: {
             background: "#fffff",
             text: "#000000",
+            textSize: 12,
         },
     }),
     mutations: {
