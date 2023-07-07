@@ -42,7 +42,7 @@ export default {
             console.log(this.background);
             if (this.background) {
                 this.storeConfig.setColorPalette(this.background, this.text);
-                this.snackbarStore.open("Se creo");
+                this.snackbarStore.open("Guardado", "green");
             }
         },
     },
