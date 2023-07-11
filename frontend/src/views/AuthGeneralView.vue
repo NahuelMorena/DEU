@@ -47,6 +47,11 @@
                     :key="j"
                     link
                     :to="option.url"
+                    :style="{
+                        backgroundColor:
+                            storeConfig.$state.colorPalette.background,
+                        color: storeConfig.$state.colorPalette.text,
+                    }"
                 >
                     <v-list-item-icon>
                         <v-icon>{{ option.icon }}</v-icon>

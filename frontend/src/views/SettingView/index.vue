@@ -1,32 +1,64 @@
 <template>
     <div>
-        <h1>Configuraciones</h1>
-        <form
-            @submit.prevent="updateColors"
-            v-if="storeConfig && snackbarStore"
-        >
-            <label>
-                Fondo:
-                <input type="color" v-model="background" />
-            </label>
-            <label>
-                Texto:
-                <input type="color" v-model="text" />
-            </label>
-            <button type="submit">Guardar</button>
-        </form>
+        <HeaderComponent title="Configuraciones" />
+        <v-container class="general-padding">
+            <v-card>
+                <v-card-title> Configuraciones </v-card-title>
+                <v-card-text>
+                    <v-form
+                        @submit.prevent="updateColors"
+                        v-if="storeConfig && snackbarStore"
+                    >
+                        <v-row align="center">
+                            <v-col cols="6">
+                                <div
+                                    class="color-square"
+                                    :style="{ backgroundColor: background }"
+                                    @click="
+                                        showBackgroundPicker =
+                                            !showBackgroundPicker
+                                    "
+                                ></div>
+                                <v-color-picker
+                                    v-model="background"
+                                    v-if="showBackgroundPicker"
+                                ></v-color-picker>
+                            </v-col>
+                            <v-col cols="6">
+                                <div
+                                    class="color-square"
+                                    :style="{ backgroundColor: text }"
+                                    @click="showTextPicker = !showTextPicker"
+                                ></div>
+                                <v-color-picker
+                                    v-model="text"
+                                    v-if="showTextPicker"
+                                ></v-color-picker>
+                            </v-col>
+                        </v-row>
+                        <v-btn color="primary" type="submit">Guardar</v-btn>
+                    </v-form>
+                </v-card-text>
+            </v-card>
+        </v-container>
     </div>
 </template>
 <script>
 import { StoreConfig } from "@/store/store";
 import { SnackbarStore } from "@/store/snackbar";
+import HeaderComponent from "@/components/HeaderComponent.vue";
 
 export default {
+    components: {
+        HeaderComponent,
+    },
     data: () => ({
         background: "",
         text: "",
         storeConfig: null,
         snackbarStore: null,
+        showBackgroundPicker: false,
+        showTextPicker: false,
     }),
 
     mounted() {
@@ -40,7 +72,7 @@ export default {
     methods: {
         updateColors() {
             console.log(this.background);
-            if (this.background) {
+            if (this.background && this.text) {
                 this.storeConfig.setColorPalette(this.background, this.text);
                 this.snackbarStore.open("Guardado", "green");
             }
@@ -48,3 +80,14 @@ export default {
     },
 };
 </script>
+
+<style>
+.color-square {
+    width: 50px;
+    height: 50px;
+    margin-top: 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    border: 2px solid black;
+}
+</style>
