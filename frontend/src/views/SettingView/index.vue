@@ -11,29 +11,38 @@
                     >
                         <v-row align="center">
                             <v-col cols="6">
-                                <div
-                                    class="color-square"
-                                    :style="{ backgroundColor: background }"
-                                    @click="
-                                        showBackgroundPicker =
-                                            !showBackgroundPicker
-                                    "
-                                ></div>
-                                <v-color-picker
-                                    v-model="background"
-                                    v-if="showBackgroundPicker"
-                                ></v-color-picker>
+                                <div class="color-square-container">
+                                    <v-card-subtitle>
+                                        Color fondo
+                                    </v-card-subtitle>
+                                    <div
+                                        ref="colorSquare"
+                                        class="color-square"
+                                        :style="{ backgroundColor: background }"
+                                        @click="toggleColorPicker('background')"
+                                    ></div>
+                                    <v-color-picker
+                                        v-model="background"
+                                        v-if="showBackgroundPicker"
+                                    ></v-color-picker>
+                                </div>
                             </v-col>
                             <v-col cols="6">
-                                <div
-                                    class="color-square"
-                                    :style="{ backgroundColor: text }"
-                                    @click="showTextPicker = !showTextPicker"
-                                ></div>
-                                <v-color-picker
-                                    v-model="text"
-                                    v-if="showTextPicker"
-                                ></v-color-picker>
+                                <div class="color-square-container">
+                                    <v-card-subtitle>
+                                        Color letra
+                                    </v-card-subtitle>
+                                    <div
+                                        ref="textSquare"
+                                        class="color-square"
+                                        :style="{ backgroundColor: text }"
+                                        @click="toggleColorPicker('text')"
+                                    ></div>
+                                    <v-color-picker
+                                        v-model="text"
+                                        v-if="showTextPicker"
+                                    ></v-color-picker>
+                                </div>
                             </v-col>
                         </v-row>
                         <v-btn color="primary" type="submit">Guardar</v-btn>
@@ -68,6 +77,12 @@ export default {
         console.log(this.storeConfig.$state.colorPalette.text);
         this.background = this.storeConfig.$state.colorPalette.background;
         this.text = this.storeConfig.$state.colorPalette.text;
+        // Agregar el listener para el evento click en el documento
+        document.addEventListener("click", this.handleClickOutside);
+    },
+    beforeDestroy() {
+        // Eliminar el listener del evento click en el documento antes de destruir el componente
+        document.removeEventListener("click", this.handleClickOutside);
     },
     methods: {
         updateColors() {
@@ -77,15 +92,50 @@ export default {
                 this.snackbarStore.open("Guardado", "green");
             }
         },
+        toggleColorPicker(type) {
+            if (type === "background") {
+                this.showBackgroundPicker = !this.showBackgroundPicker;
+                this.showTextPicker = false;
+            } else if (type === "text") {
+                this.showTextPicker = !this.showTextPicker;
+                this.showBackgroundPicker = false;
+            }
+        },
+        hideColorPicker(type) {
+            if (type === "background") {
+                this.showBackgroundPicker = false;
+            } else if (type === "text") {
+                this.showTextPicker = false;
+            }
+        },
+        handleClickOutside(event) {
+            // Comprobar si el clic se produce fuera del cuadro de etiqueta y el selector de color
+            const colorSquare = this.$refs.colorSquare;
+            const textSquare = this.$refs.textSquare;
+
+            if (
+                !colorSquare.contains(event.target) &&
+                !textSquare.contains(event.target)
+            ) {
+                this.showBackgroundPicker = false;
+                this.showTextPicker = false;
+            }
+        },
     },
 };
 </script>
 
 <style>
+.color-square-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%; /* Asegura que el contenedor tenga una altura definida */
+}
 .color-square {
     width: 50px;
     height: 50px;
-    margin-top: 20px;
+    margin-top: 10px;
     border-radius: 4px;
     cursor: pointer;
     border: 2px solid black;
