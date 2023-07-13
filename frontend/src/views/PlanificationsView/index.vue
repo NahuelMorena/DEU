@@ -1,113 +1,133 @@
 <template>
     <div>
         <HeaderComponent title="Listado de entrenamientos" />
-        <v-card>
-            <v-card-title> Planificaciones </v-card-title>
-            <v-card-text>
-                <v-text-field
-                    v-model="datatable.search"
-                    label="Buscador"
-                    hide-details
-                >
-                    <template v-slot:append-outer>
-                        <v-btn
-                            color="rgba(34, 56, 67, 0.85)"
-                            dark
-                            aria-label="Agregar planificacion"
-                            @click="dialogs.addPlanification = true"
-                        >
-                            Agregar planificacion
-                        </v-btn>
-                    </template>
-                </v-text-field>
-                <v-data-table
-                    :headers="datatable.headers"
-                    :items="datatable.items"
-                    :search="datatable.search"
-                    :items-per-page="10"
-                    :sort-by="['date']"
-                    :sort-asc="true"
-                    item-key="id"
-                    class="elevation-0"
-                >
-                    <template v-slot:item="{ item }">
-                        <tr>
-                            <td>{{ item.name }}</td>
-                            <td>
-                                <v-tooltip top>
-                                    <template v-slot:activator="{ on, attrs }">
-                                        <v-btn
-                                            v-bind="attrs"
-                                            v-on="on"
-                                            icon
-                                            aria-label="Agregar usuarios a planificacion"
-                                            @click="addUserPlanification(item)"
+        <v-container class="general-padding">
+            <v-card>
+                <v-card-title> Planificaciones </v-card-title>
+                <v-card-text>
+                    <v-text-field
+                        v-model="datatable.search"
+                        label="Buscador"
+                        hide-details
+                    >
+                        <template v-slot:append-outer>
+                            <v-btn
+                                color="rgba(34, 56, 67, 0.85)"
+                                dark
+                                aria-label="Agregar planificacion"
+                                @click="dialogs.addPlanification = true"
+                            >
+                                Agregar planificacion
+                            </v-btn>
+                        </template>
+                    </v-text-field>
+                    <v-data-table
+                        :headers="datatable.headers"
+                        :items="datatable.items"
+                        :search="datatable.search"
+                        :items-per-page="10"
+                        :sort-by="['date']"
+                        :sort-asc="true"
+                        item-key="id"
+                        class="elevation-0"
+                    >
+                        <template v-slot:item="{ item }">
+                            <tr>
+                                <td>{{ item.name }}</td>
+                                <td>
+                                    <v-tooltip top>
+                                        <template
+                                            v-slot:activator="{ on, attrs }"
                                         >
-                                            <v-icon>mdi-account-plus</v-icon>
-                                        </v-btn>
-                                    </template>
-                                    <span
-                                        >Agregar usuarios a esta
-                                        planificacion</span
-                                    >
-                                </v-tooltip>
-                            </td>
-                            <td>
-                                <v-tooltip top>
-                                    <template v-slot:activator="{ on, attrs }">
-                                        <v-btn
-                                            v-bind="attrs"
-                                            v-on="on"
-                                            icon
-                                            aria-label="Editar asignacion de usuarios a planificacion"
-                                            @click="editUserPlanification(item)"
+                                            <v-btn
+                                                v-bind="attrs"
+                                                v-on="on"
+                                                icon
+                                                aria-label="Agregar usuarios a planificacion"
+                                                @click="
+                                                    addUserPlanification(item)
+                                                "
+                                            >
+                                                <v-icon>
+                                                    mdi-account-plus
+                                                </v-icon>
+                                            </v-btn>
+                                        </template>
+                                        <span
+                                            >Agregar usuarios a esta
+                                            planificacion</span
                                         >
-                                            <v-icon>mdi-account-edit</v-icon>
-                                        </v-btn>
-                                    </template>
-                                    <span
-                                        >Editar asignaciones de usuarios a esta
-                                        planificacion</span
-                                    >
-                                </v-tooltip>
-                            </td>
-                            <td>
-                                <v-tooltip top>
-                                    <template v-slot:activator="{ on, attrs }">
-                                        <v-btn
-                                            v-bind="attrs"
-                                            v-on="on"
-                                            icon
-                                            aria-label="Editar planificacion"
-                                            @click="editPlanification(item)"
+                                    </v-tooltip>
+                                </td>
+                                <td>
+                                    <v-tooltip top>
+                                        <template
+                                            v-slot:activator="{ on, attrs }"
                                         >
-                                            <v-icon>mdi-pencil</v-icon>
-                                        </v-btn>
-                                    </template>
-                                    <span>Editar planificacion</span>
-                                </v-tooltip>
-                            </td>
-                            <td>
-                                <v-tooltip top>
-                                    <template v-slot:activator="{ on, attrs }">
-                                        <v-btn
-                                            v-bind="attrs"
-                                            v-on="on"
-                                            icon
-                                            aria-label="Borrar planificacion"
-                                            @click="deletePlanification(item)"
+                                            <v-btn
+                                                v-bind="attrs"
+                                                v-on="on"
+                                                icon
+                                                aria-label="Editar asignacion de usuarios a planificacion"
+                                                @click="
+                                                    editUserPlanification(item)
+                                                "
+                                            >
+                                                <v-icon>
+                                                    mdi-account-edit
+                                                </v-icon>
+                                            </v-btn>
+                                        </template>
+                                        <span>
+                                            Editar asignaciones de usuarios a
+                                            esta planificacion
+                                        </span>
+                                    </v-tooltip>
+                                </td>
+                                <td>
+                                    <v-tooltip top>
+                                        <template
+                                            v-slot:activator="{ on, attrs }"
                                         >
-                                            <v-icon>mdi-delete</v-icon>
-                                        </v-btn>
-                                    </template>
-                                    <span>Borrar planificacion</span>
-                                </v-tooltip>
-                            </td>
-                        </tr>
-                    </template>
-                </v-data-table>
-            </v-card-text>
-        </v-card>
+                                            <v-btn
+                                                v-bind="attrs"
+                                                v-on="on"
+                                                icon
+                                                aria-label="Editar planificacion"
+                                                @click="editPlanification(item)"
+                                            >
+                                                <v-icon>mdi-pencil</v-icon>
+                                            </v-btn>
+                                        </template>
+                                        <span>Editar planificacion</span>
+                                    </v-tooltip>
+                                </td>
+                                <td>
+                                    <v-tooltip top>
+                                        <template
+                                            v-slot:activator="{ on, attrs }"
+                                        >
+                                            <v-btn
+                                                v-bind="attrs"
+                                                v-on="on"
+                                                icon
+                                                aria-label="Borrar planificacion"
+                                                @click="
+                                                    deletePlanification(item)
+                                                "
+                                            >
+                                                <v-icon>mdi-delete</v-icon>
+                                            </v-btn>
+                                        </template>
+                                        <span>Borrar planificacion</span>
+                                    </v-tooltip>
+                                </td>
+                            </tr>
+                        </template>
+                    </v-data-table>
+                </v-card-text>
+            </v-card>
+        </v-container>
         <AddPlanification
             v-model="dialogs.addPlanification"
             @saved="newPlanificationSaved"

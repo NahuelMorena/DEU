@@ -3,90 +3,100 @@
         <HeaderComponent
             title="Planificacion de entrenamientos para el usuario"
         />
-        <v-card v-if="datatable.items && authStore">
-            <v-card-title> Usuario </v-card-title>
-            <v-card-text>
-                <v-row>
-                    <v-col cols="12" md="4">
-                        <v-autocomplete
-                            v-if="authStore.hasAuthority('TRAINER')"
-                            :items="users"
-                            :item-text="
-                                (user) => `${user.name} ${user.surname}`
-                            "
-                            return-object
-                            v-model="selectedUser"
-                            @change="getUserTrainerPlanifications()"
-                            label="Seleccionar usuario"
-                            outlined
-                        />
-                    </v-col>
-                </v-row>
-                <v-text-field
-                    v-model="datatable.search"
-                    label="Buscador"
-                    hide-details
-                >
-                </v-text-field>
-                <v-data-table
-                    :headers="datatable.headers"
-                    :items="datatable.filtered"
-                    :search="datatable.search"
-                    :items-per-page="10"
-                    :sort-by="['planification.name', 'date', 'orderNumber']"
-                    :sort-desc="true"
-                    class="elevation-0"
-                >
-                    <template v-slot:item="{ item }">
-                        <tr>
-                            <td>{{ formatDate(item.date) }}</td>
-                            <td>{{ item.planification.name }}</td>
-                            <td>{{ item.training.name }}</td>
-                            <td>{{ item.orderNumber }}</td>
-                            <td>{{ item.minutes }}</td>
-                            <td>{{ item.training.description }}</td>
-                            <td>{{ item.training.training_type.name }}</td>
-                            <td>{{ item.training.warmup_time }}</td>
-                            <td>{{ item.training.repetitions_quantity }}</td>
-                            <td v-if="authStore.hasAuthority('TRAINER')">
-                                <v-tooltip top>
-                                    <template v-slot:activator="{ on, attrs }">
-                                        {{ item.calification }}
-                                        <v-btn
-                                            v-bind="attrs"
-                                            v-on="on"
-                                            icon
-                                            aria-label="Agregar Calificacion"
-                                            @click="AddCalification(item)"
+        <v-container class="general-padding">
+            <v-card v-if="datatable.items && authStore">
+                <v-card-title> Usuario </v-card-title>
+                <v-card-text>
+                    <v-row>
+                        <v-col cols="12" md="4">
+                            <v-autocomplete
+                                v-if="authStore.hasAuthority('TRAINER')"
+                                :items="users"
+                                :item-text="
+                                    (user) => `${user.name} ${user.surname}`
+                                "
+                                return-object
+                                v-model="selectedUser"
+                                @change="getUserTrainerPlanifications()"
+                                label="Seleccionar usuario"
+                                outlined
+                            />
+                        </v-col>
+                    </v-row>
+                    <v-text-field
+                        v-model="datatable.search"
+                        label="Buscador"
+                        hide-details
+                    >
+                    </v-text-field>
+                    <v-data-table
+                        :headers="datatable.headers"
+                        :items="datatable.filtered"
+                        :search="datatable.search"
+                        :items-per-page="10"
+                        :sort-by="['planification.name', 'date', 'orderNumber']"
+                        :sort-desc="true"
+                        class="elevation-0"
+                    >
+                        <template v-slot:item="{ item }">
+                            <tr>
+                                <td>{{ formatDate(item.date) }}</td>
+                                <td>{{ item.planification.name }}</td>
+                                <td>{{ item.training.name }}</td>
+                                <td>{{ item.orderNumber }}</td>
+                                <td>{{ item.minutes }}</td>
+                                <td>{{ item.training.description }}</td>
+                                <td>{{ item.training.training_type.name }}</td>
+                                <td>{{ item.training.warmup_time }}</td>
+                                <td>
+                                    {{ item.training.repetitions_quantity }}
+                                </td>
+                                <td v-if="authStore.hasAuthority('TRAINER')">
+                                    <v-tooltip top>
+                                        <template
+                                            v-slot:activator="{ on, attrs }"
                                         >
-                                            <v-icon>mdi-pencil</v-icon>
-                                        </v-btn>
-                                    </template>
-                                    <span>Agregar/Editar calificacion</span>
-                                </v-tooltip>
-                            </td>
-                            <td v-else>{{ item.calification }}</td>
-                            <td v-if="authStore.hasAuthority('TRAINER')">
-                                <v-tooltip top>
-                                    <template v-slot:activator="{ on, attrs }">
-                                        <v-btn
-                                            v-bind="attrs"
-                                            v-on="on"
-                                            aria-label="Borrar Calificacion"
-                                            icon
-                                            @click="deleteCalification(item)"
+                                            {{ item.calification }}
+                                            <v-btn
+                                                v-bind="attrs"
+                                                v-on="on"
+                                                icon
+                                                aria-label="Agregar Calificacion"
+                                                @click="AddCalification(item)"
+                                            >
+                                                <v-icon>mdi-pencil</v-icon>
+                                            </v-btn>
+                                        </template>
+                                        <span>Agregar/Editar calificacion</span>
+                                    </v-tooltip>
+                                </td>
+                                <td v-else>{{ item.calification }}</td>
+                                <td v-if="authStore.hasAuthority('TRAINER')">
+                                    <v-tooltip top>
+                                        <template
+                                            v-slot:activator="{ on, attrs }"
                                         >
-                                            <v-icon>mdi-delete</v-icon>
-                                        </v-btn>
-                                    </template>
-                                    <span>Borrar calificacion</span>
-                                </v-tooltip>
-                            </td>
-                        </tr>
-                    </template>
-                </v-data-table>
-            </v-card-text>
-        </v-card>
+                                            <v-btn
+                                                v-bind="attrs"
+                                                v-on="on"
+                                                aria-label="Borrar Calificacion"
+                                                icon
+                                                @click="
+                                                    deleteCalification(item)
+                                                "
+                                            >
+                                                <v-icon>mdi-delete</v-icon>
+                                            </v-btn>
+                                        </template>
+                                        <span>Borrar calificacion</span>
+                                    </v-tooltip>
+                                </td>
+                            </tr>
+                        </template>
+                    </v-data-table>
+                </v-card-text>
+            </v-card>
+        </v-container>
         <v-dialog
             v-model="dialogs.AddCalification.show"
             persistent

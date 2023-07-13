@@ -110,6 +110,8 @@ export default {
         console.log(this.storeConfig.$state.colorPalette.text);
         this.background = this.storeConfig.$state.colorPalette.background;
         this.text = this.storeConfig.$state.colorPalette.text;
+        this.titleSize = this.storeConfig.$state.colorPalette.titleSize;
+        this.fontSize = this.storeConfig.$state.colorPalette.fontSize;
         // Agregar el listener para el evento click en el documento
         document.addEventListener("click", this.handleClickOutside);
     },

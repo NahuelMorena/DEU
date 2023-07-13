@@ -1,78 +1,84 @@
 <template>
     <div>
         <HeaderComponent title="Listado de entrenamientos" />
-        <v-card>
-            <v-card-title> Entrenamientos </v-card-title>
-            <v-card-text>
-                <v-text-field
-                    v-model="datatable.search"
-                    label="Buscador"
-                    hide-details
-                >
-                    <template v-slot:append-outer>
-                        <v-btn
-                            color="rgba(34, 56, 67, 0.85)"
-                            dark
-                            @click="dialogs.addTraining = true"
-                        >
-                            Agregar entrenamiento
-                        </v-btn>
-                    </template>
-                </v-text-field>
-                <v-data-table
-                    :headers="datatable.headers"
-                    :items="datatable.items"
-                    :search="datatable.search"
-                    :items-per-page="10"
-                    :sort-by="['date']"
-                    :sort-asc="true"
-                    class="elevation-0"
-                >
-                    <template v-slot:item="{ item }">
-                        <tr>
-                            <td>{{ item.date }}</td>
-                            <td>{{ item.name }}</td>
-                            <td>{{ item.description }}</td>
-                            <td>{{ item.training_type.name }}</td>
-                            <td>{{ item.warmup_time }}</td>
-                            <td>{{ item.repetitions_quantity }}</td>
-                            <td>
-                                <v-tooltip top>
-                                    <template v-slot:activator="{ on, attrs }">
-                                        <v-btn
-                                            v-bind="attrs"
-                                            v-on="on"
-                                            icon
-                                            aria-label="Editar entrenamiento"
-                                            @click="editTraining(item)"
+        <v-container class="general-padding">
+            <v-card>
+                <v-card-title> Entrenamientos </v-card-title>
+                <v-card-text>
+                    <v-text-field
+                        v-model="datatable.search"
+                        label="Buscador"
+                        hide-details
+                    >
+                        <template v-slot:append-outer>
+                            <v-btn
+                                color="rgba(34, 56, 67, 0.85)"
+                                dark
+                                @click="dialogs.addTraining = true"
+                            >
+                                Agregar entrenamiento
+                            </v-btn>
+                        </template>
+                    </v-text-field>
+                    <v-data-table
+                        :headers="datatable.headers"
+                        :items="datatable.items"
+                        :search="datatable.search"
+                        :items-per-page="10"
+                        :sort-by="['date']"
+                        :sort-asc="true"
+                        class="elevation-0"
+                    >
+                        <template v-slot:item="{ item }">
+                            <tr>
+                                <td>{{ item.date }}</td>
+                                <td>{{ item.name }}</td>
+                                <td>{{ item.description }}</td>
+                                <td>{{ item.training_type.name }}</td>
+                                <td>{{ item.warmup_time }}</td>
+                                <td>{{ item.repetitions_quantity }}</td>
+                                <td>
+                                    <v-tooltip top>
+                                        <template
+                                            v-slot:activator="{ on, attrs }"
                                         >
-                                            <v-icon>mdi-pencil</v-icon>
-                                        </v-btn>
-                                    </template>
-                                    <span>Editar entrenamiento</span>
-                                </v-tooltip>
-                            </td>
-                            <td>
-                                <v-tooltip top>
-                                    <template v-slot:activator="{ on, attrs }">
-                                        <v-btn
-                                            v-bind="attrs"
-                                            v-on="on"
-                                            icon
-                                            aria-label="Borrar entrenamiento"
-                                            @click="deleteTraining(item)"
+                                            <v-btn
+                                                v-bind="attrs"
+                                                v-on="on"
+                                                icon
+                                                aria-label="Editar entrenamiento"
+                                                @click="editTraining(item)"
+                                            >
+                                                <v-icon>mdi-pencil</v-icon>
+                                            </v-btn>
+                                        </template>
+                                        <span>Editar entrenamiento</span>
+                                    </v-tooltip>
+                                </td>
+                                <td>
+                                    <v-tooltip top>
+                                        <template
+                                            v-slot:activator="{ on, attrs }"
                                         >
-                                            <v-icon>mdi-delete</v-icon>
-                                        </v-btn>
-                                    </template>
-                                    <span>Borrar entrenamiento</span>
-                                </v-tooltip>
-                            </td>
-                        </tr>
-                    </template>
-                </v-data-table>
-            </v-card-text>
-        </v-card>
+                                            <v-btn
+                                                v-bind="attrs"
+                                                v-on="on"
+                                                icon
+                                                aria-label="Borrar entrenamiento"
+                                                @click="deleteTraining(item)"
+                                            >
+                                                <v-icon>mdi-delete</v-icon>
+                                            </v-btn>
+                                        </template>
+                                        <span>Borrar entrenamiento</span>
+                                    </v-tooltip>
+                                </td>
+                            </tr>
+                        </template>
+                    </v-data-table>
+                </v-card-text>
+            </v-card>
+        </v-container>
         <AddTraining v-model="dialogs.addTraining" @saved="newTrainingSaved" />
         <EditTraining
             v-model="dialogs.editTraining.show"
