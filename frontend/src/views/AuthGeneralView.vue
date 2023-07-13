@@ -13,7 +13,9 @@
             }"
         >
             <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
-            <v-toolbar-title>Deportes App</v-toolbar-title>
+            <v-toolbar-title :style="getTitleSizeStyle()">
+                Deportes App
+            </v-toolbar-title>
 
             <v-spacer></v-spacer>
 
@@ -58,7 +60,12 @@
                     </v-list-item-icon>
 
                     <v-list-item-content>
-                        <v-list-item-title>{{ option.name }}</v-list-item-title>
+                        <v-list-item-title
+                            class="menu-item-title"
+                            :style="getFontSizeStyle()"
+                        >
+                            {{ option.name }}
+                        </v-list-item-title>
                     </v-list-item-content>
                 </v-list-item>
             </v-list>
@@ -68,8 +75,6 @@
             <router-view />
         </v-main>
     </div>
-    <!-- <v-app id="inspire"> -->
-    <!-- </v-app> -->
 </template>
 
 <script>
@@ -112,6 +117,24 @@ export default {
             });
             return menuInSubGroups;
         },
+        getTitleSizeStyle() {
+            return {
+                fontSize: this.storeConfig.$state.colorPalette.titleSize + "px",
+            };
+        },
+        getFontSizeStyle() {
+            return {
+                fontSize: this.storeConfig.$state.colorPalette.fontSize + "px",
+            };
+        },
     },
 };
 </script>
+
+<style>
+.menu-item-title {
+    white-space: normal;
+    word-wrap: break-word;
+    padding: 4px 0;
+}
+</style>

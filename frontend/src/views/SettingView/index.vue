@@ -9,7 +9,7 @@
                         @submit.prevent="updateColors"
                         v-if="storeConfig && snackbarStore"
                     >
-                        <v-row align="center">
+                        <v-row>
                             <v-col cols="6">
                                 <div class="color-square-container">
                                     <v-card-subtitle>
@@ -45,7 +45,33 @@
                                 </div>
                             </v-col>
                         </v-row>
-                        <v-btn color="primary" type="submit">Guardar</v-btn>
+                        <v-row>
+                            <v-col cols="6">
+                                <v-select
+                                    v-model="titleSize"
+                                    label="Tamaño de titulo"
+                                    :items="allSizes"
+                                >
+                                </v-select>
+                            </v-col>
+                            <v-col cols="6">
+                                <v-select
+                                    v-model="fontSize"
+                                    label="Tamaño de letras de menu"
+                                    :items="allSizes"
+                                >
+                                </v-select>
+                            </v-col>
+                        </v-row>
+                        <v-card-actions class="d-flex justify-end">
+                            <v-btn
+                                type="submit"
+                                aria-label="Guardar"
+                                color="rgba(34, 56, 67, 0.85)"
+                                dark
+                                >Guardar</v-btn
+                            >
+                        </v-card-actions>
                     </v-form>
                 </v-card-text>
             </v-card>
@@ -64,6 +90,13 @@ export default {
     data: () => ({
         background: "",
         text: "",
+        titleSize: 0,
+        fontSize: 0,
+        allSizes: [
+            { text: "Pequeño", value: 12 },
+            { text: "Mediano", value: 16 },
+            { text: "Grande", value: 20 },
+        ],
         storeConfig: null,
         snackbarStore: null,
         showBackgroundPicker: false,
@@ -86,9 +119,18 @@ export default {
     },
     methods: {
         updateColors() {
-            console.log(this.background);
-            if (this.background && this.text) {
-                this.storeConfig.setColorPalette(this.background, this.text);
+            if (
+                this.background &&
+                this.text &&
+                this.titleSize &&
+                this.fontSize
+            ) {
+                this.storeConfig.setColorPalette(
+                    this.background,
+                    this.text,
+                    this.titleSize,
+                    this.fontSize
+                );
                 this.snackbarStore.open("Guardado", "green");
             }
         },
