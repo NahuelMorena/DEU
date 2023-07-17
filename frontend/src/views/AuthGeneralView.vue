@@ -12,28 +12,106 @@
                 color: storeConfig.$state.colorPalette.text,
             }"
         >
-            <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
-            <v-toolbar-title :style="getTitleSizeStyle()">
+            <v-app-bar-nav-icon
+                @click="drawer = !drawer"
+                :style="{
+                    color: storeConfig.$state.colorPalette.text,
+                    marginTop: '0px',
+                }"
+            ></v-app-bar-nav-icon>
+            <v-toolbar-title
+                @click="redirectToHome()"
+                :style="getTitleSizeStyle()"
+                style="cursor: pointer"
+            >
                 Deportes App
             </v-toolbar-title>
 
             <v-spacer></v-spacer>
 
-            <v-btn
-                class="black--text"
-                aria-label="Cerrar sesion"
-                icon
-                @click="logout()"
-            >
-                <v-icon>mdi-logout</v-icon>
-            </v-btn>
+            <v-menu offset-y>
+                <template v-slot:activator="{ on }">
+                    <v-btn
+                        v-on="on"
+                        class="black--text"
+                        aria-label="Menú"
+                        icon
+                        :style="{
+                            marginTop: '0px',
+                        }"
+                    >
+                        <v-icon
+                            :style="{
+                                color: storeConfig.$state.colorPalette.text,
+                            }"
+                            >mdi-dots-vertical
+                        </v-icon>
+                    </v-btn>
+                </template>
+                <v-list
+                    :style="{
+                        backgroundColor:
+                            storeConfig.$state.colorPalette.background,
+                    }"
+                >
+                    <v-list-item
+                        v-for="(option, j) in items['General']"
+                        :key="j"
+                        link
+                        :to="option.url"
+                        :style="{
+                            color: storeConfig.$state.colorPalette.text,
+                        }"
+                    >
+                        <v-list-item-icon>
+                            <v-icon
+                                :style="{
+                                    color: storeConfig.$state.colorPalette.text,
+                                }"
+                                >{{ option.icon }}
+                            </v-icon>
+                        </v-list-item-icon>
+
+                        <v-list-item-content>
+                            <v-list-item-title
+                                class="menu-item-title"
+                                :style="getFontSizeStyle()"
+                            >
+                                {{ option.name }}
+                            </v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item
+                        @click="logout()"
+                        :style="{
+                            color: storeConfig.$state.colorPalette.text,
+                        }"
+                    >
+                        <v-list-item-icon>
+                            <v-icon
+                                :style="{
+                                    color: storeConfig.$state.colorPalette.text,
+                                }"
+                            >
+                                mdi-logout
+                            </v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-title
+                            class="menu-item-title"
+                            :style="getFontSizeStyle()"
+                            >Cerrar sesión
+                        </v-list-item-title>
+                    </v-list-item>
+                </v-list>
+            </v-menu>
         </v-app-bar>
 
         <v-navigation-drawer
+            v-model="drawer"
             ref="navigationDrawer"
             persistent
             v-if="storeConfig"
-            :mini-variant="drawer"
+            :mini-variant="!drawer"
             app
             clipped
             dark
@@ -92,7 +170,9 @@ export default {
             return this.$router.currentRoute.value.fullPath;
         },
         subMenuKeys: function () {
-            return Object.keys(this.items);
+            //return Object.keys(this.items)
+            //Esta ignorando la primera key "General"
+            return Object.keys(this.items).slice(1);
         },
     },
     mounted() {
@@ -126,6 +206,9 @@ export default {
             return {
                 fontSize: this.storeConfig.$state.colorPalette.fontSize + "px",
             };
+        },
+        redirectToHome() {
+            this.$router.push("/");
         },
     },
 };
