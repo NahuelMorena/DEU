@@ -5,7 +5,7 @@
                 <v-card-title
                     class="d-flex justify-space-between align-center mb-4"
                 >
-                    <div>Agregar usuarios a la planificacion</div>
+                    <div>Asigne jugadores a la planificacion</div>
                     <div>
                         <v-btn icon @click="closeAll()" aria-label="Cerrar">
                             <v-icon>mdi-close</v-icon>
@@ -32,6 +32,16 @@
                         </v-row>
                         <v-row>
                             <v-col cols="12">
+                                <li>
+                                    <div class="item-container">
+                                        <v-label>Fecha</v-label>
+                                        <v-col
+                                            class="text-center custom-label-col"
+                                        >
+                                            <v-label>Nombre</v-label>
+                                        </v-col>
+                                    </div>
+                                </li>
                                 <li
                                     v-for="(item, index) in selectedPlayers"
                                     :key="item.id"
@@ -43,24 +53,35 @@
                                             v-model="item.date"
                                             :label="'Fecha'"
                                         ></Datepicker>
-                                        <span
-                                            class="item-name"
-                                            style="padding: 1%"
-                                            >{{
-                                                item.user.name +
-                                                " " +
-                                                item.user.surname
-                                            }}</span
-                                        >
+                                        <div class="item-subcontainer">
+                                            <span
+                                                class="item-name"
+                                                style="padding: 1%"
+                                                >{{
+                                                    item.user.name +
+                                                    " " +
+                                                    item.user.surname
+                                                }}</span
+                                            >
+                                        </div>
                                     </div>
-                                    <button
-                                        class="delete-button"
-                                        @click="borrarItem(index)"
-                                    >
-                                        Borrar<v-icon color="red"
-                                            >mdi-alpha-x</v-icon
+                                    <v-tooltip top>
+                                        <template
+                                            v-slot:activator="{ on, attrs }"
                                         >
-                                    </button>
+                                            <v-btn
+                                                class="delete-button"
+                                                v-bind="attrs"
+                                                v-on="on"
+                                                icon
+                                                aria-label="Desasignar jugador"
+                                                @click="confirmDelete(index)"
+                                            >
+                                                <v-icon>mdi-delete</v-icon>
+                                            </v-btn>
+                                        </template>
+                                        <span>Desasignar jugador</span>
+                                    </v-tooltip>
                                 </li>
                             </v-col>
                         </v-row>
@@ -73,7 +94,33 @@
                         aria-label="Guardar"
                         color="rgba(34, 56, 67, 0.85)"
                         dark
-                        >Agregar</v-btn
+                        >Confirmar</v-btn
+                    >
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+        <v-dialog v-model="confirmDialog" max-width="500px">
+            <v-card>
+                <v-card-title>Confirmar eliminación</v-card-title>
+                <v-card-text>
+                    ¿Estás seguro de que deseas eliminar al usuario?
+                </v-card-text>
+                <v-card-actions>
+                    <v-btn
+                        color="rgba(34, 56, 67, 0.85)"
+                        dark
+                        @click="cancelDelete"
+                    >
+                        <v-icon left>mdi-close</v-icon>
+                        Cancelar</v-btn
+                    >
+                    <v-btn
+                        color="rgba(34, 56, 67, 0.85)"
+                        dark
+                        @click="deleteItem"
+                    >
+                        <v-icon left>mdi-delete</v-icon>
+                        Eliminar</v-btn
                     >
                 </v-card-actions>
             </v-card>
@@ -107,6 +154,7 @@ export default {
         },
 
         valueMultiselect: [],
+        confirmDialog: false,
     }),
     created() {
         this.selectedPlanification = this.planification;
@@ -254,6 +302,20 @@ export default {
             this.$emit("input", false);
         },
 
+        confirmDelete(index) {
+            this.deleteIndex = index;
+            this.confirmDialog = true;
+        },
+
+        cancelDelete() {
+            this.confirmDialog = false;
+        },
+
+        deleteItem() {
+            this.confirmDialog = false;
+            this.borrarItem(this.deleteIndex);
+        },
+
         async save() {
             const isValid = await this.$refs.form.validate();
             if (isValid) {
@@ -391,6 +453,22 @@ li.deleting {
     text-align: center;
 }
 
-.item-minutes {
+.custom-row {
+    margin-bottom: -3rem;
+}
+
+.custom-label-col {
+    margin-left: 235px;
+}
+
+.item-subcontainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1%;
+}
+
+.item-name {
+    margin-left: 90px;
 }
 </style>

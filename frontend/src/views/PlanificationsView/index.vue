@@ -34,6 +34,7 @@
                         <template v-slot:item="{ item }">
                             <tr>
                                 <td>{{ item.name }}</td>
+                                <!--
                                 <td>
                                     <v-tooltip top>
                                         <template
@@ -59,7 +60,8 @@
                                         >
                                     </v-tooltip>
                                 </td>
-                                <td>
+                                -->
+                                <td class="text-center">
                                     <v-tooltip top>
                                         <template
                                             v-slot:activator="{ on, attrs }"
@@ -79,12 +81,12 @@
                                             </v-btn>
                                         </template>
                                         <span>
-                                            Editar asignaciones de usuarios a
+                                            Asignar o desasignar jugadores a
                                             esta planificacion
                                         </span>
                                     </v-tooltip>
                                 </td>
-                                <td>
+                                <td class="text-center">
                                     <v-tooltip top>
                                         <template
                                             v-slot:activator="{ on, attrs }"
@@ -147,19 +149,28 @@
             :planification="dialogs.addUserPlanification.planification"
             @saved="savedaddUserPlanification"
         />
-        <v-dialog
-            v-model="dialogs.deletePlanification"
-            persistent
-            max-width="600px"
-        >
+        <v-dialog v-model="dialogs.deletePlanification" max-width="500px">
             <v-card>
-                <v-card-title class="headline">
-                    ¿Deseas eliminar la planificacion seleccionado?
-                </v-card-title>
+                <v-card-title>Confirmar eliminación</v-card-title>
+                <v-card-text>
+                    ¿Deseas eliminar la planificación seleccionada?
+                </v-card-text>
                 <v-card-actions>
-                    <v-btn color="error" @click="confirmDelete">Eliminar</v-btn>
-                    <v-btn text @click="dialogs.deletePlanification = false"
-                        >Cancelar</v-btn
+                    <v-btn
+                        color="rgba(34, 56, 67, 0.85)"
+                        dark
+                        @click="dialogs.deletePlanification = false"
+                    >
+                        <v-icon left>mdi-close</v-icon>
+                        Cancelar</v-btn
+                    >
+                    <v-btn
+                        color="rgba(34, 56, 67, 0.85)"
+                        dark
+                        @click="confirmDelete"
+                    >
+                        <v-icon left>mdi-delete</v-icon>
+                        Eliminar</v-btn
                     >
                 </v-card-actions>
             </v-card>
@@ -203,9 +214,19 @@ export default {
                     value: "name",
                     sortable: null,
                 },
-                { text: "Agregar usuarios", value: "", sortable: null },
-                { text: "Editar usuarios", value: "", sortable: null },
-                { text: "Editar planificacion", value: "", sortable: null },
+                //{ text: "Agregar usuarios", value: "", sortable: null },
+                {
+                    text: "Asignar jugadores",
+                    value: "",
+                    sortable: null,
+                    align: "center",
+                },
+                {
+                    text: "Editar planificacion",
+                    value: "",
+                    sortable: null,
+                    align: "center",
+                },
                 { text: "Borrar", value: "", sortable: null },
             ],
             trainings: [],
