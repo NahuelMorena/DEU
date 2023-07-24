@@ -1,7 +1,7 @@
 <template>
     <v-overlay :value="localShow">
         <v-dialog v-model="localShow" hide-overlay persistent>
-            <v-card style="width: 600px; height: 700px">
+            <v-card style="width: 600px">
                 <v-card-title
                     class="d-flex justify-space-between align-center mb-4"
                 >
@@ -12,13 +12,13 @@
                         </v-btn>
                     </div>
                 </v-card-title>
-                <v-card-text>
+                <v-card-text style="max-height: 500px; overflow-y: auto">
                     <v-row>
                         <v-col cols="12">
                             <v-text-field
                                 v-model="name"
                                 :rules="rules.name"
-                                label="Nombre"
+                                label="Nombre de la planificación"
                                 required
                             ></v-text-field>
                         </v-col>
@@ -40,6 +40,23 @@
                     </v-row>
                     <v-row
                         ><v-col cols="12">
+                            <li>
+                                <b
+                                    ><v-label
+                                        >Lista de entrenamientos</v-label
+                                    ></b
+                                >
+                            </li>
+                            <li>
+                                <div class="item-container">
+                                    <v-col style="margin-left: 10px">
+                                        <b><v-label>Minutos</v-label></b>
+                                    </v-col>
+                                    <v-col style="margin-left: 100px">
+                                        <b><v-label>Nombre</v-label></b>
+                                    </v-col>
+                                </div>
+                            </li>
                             <draggable
                                 v-model="selectedTrainings"
                                 :element="'ul'"
@@ -51,26 +68,40 @@
                                     :key="item.id"
                                     :class="{ deleting: item.deleting }"
                                 >
-                                    <div class="item-container">
+                                    <div
+                                        class="item-container"
+                                        style="display: flex"
+                                    >
                                         <input
                                             type="number"
                                             v-model="item.minutes"
                                             class="item-minutes"
                                             min="0"
-                                            placeholder="Minutos"
+                                            placeholder="Seleccione minutos..."
                                         />
-                                        <span
-                                            class="item-name"
-                                            style="padding: 1%"
-                                            >{{ item.training.name }}</span
-                                        >
+                                        <div class="item-training-name">
+                                            <span>
+                                                {{ item.training.name }}</span
+                                            >
+                                        </div>
                                     </div>
-                                    <button
-                                        class="delete-button"
-                                        @click="borrarItem(index)"
-                                    >
-                                        Borrar
-                                    </button>
+                                    <v-tooltip top>
+                                        <template
+                                            v-slot:activator="{ on, attrs }"
+                                        >
+                                            <v-btn
+                                                class="delete-button"
+                                                v-bind="attrs"
+                                                v-on="on"
+                                                icon
+                                                aria-label="Quitar entrenamiento"
+                                                @click="confirmDelete(index)"
+                                            >
+                                                <v-icon>mdi-delete</v-icon>
+                                            </v-btn>
+                                        </template>
+                                        <span>Quitar entrenamiento</span>
+                                    </v-tooltip>
                                 </li>
                             </draggable>
                         </v-col></v-row
@@ -84,6 +115,32 @@
                         color="rgba(34, 56, 67, 0.85)"
                         dark
                         >Agregar</v-btn
+                    >
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+        <v-dialog v-model="confirmDialog" max-width="500px">
+            <v-card>
+                <v-card-title>Confirmar eliminación</v-card-title>
+                <v-card-text>
+                    ¿Estás seguro de que deseas quitar el entrenamiento?
+                </v-card-text>
+                <v-card-actions>
+                    <v-btn
+                        color="rgba(34, 56, 67, 0.85)"
+                        dark
+                        @click="cancelDelete"
+                    >
+                        <v-icon left>mdi-close</v-icon>
+                        Cancelar</v-btn
+                    >
+                    <v-btn
+                        color="rgba(34, 56, 67, 0.85)"
+                        dark
+                        @click="deleteItem"
+                    >
+                        <v-icon left>mdi-delete</v-icon>
+                        Eliminar</v-btn
                     >
                 </v-card-actions>
             </v-card>
@@ -116,6 +173,7 @@ export default {
 
         valueMultiselect: [],
         selectedTrainings: [],
+        confirmDialog: false,
     }),
     watch: {
         value: function (val) {
@@ -150,6 +208,20 @@ export default {
 
         borrarItem(index) {
             this.selectedTrainings.splice(index, 1);
+        },
+
+        confirmDelete(index) {
+            this.deleteIndex = index;
+            this.confirmDialog = true;
+        },
+
+        cancelDelete() {
+            this.confirmDialog = false;
+        },
+
+        deleteItem() {
+            this.confirmDialog = false;
+            this.borrarItem(this.deleteIndex);
         },
 
         closeAll() {
@@ -269,6 +341,13 @@ li.deleting {
 }
 
 .item-minutes {
-    width: 80px;
+    width: 155px;
+    box-sizing: border-box;
+    padding: 5px;
+}
+
+.item-training-name {
+    width: 100px;
+    margin-left: 25px;
 }
 </style>

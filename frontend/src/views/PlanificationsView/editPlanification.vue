@@ -41,10 +41,19 @@
                     <v-row>
                         <v-col cols="12">
                             <li>
+                                <b
+                                    ><v-label
+                                        >Lista de entrenamientos</v-label
+                                    ></b
+                                >
+                            </li>
+                            <li>
                                 <div class="item-container">
-                                    <v-label>Minutos</v-label>
-                                    <v-col style="margin-left: 135px">
-                                        <v-label>Nombre</v-label>
+                                    <v-col style="margin-left: 10px">
+                                        <b><v-label>Minutos</v-label></b>
+                                    </v-col>
+                                    <v-col style="margin-left: 100px">
+                                        <b><v-label>Nombre</v-label></b>
                                     </v-col>
                                 </div>
                             </li>
@@ -70,12 +79,12 @@
                                             v-model="item.minutes"
                                             class="item-minutes"
                                             min="0"
-                                            placeholder="Minutos"
+                                            placeholder="Seleccione minutos..."
                                         />
-                                        <div style="flex: 1; padding: 10px">
-                                            <span class="item-name">{{
-                                                item.training.name
-                                            }}</span>
+                                        <div class="item-training-name">
+                                            <span>
+                                                {{ item.training.name }}</span
+                                            >
                                         </div>
                                     </div>
                                     <v-tooltip top>
@@ -437,11 +446,14 @@ li.deleting {
     justify-content: space-between;
 }
 
-.item-name {
-    margin-right: 10px;
+.item-minutes {
+    width: 155px;
+    box-sizing: border-box;
+    padding: 5px;
 }
 
-.item-minutes {
-    width: 80px;
+.item-training-name {
+    width: 100px;
+    margin-left: 25px;
 }
 </style>

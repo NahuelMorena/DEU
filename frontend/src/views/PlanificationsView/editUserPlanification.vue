@@ -1,7 +1,7 @@
 <template>
     <v-overlay :value="localShow">
         <v-dialog v-model="localShow" hide-overlay persistent>
-            <v-card style="width: 600px; height: 700px">
+            <v-card style="width: 600px">
                 <v-card-title
                     class="d-flex justify-space-between align-center mb-4"
                 >
@@ -12,7 +12,7 @@
                         </v-btn>
                     </div>
                 </v-card-title>
-                <v-card-text>
+                <v-card-text style="max-height: 500px; overflow-y: auto">
                     <v-form ref="form" @submit.prevent="addUserPlanification">
                         <v-row>
                             <v-col cols="12">
@@ -33,12 +33,15 @@
                         <v-row>
                             <v-col cols="12">
                                 <li>
+                                    <b><v-label>Lista de jugadores</v-label></b>
+                                </li>
+                                <li>
                                     <div class="item-container">
-                                        <v-label>Fecha</v-label>
-                                        <v-col
-                                            class="text-center custom-label-col"
-                                        >
-                                            <v-label>Nombre</v-label>
+                                        <v-col style="margin-left: -10px">
+                                            <b><v-label>Fecha</v-label></b>
+                                        </v-col>
+                                        <v-col style="margin-left: 155px">
+                                            <b><v-label>Nombre</v-label></b>
                                         </v-col>
                                     </div>
                                 </li>
@@ -54,15 +57,11 @@
                                             :label="'Fecha'"
                                         ></Datepicker>
                                         <div class="item-subcontainer">
-                                            <span
-                                                class="item-name"
-                                                style="padding: 1%"
-                                                >{{
-                                                    item.user.name +
-                                                    " " +
-                                                    item.user.surname
-                                                }}</span
-                                            >
+                                            <span class="item-name">{{
+                                                item.user.name +
+                                                " " +
+                                                item.user.surname
+                                            }}</span>
                                         </div>
                                     </div>
                                     <v-tooltip top>
@@ -469,6 +468,7 @@ li.deleting {
 }
 
 .item-name {
-    margin-left: 90px;
+    width: 100px;
+    margin-left: 25px;
 }
 </style>
