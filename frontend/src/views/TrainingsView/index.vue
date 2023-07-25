@@ -1,6 +1,6 @@
 <template>
     <div>
-        <HeaderComponent title="Listado de entrenamientos" />
+        <HeaderComponent title="Listado de mis entrenamientos" />
         <v-container class="general-padding">
             <v-card>
                 <v-card-title> Entrenamientos </v-card-title>
@@ -85,23 +85,28 @@
             :training="dialogs.editTraining.training"
             @saved="savededitTraining"
         />
-        <v-dialog v-model="dialogs.deleteTraining" persistent max-width="600px">
+        <v-dialog v-model="dialogs.deleteTraining" max-width="500px">
             <v-card>
-                <v-card-title class="headline">
+                <v-card-title>Confirmar eliminación</v-card-title>
+                <v-card-text>
                     ¿Deseas eliminar el entrenamiento seleccionado?
-                </v-card-title>
+                </v-card-text>
                 <v-card-actions>
                     <v-btn
-                        color="error"
-                        @click="confirmDelete"
-                        aria-label="Eliminar"
-                        >Eliminar</v-btn
+                        color="rgba(34, 56, 67, 0.85)"
+                        dark
+                        @click="dialogs.deleteTraining = false"
+                    >
+                        <v-icon left>mdi-close</v-icon>
+                        Cancelar</v-btn
                     >
                     <v-btn
-                        text
-                        @click="dialogs.deleteTraining = false"
-                        aria-label="Cancelar"
-                        >Cancelar</v-btn
+                        color="rgba(34, 56, 67, 0.85)"
+                        dark
+                        @click="confirmDelete"
+                    >
+                        <v-icon left>mdi-delete</v-icon>
+                        Eliminar</v-btn
                     >
                 </v-card-actions>
             </v-card>

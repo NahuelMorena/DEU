@@ -96,6 +96,7 @@
                         color="rgba(34, 56, 67, 0.85)"
                         dark
                         aria-label="Guardar"
+                        class="custom-add-button"
                         @click="
                             if ($refs.form.validate()) {
                                 save();
@@ -199,4 +200,8 @@ export default {
     components: { Datepicker },
 };
 </script>
-<style></style>
+<style>
+.custom-add-button {
+    margin-top: -10px;
+}
+</style>

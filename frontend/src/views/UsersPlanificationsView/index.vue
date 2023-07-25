@@ -1,8 +1,6 @@
 <template>
     <div>
-        <HeaderComponent
-            title="Planificacion de entrenamientos para el usuario"
-        />
+        <HeaderComponent title="Entrenamientos asignados por jugador" />
         <v-container class="general-padding">
             <v-card v-if="datatable.items && authStore">
                 <v-card-title> Usuario </v-card-title>
@@ -45,51 +43,61 @@
                                 <td>{{ item.training.name }}</td>
                                 <td>{{ item.orderNumber }}</td>
                                 <td>{{ item.minutes }}</td>
+                                <!--
                                 <td>{{ item.training.description }}</td>
+                                -->
                                 <td>{{ item.training.training_type.name }}</td>
                                 <td>{{ item.training.warmup_time }}</td>
                                 <td>
                                     {{ item.training.repetitions_quantity }}
                                 </td>
-                                <td v-if="authStore.hasAuthority('TRAINER')">
-                                    <v-tooltip top>
-                                        <template
-                                            v-slot:activator="{ on, attrs }"
-                                        >
-                                            {{ item.calification }}
-                                            <v-btn
-                                                v-bind="attrs"
-                                                v-on="on"
-                                                icon
-                                                aria-label="Agregar Calificacion"
-                                                @click="AddCalification(item)"
-                                            >
-                                                <v-icon>mdi-pencil</v-icon>
-                                            </v-btn>
-                                        </template>
-                                        <span>Agregar/Editar calificacion</span>
-                                    </v-tooltip>
+                                <td v-if="item.calification">
+                                    {{ item.calification }}
                                 </td>
-                                <td v-else>{{ item.calification }}</td>
+                                <td v-else>
+                                    {{ "-" }}
+                                </td>
                                 <td v-if="authStore.hasAuthority('TRAINER')">
-                                    <v-tooltip top>
-                                        <template
-                                            v-slot:activator="{ on, attrs }"
-                                        >
-                                            <v-btn
-                                                v-bind="attrs"
-                                                v-on="on"
-                                                aria-label="Borrar Calificacion"
-                                                icon
-                                                @click="
-                                                    deleteCalification(item)
-                                                "
+                                    <div style="display: flex">
+                                        <v-tooltip top>
+                                            <template
+                                                v-slot:activator="{ on, attrs }"
                                             >
-                                                <v-icon>mdi-delete</v-icon>
-                                            </v-btn>
-                                        </template>
-                                        <span>Borrar calificacion</span>
-                                    </v-tooltip>
+                                                <v-btn
+                                                    v-bind="attrs"
+                                                    v-on="on"
+                                                    icon
+                                                    aria-label="Agregar calificación"
+                                                    @click="
+                                                        AddCalification(item)
+                                                    "
+                                                >
+                                                    <v-icon>mdi-pencil</v-icon>
+                                                </v-btn>
+                                            </template>
+                                            <span>
+                                                Agregar/Editar calificación
+                                            </span>
+                                        </v-tooltip>
+                                        <v-tooltip top>
+                                            <template
+                                                v-slot:activator="{ on, attrs }"
+                                            >
+                                                <v-btn
+                                                    v-bind="attrs"
+                                                    v-on="on"
+                                                    aria-label="Borrar Calificación"
+                                                    icon
+                                                    @click="
+                                                        deleteCalification(item)
+                                                    "
+                                                >
+                                                    <v-icon>mdi-delete</v-icon>
+                                                </v-btn>
+                                            </template>
+                                            <span>Borrar calificación</span>
+                                        </v-tooltip>
+                                    </div>
                                 </td>
                             </tr>
                         </template>
@@ -134,27 +142,28 @@
             </v-card>
         </v-dialog>
 
-        <v-dialog
-            v-model="dialogs.deleteCalification"
-            persistent
-            max-width="600px"
-        >
+        <v-dialog v-model="dialogs.deleteCalification" max-width="500px">
             <v-card>
-                <v-card-title class="headline">
-                    ¿Deseas eliminar el entrenamiento seleccionado?
-                </v-card-title>
+                <v-card-title>Confirmar eliminación</v-card-title>
+                <v-card-text>
+                    ¿Deseas eliminar la calificación seleccionada?
+                </v-card-text>
                 <v-card-actions>
                     <v-btn
-                        aria-label="Eliminar"
-                        color="error"
-                        @click="confirmDelete"
-                        >Eliminar</v-btn
+                        color="rgba(34, 56, 67, 0.85)"
+                        dark
+                        @click="dialogs.deleteCalification = false"
+                    >
+                        <v-icon left>mdi-close</v-icon>
+                        Cancelar</v-btn
                     >
                     <v-btn
-                        aria-label="Cancelar"
-                        text
-                        @click="dialogs.deleteCalification = false"
-                        >Cancelar</v-btn
+                        color="rgba(34, 56, 67, 0.85)"
+                        dark
+                        @click="confirmDelete"
+                    >
+                        <v-icon left>mdi-delete</v-icon>
+                        Eliminar</v-btn
                     >
                 </v-card-actions>
             </v-card>
@@ -218,11 +227,11 @@ export default {
                     sortable: null,
                     value: "minutes",
                 },
-                {
-                    text: "Descripcion",
-                    value: "training.description",
-                    sortable: null,
-                },
+                //{
+                //    text: "Descripcion",
+                //    value: "training.description",
+                //    sortable: null,
+                //},
                 {
                     text: "Tipo de entrenamiento",
                     value: "training.training_type.name",
@@ -239,7 +248,7 @@ export default {
                     sortable: null,
                 },
                 { text: "Calificacion", value: "calification", sortable: null },
-                { text: "Borrar", value: "", sortable: null },
+                { text: "Operaciones", value: "", sortable: null },
             ],
             trainings: [],
             search: "",

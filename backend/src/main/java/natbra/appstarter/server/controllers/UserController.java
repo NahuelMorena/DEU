@@ -67,6 +67,18 @@ private final String baseUrl = "/admin/users";
 		return ResponseEntity.ok(userRepository.findAllByTrainerId(utils.getAuthUser().getId()));
 	}
 
+	@GetMapping(baseUrl + "/get-players-accepted")
+	public HttpEntity<Set<User>> getAcceptedUsersByTrainerId(){
+		List<User> users = userRepository.findAllByTrainerId(utils.getAuthUser().getId());
+		Set<User> usersRequests = new HashSet<>();
+		for(User user : users){
+			if (!user.getRoles().isEmpty()){
+				usersRequests.add(user);
+			}
+		}
+		return ResponseEntity.ok(usersRequests);
+	}
+
 	@GetMapping(baseUrl + "/get-players-requests")
 	public HttpEntity<Set<User>> getUsersRequestsByTrainerId(){
 		List<User> users = userRepository.findAllByTrainerId(utils.getAuthUser().getId());

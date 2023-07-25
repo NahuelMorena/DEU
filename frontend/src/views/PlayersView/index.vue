@@ -12,12 +12,22 @@
                     >
                         <template v-slot:append-outer>
                             <v-btn
+                                class="custom-button"
                                 color="rgba(34, 56, 67, 0.85)"
                                 dark
                                 aria-label="Agregar jugador"
                                 @click="dialogs.addUser = true"
                             >
                                 Agregar Jugador
+                            </v-btn>
+                            <v-btn
+                                class="custom-button"
+                                color="rgba(34, 56, 67, 0.85)"
+                                dark
+                                aria-label="Solicitudes pendientes"
+                                @click="redirectToRequests"
+                            >
+                                Solicitudes pendientes
                             </v-btn>
                         </template>
                     </v-text-field>
@@ -76,23 +86,28 @@
                 @saved="savedEditUser"
             />
 
-            <v-dialog v-model="dialogs.deleteUser" persistent max-width="600px">
+            <v-dialog v-model="dialogs.deleteUser" max-width="500px">
                 <v-card>
-                    <v-card-title class="headline">
-                        ¿Deseas quitar de la lista al usuario seleccionado?
-                    </v-card-title>
+                    <v-card-title>Confirmar eliminación</v-card-title>
+                    <v-card-text>
+                        ¿Deseas eliminar el jugador seleccionado?
+                    </v-card-text>
                     <v-card-actions>
                         <v-btn
-                            color="error"
-                            @click="deleteUser"
-                            aria-label="Eliminar"
-                            >Eliminar</v-btn
+                            color="rgba(34, 56, 67, 0.85)"
+                            dark
+                            @click="dialogs.deleteUser = false"
+                        >
+                            <v-icon left>mdi-close</v-icon>
+                            Cancelar</v-btn
                         >
                         <v-btn
-                            text
-                            @click="dialogs.deleteUser = false"
-                            aria-label="Cancelar"
-                            >Cancelar</v-btn
+                            color="rgba(34, 56, 67, 0.85)"
+                            dark
+                            @click="deleteUser"
+                        >
+                            <v-icon left>mdi-delete</v-icon>
+                            Eliminar</v-btn
                         >
                     </v-card-actions>
                 </v-card>
@@ -141,7 +156,12 @@ export default {
         },
     }),
     async mounted() {
-        let response = await localAxios.get("/admin/users/get-players");
+        //Esto trae todos los jugadores hayan sido aceptados por el entrenador o no
+        //let response = await localAxios.get("/admin/users/get-players");
+        //Esto trae solo a los jugadores que hayan sido aceptados
+        let response = await localAxios.get(
+            "/admin/users/get-players-accepted"
+        );
         this.datatable.items = response.data;
         console.log(response);
     },
@@ -161,6 +181,9 @@ export default {
         confirmDelete(item) {
             this.dialogs.deleteUser = true;
             this.userToDelete = item;
+        },
+        redirectToRequests() {
+            this.$router.push("/players/requests");
         },
         async deleteUser() {
             let response = await localAxios.delete("/admin/users", {
@@ -182,3 +205,8 @@ export default {
     },
 };
 </script>
+<style>
+.custom-button {
+    margin-right: 8px;
+}
+</style>

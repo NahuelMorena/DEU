@@ -1,6 +1,6 @@
 <template>
     <div>
-        <HeaderComponent title="Listado de entrenamientos" />
+        <HeaderComponent title="Listado de mis planificaciones" />
         <v-container class="general-padding">
             <v-card>
                 <v-card-title> Planificaciones </v-card-title>
