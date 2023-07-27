@@ -47,6 +47,21 @@ private final String baseUrl = "/admin/users";
 
 	}
 
+	@PostMapping(baseUrl)
+	public HttpEntity<User> addUserByTrainer(@RequestBody User user){
+		if(userRepository.existsByUsernameOrEmail(user.getUsername(),user.getEmail())){
+			return ResponseEntity.ok(null);
+		}else{
+			user.setPassword(encoder.encode(user.getPassword()));
+			Set<Role> roles = new HashSet<>();
+			Role role = rolesRepository.findById(1L).orElseThrow(NoSuchElementException::new);
+			roles.add(role);
+			List<Role> list = new ArrayList<>(roles);
+			user.setRoles(list);
+			return ResponseEntity.ok(userRepository.save(user));
+		}
+	}
+
 	@PutMapping("/register")
 	public HttpEntity<User> acceptUser(@RequestBody User user){
 		User player = userRepository.findById(user.getId()).orElseThrow(NoSuchElementException::new);
@@ -117,17 +132,6 @@ private final String baseUrl = "/admin/users";
 	public HttpEntity<User> deleteUser(@RequestBody User user){
 		userRepository.delete(user);
 		return ResponseEntity.ok(user);
-	}
-	
-	@PostMapping(baseUrl)
-	public HttpEntity<User> addUser(@RequestBody User user){
-		if(userRepository.existsByUsernameOrEmail(user.getUsername(),user.getEmail())){
-			return ResponseEntity.ok(null);
-		}else{
-			user.setPassword(encoder.encode(user.getPassword()));
-			return ResponseEntity.ok(userRepository.save(user));
-		}
-
 	}
 
 	@PutMapping(baseUrl)

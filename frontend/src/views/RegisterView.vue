@@ -5,7 +5,7 @@
                 <v-card-title primary-title class="mb-7">
                     <div class="text-h4">Registrarse</div>
                 </v-card-title>
-                <v-card-text>
+                <v-card-text style="margin-top: -55px">
                     <v-form ref="form">
                         <v-row>
                             <v-col cols="12">
@@ -101,8 +101,9 @@
                     </v-form>
                     <v-card-actions class="d-flex justify-end">
                         <v-btn
+                            color="rgba(34, 56, 67, 0.85)"
+                            dark
                             block
-                            color="primary"
                             class="elevation-0"
                             @click="register"
                         >
@@ -188,6 +189,7 @@ export default {
                         console.log(response);
                         if (response.data) {
                             alert("Tu solicitud ha sido enviada al profesor");
+                            this.$router.push("/login");
                         } else {
                             alert(
                                 "Este email/username ya hizo el pedido de registrarse o ya esta registrado"

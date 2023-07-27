@@ -20,8 +20,9 @@
                         id="password"
                     ></v-text-field>
                     <v-btn
+                        color="rgba(34, 56, 67, 0.85)"
+                        dark
                         block
-                        color="primary"
                         class="elevation-0"
                         @click="logearse"
                     >

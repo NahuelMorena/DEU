@@ -3,8 +3,8 @@ import { defineStore } from "pinia";
 export const StoreConfig = defineStore("store", {
     state: () => ({
         colorPalette: {
-            background: "#fffff",
-            text: "#000000",
+            background: "#173d0eff",
+            text: "#d8d86f",
             titleSize: 20,
             fontSize: 12,
         },

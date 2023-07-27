@@ -45,13 +45,15 @@
                                     >
                                 </td>
                                 <td>
-                                    <v-btn
-                                        icon
-                                        @click="confirmDelete(item)"
-                                        aria-label="Borrar usuario"
-                                    >
-                                        <v-icon>mdi-delete</v-icon>
-                                    </v-btn>
+                                    <div v-if="item.id !== user.id">
+                                        <v-btn
+                                            icon
+                                            @click="confirmDelete(item)"
+                                            aria-label="Borrar usuario"
+                                        >
+                                            <v-icon>mdi-delete</v-icon>
+                                        </v-btn>
+                                    </div>
                                 </td>
                             </tr>
                         </template>
@@ -69,27 +71,28 @@
                 :user="dialogs.editUser.user"
                 @saved="savedEditUser"
             />
-            <v-dialog
-                v-model="dialogs.deleteVisit"
-                persistent
-                max-width="600px"
-            >
+            <v-dialog v-model="dialogs.deleteVisit" max-width="500px">
                 <v-card>
-                    <v-card-title class="headline">
+                    <v-card-title>Confirmar eliminación</v-card-title>
+                    <v-card-text>
                         ¿Deseas eliminar el usuario seleccionado?
-                    </v-card-title>
+                    </v-card-text>
                     <v-card-actions>
                         <v-btn
-                            color="error"
-                            @click="deleteUser"
-                            aria-label="Eliminar"
-                            >Eliminar</v-btn
+                            color="rgba(34, 56, 67, 0.85)"
+                            dark
+                            @click="dialogs.deleteVisit = false"
+                        >
+                            <v-icon left>mdi-close</v-icon>
+                            Cancelar</v-btn
                         >
                         <v-btn
-                            text
-                            @click="dialogs.deleteVisit = false"
-                            aria-label="Cancelar"
-                            >Cancelar</v-btn
+                            color="rgba(34, 56, 67, 0.85)"
+                            dark
+                            @click="deleteUser"
+                        >
+                            <v-icon left>mdi-delete</v-icon>
+                            Eliminar</v-btn
                         >
                     </v-card-actions>
                 </v-card>
@@ -136,8 +139,15 @@ export default {
             deleteVisit: false,
             editUser: { show: false, user: null },
         },
+        user: null,
     }),
     async mounted() {
+        try {
+            let response1 = await localAxios.get("/admin/users/get-user");
+            this.user = response1.data;
+        } catch (error) {
+            console.log(error);
+        }
         let response = await localAxios.get("/admin/users");
         this.datatable.items = response.data;
         console.log(response);
@@ -170,6 +180,7 @@ export default {
                     "Se borró el usuario " + this.userToDelete.username + "."
                 );
             }
+            this.dialogs.deleteVisit = false;
         },
         async editUser(item) {
             this.dialogs.editUser.user = item;

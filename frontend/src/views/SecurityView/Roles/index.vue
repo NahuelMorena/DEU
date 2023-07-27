@@ -72,6 +72,32 @@
             v-bind:roleName="dialogs.authorities.roleName"
             v-bind:authorities="dialogs.authorities.items"
         />
+        <v-dialog v-model="dialogs.deleteRole" max-width="500px">
+            <v-card>
+                <v-card-title>Confirmar eliminación</v-card-title>
+                <v-card-text>
+                    ¿Deseas eliminar el rol seleccionado?
+                </v-card-text>
+                <v-card-actions>
+                    <v-btn
+                        color="rgba(34, 56, 67, 0.85)"
+                        dark
+                        @click="dialogs.deleteRole = false"
+                    >
+                        <v-icon left>mdi-close</v-icon>
+                        Cancelar</v-btn
+                    >
+                    <v-btn
+                        color="rgba(34, 56, 67, 0.85)"
+                        dark
+                        @click="confirmDelete"
+                    >
+                        <v-icon left>mdi-delete</v-icon>
+                        Eliminar</v-btn
+                    >
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </div>
 </template>
 
@@ -98,6 +124,7 @@ export default {
         },
         dialogs: {
             addRole: false,
+            deleteRole: false,
             authorities: {
                 show: false,
                 roleName: null,
@@ -119,15 +146,23 @@ export default {
             this.dialogs.authorities.roleName = item.name;
             this.dialogs.authorities.items = item.authorities;
         },
-        async deleteRole(item) {
+        deleteRole(item) {
+            this.dialogs.deleteRole = true;
+            this.roleToDelete = item;
+        },
+        //async deleteRole(item) {
+        async confirmDelete() {
             let response = await localAxios.delete("/admin/roles", {
-                data: item,
+                data: this.roleToDelete,
             });
             if (response.status == 200) {
-                const index = this.datatable.items.indexOf(item);
+                const index = this.datatable.items.indexOf(this.roleToDelete);
                 if (index >= 0) this.datatable.items.splice(index, 1);
-                this.snackbarStore.open("Se borró el rol " + item.name + ".");
+                this.snackbarStore.open(
+                    "Se borró el rol " + this.roleToDelete.name + "."
+                );
             }
+            this.dialogs.deleteRole = false;
         },
     },
 };

@@ -1,6 +1,8 @@
 <template>
     <v-container>
-        <div class="googlefont">{{ title }}</div>
+        <div class="googlefont" :style="getTitleSizeStyle()">
+            {{ title }}
+        </div>
     </v-container>
 </template>
 
@@ -15,11 +17,27 @@
 </style>
 
 <script>
+import { defineComponent } from "vue";
+import { StoreConfig } from "@/store/store";
 export default {
+    data: () => ({
+        storeConfig: null,
+    }),
     props: {
         title: {
             type: String,
             required: true,
+        },
+    },
+    mounted() {
+        this.storeConfig = StoreConfig();
+    },
+    methods: {
+        getTitleSizeStyle() {
+            let size = 30 + this.storeConfig.$state.colorPalette.titleSize;
+            return {
+                fontSize: size + "px",
+            };
         },
     },
 };

@@ -23,6 +23,7 @@
                     :headers="datatable.headers"
                     :items="datatable.items"
                     :search="datatable.search"
+                    :items-per-page="5"
                     class="elevation-0"
                 >
                     <template v-slot:item="{ item }">
@@ -55,6 +56,32 @@
             v-model="dialogs.addAuthority"
             @saved="(newAuthority) => newAuthoritySaved(newAuthority)"
         />
+        <v-dialog v-model="dialogs.deleteAuthority" max-width="500px">
+            <v-card>
+                <v-card-title>Confirmar eliminación</v-card-title>
+                <v-card-text>
+                    ¿Deseas eliminar la autorización seleccionada?
+                </v-card-text>
+                <v-card-actions>
+                    <v-btn
+                        color="rgba(34, 56, 67, 0.85)"
+                        dark
+                        @click="dialogs.deleteAuthority = false"
+                    >
+                        <v-icon left>mdi-close</v-icon>
+                        Cancelar</v-btn
+                    >
+                    <v-btn
+                        color="rgba(34, 56, 67, 0.85)"
+                        dark
+                        @click="confirmDelete"
+                    >
+                        <v-icon left>mdi-delete</v-icon>
+                        Eliminar</v-btn
+                    >
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </div>
 </template>
 
@@ -79,6 +106,7 @@ export default {
         },
         dialogs: {
             addAuthority: false,
+            deleteAuthority: false,
         },
     }),
     async mounted() {
@@ -92,17 +120,24 @@ export default {
                 "Se creó el nuevo permiso: " + newAuthority.name + "."
             );
         },
-        async deleteAuthority(item) {
+        deleteAuthority(item) {
+            this.dialogs.deleteAuthority = true;
+            this.authorityToDelete = item;
+        },
+        async confirmDelete() {
             let response = await localAxios.delete("/admin/authorities", {
-                data: item,
+                data: this.authorityToDelete,
             });
             if (response.status == 200) {
-                const index = this.datatable.items.indexOf(item);
+                const index = this.datatable.items.indexOf(
+                    this.authorityToDelete
+                );
                 if (index >= 0) this.datatable.items.splice(index, 1);
                 this.snackbarStore.open(
-                    "Se borró el permiso " + item.name + "."
+                    "Se borró el permiso " + this.authorityToDelete.name + "."
                 );
             }
+            this.dialogs.deleteAuthority = false;
         },
     },
 };

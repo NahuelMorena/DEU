@@ -183,18 +183,19 @@ export default {
             }
             this.form.trainer = this.authStore.user.user;
             this.form.telephone = parseInt(this.form.telephone);
-            let response = await localAxios
-                .post("/admin/users", this.form)
-                .then((response) => {
-                    if (response.data != null) {
-                        alert("Se creo con exito el jugador");
-                    } else {
-                        alert("Ya existia una cuenta con ese username/email");
-                    }
-                });
-            let newUser = response.data;
-            this.$emit("saved", newUser);
-            this.closeAll();
+            try {
+                let response = await localAxios.post("/admin/users", this.form);
+                let newUser = response.data;
+                if (newUser != null) {
+                    alert("Se creo con exito el jugador");
+                } else {
+                    alert("Ya existia una cuenta con ese username/email");
+                }
+                this.$emit("saved", newUser);
+                this.closeAll();
+            } catch (error) {
+                console.error(error);
+            }
         },
     },
     components: { Datepicker },

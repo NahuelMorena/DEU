@@ -123,7 +123,7 @@
                         </v-row>
                     </v-form>
                 </v-card-text>
-                <v-card-actions class="d-flex justify-end">
+                <v-card-actions class="justify-end">
                     <v-btn
                         color="rgba(34, 56, 67, 0.85)"
                         dark
@@ -133,6 +133,7 @@
                                 save();
                             }
                         "
+                        class="custom-add-button"
                         >Guardar</v-btn
                     >
                 </v-card-actions>
@@ -230,4 +231,9 @@ export default {
     components: { Datepicker },
 };
 </script>
-<style></style>
+<style>
+.custom-add-button {
+    margin: 0;
+    margin-top: -50px;
+}
+</style>

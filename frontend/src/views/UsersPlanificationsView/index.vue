@@ -132,6 +132,7 @@
                 </v-card-text>
                 <v-card-actions class="d-flex justify-end">
                     <v-btn
+                        style="margin-top: -35px"
                         type="submit"
                         @click="saveCalification()"
                         color="rgba(34, 56, 67, 0.85)"
@@ -264,7 +265,7 @@ export default {
                 this.authStore.user.user
             );
             let responseUsers = await localAxios.get(
-                "/admin/users/get-players"
+                "/admin/users/get-players-accepted"
             );
 
             let responseCalifications = await localAxios.post(
@@ -514,6 +515,7 @@ export default {
         async AddCalification(item) {
             this.dialogs.AddCalification.show = true;
             this.dialogs.AddCalification.userPlan = item;
+            this.calification = item.calification;
         },
     },
 };

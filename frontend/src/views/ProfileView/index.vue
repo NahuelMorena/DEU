@@ -47,7 +47,15 @@
                                         :rules="rules.email"
                                     ></v-text-field>
                                 </v-col>
-                                <v-col cols="6">
+                                <v-col
+                                    v-if="
+                                        !(
+                                            authStore.hasAuthority('TRAINER') ||
+                                            authStore.hasAuthority('ADMIN')
+                                        )
+                                    "
+                                    cols="6"
+                                >
                                     <v-select
                                         :rules="rules.usertype"
                                         v-model="form.usertype"
@@ -58,6 +66,13 @@
                                         label="Tipo de jugador"
                                         required
                                     ></v-select>
+                                </v-col>
+                                <v-col v-else cols="6">
+                                    <v-text-field
+                                        label="Rol asignado"
+                                        v-model="role"
+                                        readonly
+                                    ></v-text-field>
                                 </v-col>
                             </v-row>
                             <v-row>
@@ -124,6 +139,7 @@ export default {
         allRoles: null,
         allTypes: null,
         showPassword: null,
+        role: null,
         form: {
             name: "",
             surname: "",
@@ -161,9 +177,12 @@ export default {
         let response2 = await localAxios.get("/admin/users/get-types");
         this.allTypes = response2.data;
         this.form = { ...this.user };
+        this.role =
+            this.user.roles[0].name === "TRAINER"
+                ? "Entrenador"
+                : "Administrador";
         let response = await localAxios.get("/admin/roles");
         this.allRoles = response.data;
-        console.log(this.user);
     },
     methods: {
         async save() {
