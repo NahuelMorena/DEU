@@ -1,6 +1,6 @@
 <template>
     <div>
-        <HeaderComponent title="Home view" />
+        <HeaderComponent title="Pantalla principal" />
         <v-container class="general-padding">
             <!--
                 <v-btn color="error" @click="requestBloqueado">Request bloqueado</v-btn>

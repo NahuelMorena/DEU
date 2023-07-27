@@ -153,6 +153,7 @@ import { localAxios } from "@/axios";
 import Multiselect from "vue-multiselect";
 import moment from "moment";
 import draggable from "vuedraggable";
+import { SnackbarStore } from "@/store/snackbar";
 
 export default {
     components: {
@@ -163,6 +164,7 @@ export default {
         value: { type: Boolean },
     },
     data: () => ({
+        snackbarStore: SnackbarStore(),
         localShow: false,
         trainings: [],
         players: [],
@@ -196,7 +198,9 @@ export default {
             };
             this.selectedTrainings.push(nuevoObjeto);
             this.valueMultiselect = [];
-            console.log(this.selectedTrainings);
+            this.snackbarStore.open(
+                "Entrenamiento: " + nuevoObjeto.training.name + " seleccionado!"
+            );
         },
 
         actualizarOrden() {

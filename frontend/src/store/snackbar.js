@@ -1,12 +1,17 @@
 import { defineStore } from "pinia";
+import { StoreConfig } from "@/store/store";
 
 export const SnackbarStore = defineStore("snackbar", {
     state: () => ({
         alerts: [],
     }),
     actions: {
-        open(text, color = "indigo") {
-            let alert = { text, color };
+        open(text) {
+            let storeConfig = StoreConfig();
+            let alert = {
+                text,
+                color: storeConfig.$state.colorPalette.background,
+            };
             this.alerts.push(alert);
             setTimeout(() => {
                 this.close(alert);
