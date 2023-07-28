@@ -21,16 +21,13 @@ import { defineComponent } from "vue";
 import { StoreConfig } from "@/store/store";
 export default {
     data: () => ({
-        storeConfig: null,
+        storeConfig: StoreConfig(),
     }),
     props: {
         title: {
             type: String,
             required: true,
         },
-    },
-    mounted() {
-        this.storeConfig = StoreConfig();
     },
     methods: {
         getTitleSizeStyle() {
