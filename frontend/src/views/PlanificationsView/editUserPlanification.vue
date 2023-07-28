@@ -4,10 +4,16 @@
             <v-card style="width: 600px">
                 <v-card-title
                     class="d-flex justify-space-between align-center mb-4"
+                    tabindex="0"
                 >
                     <div>Asigne jugadores a la planificacion</div>
                     <div>
-                        <v-btn icon @click="closeAll()" aria-label="Cerrar">
+                        <v-btn
+                            icon
+                            @click="closeAll()"
+                            aria-label="Cerrar"
+                            tabindex="0"
+                        >
                             <v-icon>mdi-close</v-icon>
                         </v-btn>
                     </div>
@@ -16,8 +22,14 @@
                     <v-form ref="form" @submit.prevent="addUserPlanification">
                         <v-row>
                             <v-col cols="12">
+                                <b>
+                                    <label for="training-select">
+                                        Seleccione entrenamiento
+                                    </label>
+                                </b>
                                 <multiselect
                                     v-model="valueMultiselect"
+                                    id="training-select"
                                     placeholder="Seleccione jugadores a los que se les asignara"
                                     label="name"
                                     track-by="id"
@@ -33,15 +45,15 @@
                         <v-row>
                             <v-col cols="12">
                                 <li>
-                                    <b><v-label>Lista de jugadores</v-label></b>
+                                    <b><span>Lista de jugadores</span></b>
                                 </li>
                                 <li>
                                     <div class="item-container">
                                         <v-col style="margin-left: -10px">
-                                            <b><v-label>Fecha</v-label></b>
+                                            <b><span>Fecha</span></b>
                                         </v-col>
                                         <v-col style="margin-left: 155px">
-                                            <b><v-label>Nombre</v-label></b>
+                                            <b><span>Nombre</span></b>
                                         </v-col>
                                     </div>
                                 </li>

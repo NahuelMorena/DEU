@@ -15,21 +15,30 @@
                 <v-card-text style="max-height: 500px; overflow-y: auto">
                     <v-row>
                         <v-col cols="12">
+                            <label for="name-field">
+                                Nombre de la planificación</label
+                            >
                             <v-text-field
                                 v-model="name"
                                 :rules="rules.name"
-                                label="Nombre de la planificación"
                                 required
+                                id="name-field"
                             ></v-text-field>
                         </v-col>
                     </v-row>
 
                     <v-row>
                         <v-col cols="12">
+                            <b>
+                                <label for="training-select">
+                                    Seleccione entrenamiento
+                                </label>
+                            </b>
                             <multiselect
                                 v-model="valueMultiselect"
-                                placeholder="Seleccione entrenamiento"
+                                id="training-select"
                                 label="name"
+                                placeholder="Seleccione entrenamiento....."
                                 :options="trainings"
                                 :multiple="true"
                                 :close-on-select="false"
@@ -41,19 +50,23 @@
                     <v-row
                         ><v-col cols="12">
                             <li>
-                                <b
-                                    ><v-label
-                                        >Lista de entrenamientos</v-label
-                                    ></b
-                                >
+                                <b><span>Lista de entrenamientos</span></b>
                             </li>
                             <li>
                                 <div class="item-container">
                                     <v-col style="margin-left: 10px">
-                                        <b><v-label>Minutos</v-label></b>
+                                        <b>
+                                            <label for="minutes-input"
+                                                >Minutos</label
+                                            ></b
+                                        >
                                     </v-col>
                                     <v-col style="margin-left: 100px">
-                                        <b><v-label>Nombre</v-label></b>
+                                        <b>
+                                            <span for="name-input"
+                                                >Nombre</span
+                                            ></b
+                                        >
                                     </v-col>
                                 </div>
                             </li>
@@ -77,6 +90,7 @@
                                             v-model="item.minutes"
                                             class="item-minutes"
                                             min="0"
+                                            id="minutes-input"
                                             placeholder="Seleccione minutos..."
                                         />
                                         <div class="item-training-name">

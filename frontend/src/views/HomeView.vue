@@ -48,9 +48,7 @@ export default {
         filteredItems() {
             if (this.authStore.hasAuthority("USER")) {
                 return this.items.filter(
-                    (option) =>
-                        this.authStore.hasAuthority("USER") &&
-                        option.subMenu !== "Entrenador"
+                    (option) => option.subMenu !== "Entrenador"
                 );
             }
             return this.items;

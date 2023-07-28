@@ -31,6 +31,7 @@
                                 <v-tooltip top>
                                     <template v-slot:activator="{ on, attrs }">
                                         <v-btn
+                                            aria-label="Observar permisos"
                                             v-bind="attrs"
                                             v-on="on"
                                             icon

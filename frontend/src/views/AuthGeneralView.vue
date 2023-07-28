@@ -18,8 +18,10 @@
                     color: storeConfig.$state.colorPalette.text,
                     marginTop: '0px',
                 }"
+                aria-label="Menu desplegable izquierdo"
             ></v-app-bar-nav-icon>
             <v-toolbar-title
+                aria-label="Pagina principal"
                 @click="redirectToHome()"
                 :style="getTitleSizeStyle()"
                 style="cursor: pointer"
@@ -34,7 +36,7 @@
                     <v-btn
                         v-on="on"
                         class="black--text"
-                        aria-label="Menú"
+                        aria-label="Abrir Menú"
                         icon
                         :style="{
                             marginTop: '0px',
@@ -44,6 +46,7 @@
                             :style="{
                                 color: storeConfig.$state.colorPalette.text,
                             }"
+                            aria-label="Icono de Puntos Verticales"
                             >mdi-dots-vertical
                         </v-icon>
                     </v-btn>
@@ -92,6 +95,7 @@
                                 :style="{
                                     color: storeConfig.$state.colorPalette.text,
                                 }"
+                                aria-label="Icono de cerrar sesión"
                             >
                                 mdi-logout
                             </v-icon>
@@ -212,6 +216,7 @@ export default {
         },
     },
 };
+///
 </script>
 
 <style>

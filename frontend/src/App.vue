@@ -1,5 +1,6 @@
 <template>
     <v-app id="inspire" style="background-color: #eee">
+        <h1>Deportes App</h1>
         <BlockUiVue />
         <GlobalDialogs />
         <router-view />

@@ -1,133 +1,141 @@
 <template>
-    <v-layout fill-height>
-        <v-col class="d-flex justify-center align-center">
-            <v-card style="width: 500px" v-on:keyup.enter="logearse">
-                <v-card-title primary-title class="mb-7">
-                    <div class="text-h4">Registrarse</div>
-                </v-card-title>
-                <v-card-text style="margin-top: -55px">
-                    <v-form ref="form">
-                        <v-row>
-                            <v-col cols="12">
-                                <v-select
-                                    :rules="rules.trainer"
-                                    v-model="form.trainer"
-                                    :items="allTrainers"
-                                    item-text="name"
-                                    item-value="id"
-                                    data-vv-name="select"
-                                    label="Entrenador"
-                                    required
-                                    return-object
-                                ></v-select>
-                            </v-col>
-                        </v-row>
-                        <v-row>
-                            <v-col cols="6">
-                                <v-text-field
-                                    label="Nombre"
-                                    v-model="form.name"
-                                    :rules="rules.name"
-                                ></v-text-field>
-                            </v-col>
-                            <v-col cols="6">
-                                <v-text-field
-                                    label="Apellido"
-                                    v-model="form.surname"
-                                    :rules="rules.surname"
-                                ></v-text-field>
-                            </v-col>
-                        </v-row>
-                        <v-row>
-                            <v-col cols="6">
-                                <Datepicker
-                                    v-model="form.birthdate"
-                                    label="Fecha de nacimiento"
-                                ></Datepicker>
-                            </v-col>
-                            <v-col cols="6">
-                                <v-text-field
-                                    label="Telefono"
-                                    v-model="form.telephone"
-                                    :rules="rules.telephone"
-                                    type="number"
-                                ></v-text-field>
-                            </v-col>
-                        </v-row>
-                        <v-row>
-                            <v-col cols="6">
-                                <v-text-field
-                                    label="Email"
-                                    v-model="form.email"
-                                    :rules="rules.email"
-                                ></v-text-field>
-                            </v-col>
-                            <v-col cols="6">
-                                <v-select
-                                    :rules="rules.usertype"
-                                    v-model="form.usertype"
-                                    :items="allTypes"
-                                    item-text="name"
-                                    item-value="id"
-                                    data-vv-name="select"
-                                    label="Tipo de jugador"
-                                    required
-                                    return-object
-                                ></v-select>
-                            </v-col>
-                        </v-row>
-                        <v-row>
-                            <v-col cols="6">
-                                <v-text-field
-                                    label="Nombre del usuario"
-                                    v-model="form.username"
-                                    :rules="rules.username"
-                                ></v-text-field>
-                            </v-col>
-                            <v-col cols="6">
-                                <v-text-field
-                                    v-model="form.password"
-                                    :append-icon="
-                                        showPassword ? 'mdi-eye' : 'mdi-eye-off'
-                                    "
-                                    :rules="rules.password"
-                                    :type="showPassword ? 'text' : 'password'"
-                                    label="Contraseña del usuario"
-                                    counter
-                                    @click:append="showPassword = !showPassword"
-                                ></v-text-field>
-                            </v-col>
-                        </v-row>
-                    </v-form>
-                    <v-card-actions class="d-flex justify-end">
-                        <v-btn
-                            color="rgba(34, 56, 67, 0.85)"
-                            dark
-                            block
-                            class="elevation-0"
-                            @click="register"
+    <div role="main">
+        <v-layout fill-height>
+            <v-col class="d-flex justify-center align-center">
+                <v-card style="width: 500px" v-on:keyup.enter="logearse">
+                    <v-card-title primary-title class="mb-7">
+                        <div class="text-h4">Registrarse</div>
+                    </v-card-title>
+                    <v-card-text style="margin-top: -55px">
+                        <v-form ref="form">
+                            <v-row>
+                                <v-col cols="12">
+                                    <v-select
+                                        :rules="rules.trainer"
+                                        v-model="form.trainer"
+                                        :items="allTrainers"
+                                        item-text="name"
+                                        item-value="id"
+                                        data-vv-name="select"
+                                        label="Entrenador"
+                                        required
+                                        return-object
+                                    ></v-select>
+                                </v-col>
+                            </v-row>
+                            <v-row>
+                                <v-col cols="6">
+                                    <v-text-field
+                                        label="Nombre"
+                                        v-model="form.name"
+                                        :rules="rules.name"
+                                    ></v-text-field>
+                                </v-col>
+                                <v-col cols="6">
+                                    <v-text-field
+                                        label="Apellido"
+                                        v-model="form.surname"
+                                        :rules="rules.surname"
+                                    ></v-text-field>
+                                </v-col>
+                            </v-row>
+                            <v-row>
+                                <v-col cols="6">
+                                    <Datepicker
+                                        v-model="form.birthdate"
+                                        label="Fecha de nacimiento"
+                                    ></Datepicker>
+                                </v-col>
+                                <v-col cols="6">
+                                    <v-text-field
+                                        label="Telefono"
+                                        v-model="form.telephone"
+                                        :rules="rules.telephone"
+                                        type="number"
+                                    ></v-text-field>
+                                </v-col>
+                            </v-row>
+                            <v-row>
+                                <v-col cols="6">
+                                    <v-text-field
+                                        label="Email"
+                                        v-model="form.email"
+                                        :rules="rules.email"
+                                    ></v-text-field>
+                                </v-col>
+                                <v-col cols="6">
+                                    <v-select
+                                        :rules="rules.usertype"
+                                        v-model="form.usertype"
+                                        :items="allTypes"
+                                        item-text="name"
+                                        item-value="id"
+                                        data-vv-name="select"
+                                        label="Tipo de jugador"
+                                        required
+                                        return-object
+                                    ></v-select>
+                                </v-col>
+                            </v-row>
+                            <v-row>
+                                <v-col cols="6">
+                                    <v-text-field
+                                        label="Nombre del usuario"
+                                        v-model="form.username"
+                                        :rules="rules.username"
+                                    ></v-text-field>
+                                </v-col>
+                                <v-col cols="6">
+                                    <v-text-field
+                                        v-model="form.password"
+                                        :append-icon="
+                                            showPassword
+                                                ? 'mdi-eye'
+                                                : 'mdi-eye-off'
+                                        "
+                                        :rules="rules.password"
+                                        :type="
+                                            showPassword ? 'text' : 'password'
+                                        "
+                                        label="Contraseña del usuario"
+                                        counter
+                                        @click:append="
+                                            showPassword = !showPassword
+                                        "
+                                    ></v-text-field>
+                                </v-col>
+                            </v-row>
+                        </v-form>
+                        <v-card-actions class="d-flex justify-end">
+                            <v-btn
+                                color="rgba(34, 56, 67, 0.85)"
+                                dark
+                                block
+                                class="elevation-0"
+                                @click="register"
+                            >
+                                Ingresar
+                            </v-btn>
+                        </v-card-actions>
+                        <div class="text-center mt-3">
+                            ¿Ya tienes cuenta?
+                            <a href="#" @click="login()" class="register-link"
+                                >Ingresar</a
+                            >
+                        </div>
+                        <v-alert
+                            class="mt-3"
+                            v-model="loginError"
+                            dismissible
+                            type="error"
                         >
-                            Ingresar
-                        </v-btn>
-                    </v-card-actions>
-                    <div class="text-center mt-3">
-                        ¿Ya tienes cuenta?
-                        <a href="#" @click="login()" class="register-link"
-                            >Ingresar</a
-                        >
-                    </div>
-                    <v-alert
-                        class="mt-3"
-                        v-model="loginError"
-                        dismissible
-                        type="error"
-                    >
-                        Error al iniciar sesion
-                    </v-alert>
-                </v-card-text>
-            </v-card>
-        </v-col>
-    </v-layout>
+                            Error al iniciar sesion
+                        </v-alert>
+                    </v-card-text>
+                </v-card>
+            </v-col>
+        </v-layout>
+    </div>
 </template>
 <script>
 import { localAxios } from "@/axios";
