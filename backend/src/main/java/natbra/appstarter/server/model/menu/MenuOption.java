@@ -15,8 +15,9 @@ public enum MenuOption {
 	Trainings("Entrenamientos", "/trainings", "mdi-run", SubMenu.Trainer.getName()),
 	Planifications("Planificaciones", "/planifications", "mdi-file-account", SubMenu.Trainer.getName()),
 	UsersPlanifications("Planificaciones de usuarios", "/users_planifications", "mdi-account-outline",
-			SubMenu.Trainer.getName());
-
+			SubMenu.Trainer.getName()),
+	PlanificationsByPlayer("Entrenamientos asignados", "/users_planifications", "mdi-account-outline",
+			SubMenu.Player.getName());
 	private String name;
 	private String url;
 	private String icon;

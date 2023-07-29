@@ -163,11 +163,13 @@
 import { AuthStore } from "@/store/auth";
 import { localAxios } from "@/axios";
 import { StoreConfig } from "@/store/store";
+
 export default {
     data: () => ({
         items: [],
         drawer: null,
         storeConfig: null,
+        authStore: AuthStore(),
     }),
     computed: {
         currentRoute: function () {
@@ -193,8 +195,13 @@ export default {
             });
         },
         splitInSubGroups(menuOptions) {
-            let menuInSubGroups = [];
+            const menuInSubGroups = {};
             menuOptions.forEach((mp) => {
+                if (
+                    this.authStore.hasAuthority("USER") &&
+                    mp.subMenu === "Entrenador"
+                )
+                    return;
                 if (!menuInSubGroups[mp.subMenu])
                     menuInSubGroups[mp.subMenu] = [];
                 menuInSubGroups[mp.subMenu].push(mp);

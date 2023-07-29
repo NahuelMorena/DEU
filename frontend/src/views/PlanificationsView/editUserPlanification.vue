@@ -4,16 +4,10 @@
             <v-card style="width: 600px">
                 <v-card-title
                     class="d-flex justify-space-between align-center mb-4"
-                    tabindex="0"
                 >
                     <div>Asigne jugadores a la planificacion</div>
                     <div>
-                        <v-btn
-                            icon
-                            @click="closeAll()"
-                            aria-label="Cerrar"
-                            tabindex="0"
-                        >
+                        <v-btn icon @click="closeAll()" aria-label="Cerrar">
                             <v-icon>mdi-close</v-icon>
                         </v-btn>
                     </div>

@@ -4,6 +4,7 @@ public enum SubMenu {
 	
 	General("General"),
 	Trainer("Entrenador"),
+	Player("Jugador"),
 	Admin("Administrador");
 
 	
