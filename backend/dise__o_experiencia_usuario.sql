@@ -51,7 +51,7 @@ INSERT INTO `authorities` (`id`, `name`) VALUES
 (17, 'CAN_VIEW_PROFILE'),
 (18, 'CAN_VIEW_SETTING'),
 (19, 'CAN_VIEW_PLAYERSREQUESTS'),
-(20, 'CAN_VIEW_PLANIFICATIONBYPLAYER');
+(20, 'CAN_VIEW_PLANIFICATIONSBYPLAYER');
 
 -- --------------------------------------------------------
 
