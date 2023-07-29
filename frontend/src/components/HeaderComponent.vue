@@ -13,6 +13,7 @@
 .googlefont {
     font-size: 50px;
     font-family: "Didact Gothic", sans-serif;
+    margin-top: -50px;
 }
 </style>
 

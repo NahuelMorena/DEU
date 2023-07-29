@@ -56,8 +56,8 @@
                                 <div class="item-container">
                                     <v-col style="margin-left: 10px">
                                         <b>
-                                            <label for="minutes-input"
-                                                >Minutos</label
+                                            <span for="minutes-input"
+                                                >Minutos</span
                                             ></b
                                         >
                                     </v-col>
