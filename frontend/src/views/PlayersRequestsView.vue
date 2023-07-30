@@ -1,6 +1,6 @@
 <template>
     <div>
-        <HeaderComponent title="Mis jugadores" />
+        <HeaderComponent title="Solicitudes pendientes" />
         <v-container class="general-padding">
             <v-card>
                 <v-card-title> Jugadores </v-card-title>
@@ -31,20 +31,28 @@
                                 <td>
                                     <v-btn
                                         icon
-                                        color="green"
                                         @click="acceptPlayer(item)"
                                         aria-label="Aceptar"
-                                        >Aceptar
+                                        color="rgba(34, 56, 67, 0.85)"
+                                        dark
+                                        :style="{
+                                            marginTop: '0px',
+                                        }"
+                                        ><v-icon>mdi-check</v-icon>
                                     </v-btn>
                                 </td>
 
                                 <td>
                                     <v-btn
                                         icon
-                                        color="red"
                                         @click="rejectPlayer(item)"
                                         aria-label="Rechazar"
-                                        >Rechazar
+                                        color="rgba(34, 56, 67, 0.85)"
+                                        dark
+                                        :style="{
+                                            marginTop: '0px',
+                                        }"
+                                        ><v-icon>mdi-close</v-icon>
                                     </v-btn>
                                 </td>
                             </tr>
@@ -55,23 +63,54 @@
 
             <!-- Dialogs -->
 
-            <v-dialog v-model="dialogs.rejectUser" persistent max-width="600px">
+            <v-dialog v-model="dialogs.rejectUser" max-width="500px">
                 <v-card>
-                    <v-card-title class="headline">
-                        ¿Deseas rechazar al usuario seleccionado?
-                    </v-card-title>
+                    <v-card-title>Rechazar jugador</v-card-title>
+                    <v-card-text>
+                        ¿Deseas rechazar al jugador seleccionado?
+                    </v-card-text>
                     <v-card-actions>
                         <v-btn
-                            color="error"
-                            @click="rejectUser()"
-                            aria-label="Eliminar"
-                            >Eliminar</v-btn
+                            color="rgba(34, 56, 67, 0.85)"
+                            dark
+                            @click="dialogs.rejectUser = false"
+                        >
+                            <v-icon left>mdi-close</v-icon>
+                            Cancelar</v-btn
                         >
                         <v-btn
-                            text
-                            @click="dialogs.rejectUser = false"
-                            aria-label="Cancelar"
-                            >Cancelar</v-btn
+                            color="rgba(34, 56, 67, 0.85)"
+                            dark
+                            @click="rejectUser()"
+                        >
+                            <v-icon left>mdi-delete</v-icon>
+                            Rechazar</v-btn
+                        >
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+            <v-dialog v-model="dialogs.acceptUser" max-width="500px">
+                <v-card>
+                    <v-card-title>Aceptar jugador</v-card-title>
+                    <v-card-text>
+                        ¿Deseas aceptar al jugador seleccionado?
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-btn
+                            color="rgba(34, 56, 67, 0.85)"
+                            dark
+                            @click="dialogs.acceptUser = false"
+                        >
+                            <v-icon left>mdi-close</v-icon>
+                            Cancelar</v-btn
+                        >
+                        <v-btn
+                            color="rgba(34, 56, 67, 0.85)"
+                            dark
+                            @click="acceptUser()"
+                        >
+                            <v-icon left>mdi-check</v-icon>
+                            Aceptar</v-btn
                         >
                     </v-card-actions>
                 </v-card>
@@ -111,7 +150,9 @@ export default {
         },
         dialogs: {
             rejectUser: false,
+            acceptUser: false,
         },
+        user: null,
     }),
     async mounted() {
         let response = await localAxios.get(
@@ -121,11 +162,16 @@ export default {
         console.log(response);
     },
     methods: {
-        async acceptPlayer(user) {
-            let response = await localAxios.put("/register", user);
+        acceptPlayer(item) {
+            this.dialogs.acceptUser = true;
+            this.user = item;
+        },
+        async acceptUser() {
+            let response = await localAxios.put("/register", this.user);
             console.log(response);
-            const index = this.datatable.items.indexOf(user);
+            const index = this.datatable.items.indexOf(this.user);
             if (index >= 0) this.datatable.items.splice(index, 1);
+            this.dialogs.acceptUser = false;
         },
         rejectPlayer(item) {
             this.dialogs.rejectUser = true;

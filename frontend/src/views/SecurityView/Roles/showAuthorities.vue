@@ -7,7 +7,11 @@
                 >
                     <div>Permisos para el rol: {{ roleName }}</div>
                     <div>
-                        <v-btn icon @click="closeAll">
+                        <v-btn
+                            icon
+                            @click="closeAll"
+                            aria-label="Cerrar ventana"
+                        >
                             <v-icon>mdi-close</v-icon>
                         </v-btn>
                     </div>

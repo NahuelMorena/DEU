@@ -47,6 +47,21 @@ private final String baseUrl = "/admin/users";
 
 	}
 
+	@PostMapping(baseUrl)
+	public HttpEntity<User> addUserByTrainer(@RequestBody User user){
+		if(userRepository.existsByUsernameOrEmail(user.getUsername(),user.getEmail())){
+			return ResponseEntity.ok(null);
+		}else{
+			user.setPassword(encoder.encode(user.getPassword()));
+			Set<Role> roles = new HashSet<>();
+			Role role = rolesRepository.findById(1L).orElseThrow(NoSuchElementException::new);
+			roles.add(role);
+			List<Role> list = new ArrayList<>(roles);
+			user.setRoles(list);
+			return ResponseEntity.ok(userRepository.save(user));
+		}
+	}
+
 	@PutMapping("/register")
 	public HttpEntity<User> acceptUser(@RequestBody User user){
 		User player = userRepository.findById(user.getId()).orElseThrow(NoSuchElementException::new);
@@ -65,6 +80,18 @@ private final String baseUrl = "/admin/users";
 	@GetMapping(baseUrl + "/get-players")
 	public HttpEntity<List<User>> getUsersByTrainerId(){
 		return ResponseEntity.ok(userRepository.findAllByTrainerId(utils.getAuthUser().getId()));
+	}
+
+	@GetMapping(baseUrl + "/get-players-accepted")
+	public HttpEntity<Set<User>> getAcceptedUsersByTrainerId(){
+		List<User> users = userRepository.findAllByTrainerId(utils.getAuthUser().getId());
+		Set<User> usersRequests = new HashSet<>();
+		for(User user : users){
+			if (!user.getRoles().isEmpty()){
+				usersRequests.add(user);
+			}
+		}
+		return ResponseEntity.ok(usersRequests);
 	}
 
 	@GetMapping(baseUrl + "/get-players-requests")
@@ -105,17 +132,6 @@ private final String baseUrl = "/admin/users";
 	public HttpEntity<User> deleteUser(@RequestBody User user){
 		userRepository.delete(user);
 		return ResponseEntity.ok(user);
-	}
-	
-	@PostMapping(baseUrl)
-	public HttpEntity<User> addUser(@RequestBody User user){
-		if(userRepository.existsByUsernameOrEmail(user.getUsername(),user.getEmail())){
-			return ResponseEntity.ok(null);
-		}else{
-			user.setPassword(encoder.encode(user.getPassword()));
-			return ResponseEntity.ok(userRepository.save(user));
-		}
-
 	}
 
 	@PutMapping(baseUrl)

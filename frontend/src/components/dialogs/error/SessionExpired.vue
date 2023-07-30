@@ -8,7 +8,12 @@
             <v-card-title class="d-flex justify-space-between align-center">
                 <div>Se vencio la sesion</div>
                 <div>
-                    <v-btn text icon @click="sessionExpiredStore.close()">
+                    <v-btn
+                        text
+                        icon
+                        @click="sessionExpiredStore.close()"
+                        aria-label="Cerrar boton de sesion vencida"
+                    >
                         <v-icon>mdi-close</v-icon>
                     </v-btn>
                 </div>

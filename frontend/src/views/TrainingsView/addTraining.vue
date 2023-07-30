@@ -72,6 +72,7 @@
                                     v-model="form.description"
                                     label="Descripcion"
                                     required
+                                    rows="3"
                                 ></v-textarea>
                             </v-col>
                         </v-row>
@@ -84,6 +85,7 @@
                         @click="save()"
                         color="rgba(34, 56, 67, 0.85)"
                         dark
+                        class="custom-add-button"
                         >Agregar</v-btn
                     >
                 </v-card-actions>
@@ -164,4 +166,8 @@ export default {
     components: { Datepicker },
 };
 </script>
-<style></style>
+<style>
+.custom-add-button {
+    margin-top: -10px;
+}
+</style>
