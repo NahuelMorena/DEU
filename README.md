@@ -1,92 +1,70 @@
-# adminstock
+# Deportes App
 
+Este es el repositorio correspondiente al Trabajo Final Integrador (TFI) del curso de Diseño de Experiencia de Usuario y DCU de la Facultad de Informática de la Universidad Nacional de La Plata, desarrollado sobre la cursada correspondiente al primer semestre del año 2023. 
 
+## Descripción del proyecto
 
-## Getting started
+El objetivo de este proyecto es brindar una aplicación que funcione como una herramienta de asistencia para un grupo de entrenadores de diferentes deportes, como fútbol, hockey, rugby y ciclismo. La aplicación ofrece características de gestión de equipos y jugadores, planificación de entrenamientos y asignación de actividades, lo que permite un seguimineto efectivo de los jugadores.
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+## Requisitos técnicos
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+La aplicación se ha implementado utilizando las siguientes tecnologías:
 
-## Add your files
+* Backend: Spring Boot v2.7.5 con Java v17.0.7.
+* Frontend: Vue.js v2.7.14.
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+## Instrucciones para iniciar la aplicación
 
+### Frontend
+
+Para ejecutar el frontend, sigue estos pasos: 
+
+1. Ubícate en el directorio `/frontend`.
+2. Ejecuta el siguiente comando:
+
+```bash
+$   npm run serve
 ```
-cd existing_repo
-git remote add origin https://gitlab.com/Huggias/adminstock.git
-git branch -M main
-git push -uf origin main
-```
+## Funcionalidades de la aplicación
 
-## Integrate with your tools
+Deportes App tiene como objetivo principal proporcionar un completo seguimineto de los jugadores en distintas disciplinas deportivas. Para lograr esto, la aplicación cuenta con las siguientes funcionalidades:
 
-- [ ] [Set up project integrations](https://gitlab.com/Huggias/adminstock/-/settings/integrations)
+1. `Registro de Planificación de Entrenaminetos:` Los entrenadores pueden registrar la planificación de entrenamientos, estableciendo el número de sesiones (por ejemplo, 8 entrenamientos) y proporcionando detalles específicos para cada uno. Estos detalles incluyen el tiempo de entrada en calor, ejercicios a realizar, cantidad de repeticiones. Cada entrenamiento estará etiquetado según su tipo (fuerza, resistencia, velocidad o estrategia).
+2. `Gestión de Jugadores:` La aplicación ofrecerá una sección dedicada al Alta, Baja y Modificación (ABM) de jugadores. Aquí, los entrenadores podrán administrar la información de los jugadores y mantener actualizado el registro de su rendimineto.
+3. `Evaluación de Rendimiento:` Los entrenadores tendrán la capacidad de evaluar el rendimiento de los jugadores después de cada entrenamiento. Podrán calificar las actuaciones de los jugadores.
+4. `Gestion de seguridad:` Los administradores tendrán la capacidad de administrar los roles y permisos con los que operara la aplicación.
 
-## Collaborate with your team
+## Roles y usuarios predefinidos
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Automatically merge when pipeline succeeds](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+La aplicación cuenta con tres roles predefinidos, cada uno con sus respectivos usuarios para iniciar sesión:
 
-## Test and Deploy
+### Administrador
 
-Use the built-in continuous integration in GitLab.
+* Nombre de usuario: `admin`
+* Contraseña: `admin`
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+El rol de Administrador tiene acceso a la gestión de usuarios, roles y permisos dentro de la aplicación. Puede ver, crear, editar y eliminar usuarios, roles y permisos.
 
-***
+### Entrenador
 
-# Editing this README
+* Nombre de usuario: `fer`
+* Contraseña: `fer`
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
+El rol rol de Entrenador tiene acceso a funcionalidades más específicas en el sistema. Puede gestionar jugadores, entrenamientos y planificaciones. Además, puede ver los entrenaminetos asignados a cada jugador y calificar su desempeño.
 
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+### Jugador 
 
-## Name
-Choose a self-explaining name for your project.
+* Nombre de usuario: `player`
+* Contraseña: `player`
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+El rol de Jugador tiene acceso a la visualización de los entrenamientos asignados por su respectivo entrenador. También puede ver las calificaciones recibidas después de ser evaluado.
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+## Consideraciónes 
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+### Configuración de pantalla
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+La aplicación ofrece un sistema de configuraciones de pantalla que permite a los usuarios personalizar el aspecto visual para adaptarse a sus preferencias o necesidades. Las opciones incluyen ajustes de paletas de colores y tamaños de letra, lo que garantiza una experiencia de lectura cómoda y adecuada.
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+### Accesibilidad web
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+Durante el desarrollo de la aplicación, se prestó especial atención a la accesibilidad web. Se realizaron pruebas utilizando la herramienta Wave, que evalúa la accesibilidad del sitio web y proporciona información sobre constraste y estilos de página. Como resultado, la aplicación es compatible con lectores de pantalla, asegurando una experiencia accesible para todos los usuarios. 
