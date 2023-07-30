@@ -70,6 +70,9 @@
                                                 v-bind="attrs"
                                                 v-on="on"
                                                 icon
+                                                :style="{
+                                                    marginTop: '0px',
+                                                }"
                                                 aria-label="Editar asignacion de usuarios a planificacion"
                                                 @click="
                                                     editUserPlanification(item)
@@ -95,6 +98,9 @@
                                                 v-bind="attrs"
                                                 v-on="on"
                                                 icon
+                                                :style="{
+                                                    marginTop: '0px',
+                                                }"
                                                 aria-label="Editar planificacion"
                                                 @click="editPlanification(item)"
                                             >
@@ -113,6 +119,9 @@
                                                 v-bind="attrs"
                                                 v-on="on"
                                                 icon
+                                                :style="{
+                                                    marginTop: '0px',
+                                                }"
                                                 aria-label="Borrar planificacion"
                                                 @click="
                                                     deletePlanification(item)

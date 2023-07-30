@@ -51,6 +51,9 @@
                                 <td>
                                     <v-btn
                                         icon
+                                        :style="{
+                                            marginTop: '0px',
+                                        }"
                                         @click="editPlayer(item)"
                                         aria-label="Editar"
                                     >
@@ -61,6 +64,9 @@
                                 <td>
                                     <v-btn
                                         icon
+                                        :style="{
+                                            marginTop: '0px',
+                                        }"
                                         @click="confirmDelete(item)"
                                         aria-label="Borrar"
                                     >

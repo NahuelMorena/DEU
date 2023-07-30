@@ -46,8 +46,11 @@
                                         <v-col style="margin-left: -10px">
                                             <b><span>Fecha</span></b>
                                         </v-col>
-                                        <v-col style="margin-left: 155px">
+                                        <v-col style="margin-left: 165px">
                                             <b><span>Nombre</span></b>
+                                        </v-col>
+                                        <v-col style="margin-left: 190px">
+                                            <b><span>Borrar</span></b>
                                         </v-col>
                                     </div>
                                 </li>
@@ -79,6 +82,9 @@
                                                 v-bind="attrs"
                                                 v-on="on"
                                                 icon
+                                                :style="{
+                                                    marginTop: '0px',
+                                                }"
                                                 aria-label="Desasignar jugador"
                                                 @click="confirmDelete(index)"
                                             >

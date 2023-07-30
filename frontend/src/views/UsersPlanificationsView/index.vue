@@ -67,6 +67,9 @@
                                                     v-bind="attrs"
                                                     v-on="on"
                                                     icon
+                                                    :style="{
+                                                        marginTop: '0px',
+                                                    }"
                                                     aria-label="Agregar calificación"
                                                     @click="
                                                         AddCalification(item)
@@ -88,6 +91,9 @@
                                                     v-on="on"
                                                     aria-label="Borrar Calificación"
                                                     icon
+                                                    :style="{
+                                                        marginTop: '0px',
+                                                    }"
                                                     @click="
                                                         deleteCalification(item)
                                                     "
@@ -368,10 +374,8 @@ export default {
                 (item) => item.user.id === this.selectedUser.id
             );
 
-            let noteToSave = null;
-
-            console.log("CALIFICACIONES: ");
-            console.log(this.califications);
+            //console.log("CALIFICACIONES: ");
+            //console.log(this.califications);
 
             //filtramos los trainer planifications del usuario seleccionado (por medio de los user planifications filtrados arriba)
             //tambien le agarramos el date a esos userplanifications y lo cargamos en el vector para poder mostrar
@@ -403,11 +407,14 @@ export default {
                         ...filteredPlanification,
                         date: userPlanification.date,
                         calification: null, // Initialize calification as null
+                        calificationId: null,
                     };
 
                     if (calificationFound) {
                         modifiedPlanification.calification =
                             calificationFound.note;
+                        modifiedPlanification.calificationId =
+                            calificationFound.id;
                     }
 
                     return modifiedPlanification;
@@ -483,6 +490,12 @@ export default {
                 } else {
                     this.califications.push(newCalification.data);
                 }
+
+                this.dialogs.AddCalification.userPlan.calification =
+                    newCalification.data.note;
+                this.dialogs.AddCalification.userPlan.calificationId =
+                    newCalification.data.id;
+
                 this.getUserTrainerPlanifications();
                 this.dialogs.AddCalification.show = false;
             } else {
@@ -494,23 +507,36 @@ export default {
         },
         deleteCalification(item) {
             this.dialogs.deleteCalification = true;
-            this.calificationToDelete = item.calification;
+            this.calificationToDelete = item.calificationId;
         },
 
         async confirmDelete() {
-            this.dialogs.deleteCalification = false;
+            const calificacionEncontrada = this.califications.find(
+                (calificacion) => calificacion.id === this.calificationToDelete
+            );
             let response = await localAxios.delete(
                 "/admin/users/planifications/calification",
-                { data: this.calificationToDelete }
+                { data: calificacionEncontrada }
             );
             if (response.status == 200) {
-                const index = this.califications.indexOf(
-                    this.calificationToDelete
+                const index = this.califications.findIndex(
+                    (calification) =>
+                        calification.id === this.calificationToDelete
                 );
-                if (index >= 0) this.califications.splice(index, 1);
+                if (index >= 0) {
+                    this.califications.splice(index, 1);
+                    const itemToUpdate = this.datatable.filtered.find(
+                        (item) =>
+                            item.calificationId === this.calificationToDelete
+                    );
+                    if (itemToUpdate) {
+                        itemToUpdate.calification = "-";
+                    }
+                }
                 this.getUserTrainerPlanifications();
             }
             this.calificationToDelete = null;
+            this.dialogs.deleteCalification = false;
         },
         async AddCalification(item) {
             this.dialogs.AddCalification.show = true;

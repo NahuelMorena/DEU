@@ -54,19 +54,22 @@
                             </li>
                             <li>
                                 <div class="item-container">
-                                    <v-col style="margin-left: 10px">
+                                    <v-col style="margin-left: 5px">
                                         <b>
                                             <span for="minutes-input"
                                                 >Minutos</span
                                             ></b
                                         >
                                     </v-col>
-                                    <v-col style="margin-left: 100px">
+                                    <v-col style="margin-left: 112px">
                                         <b>
                                             <span for="name-input"
                                                 >Nombre</span
                                             ></b
                                         >
+                                    </v-col>
+                                    <v-col style="margin-left: 215px">
+                                        <b><span>Borrar</span></b>
                                     </v-col>
                                 </div>
                             </li>
@@ -108,6 +111,9 @@
                                                 v-bind="attrs"
                                                 v-on="on"
                                                 icon
+                                                :style="{
+                                                    marginTop: '0px',
+                                                }"
                                                 aria-label="Quitar entrenamiento"
                                                 @click="confirmDelete(index)"
                                             >

@@ -46,6 +46,9 @@
                                                 v-bind="attrs"
                                                 v-on="on"
                                                 icon
+                                                :style="{
+                                                    marginTop: '0px',
+                                                }"
                                                 aria-label="Editar entrenamiento"
                                                 @click="editTraining(item)"
                                             >
@@ -64,6 +67,9 @@
                                                 v-bind="attrs"
                                                 v-on="on"
                                                 icon
+                                                :style="{
+                                                    marginTop: '0px',
+                                                }"
                                                 aria-label="Borrar entrenamiento"
                                                 @click="deleteTraining(item)"
                                             >
