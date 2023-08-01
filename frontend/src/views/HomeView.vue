@@ -82,4 +82,25 @@ export default {
     left: 10px;
     bottom: 10px;
 }
+
+/* Estilos para pantallas grandes (hasta 3 cards por fila) */
+@media (min-width: 1024px) {
+    .card-container {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Estilos para pantallas medianas (hasta 2 cards por fila) */
+@media (max-width: 1023px) {
+    .card-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Estilos para pantallas pequeñas (1 card por fila) */
+@media (max-width: 767px) {
+    .card-container {
+        grid-template-columns: repeat(1, 1fr);
+    }
+}
 </style>

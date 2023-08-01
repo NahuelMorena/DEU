@@ -204,7 +204,38 @@ export default {
             if (index >= 0) this.form.roles.splice(index, 1);
         },
         async save() {
+            console.log("-------------");
+            console.log(this.form);
+            console.log(this.form.roles);
+            const isUserRole = this.form.roles.some(
+                (role) => role.name === "USER"
+            );
+            if (isUserRole) {
+                if (Number.isInteger(this.form.usertype)) {
+                    this.form.usertype = this.allTypes.find(
+                        (usertype) => usertype.id === this.form.usertype
+                    );
+                }
+            } else {
+                this.form.usertype = null;
+            }
             this.form.telephone = parseInt(this.form.telephone);
+            try {
+                let response = await localAxios.post("/register", this.form);
+                let newUser = response.data;
+                if (newUser != null) {
+                    alert("Se creo con exito el jugador");
+                } else {
+                    alert(
+                        "Ya existia una cuenta con ese nombre de usuario/email"
+                    );
+                }
+                this.$emit("saved", newUser);
+                this.closeAll();
+            } catch (error) {
+                console.log(error);
+            }
+            /** 
             const valid = this.$refs.form.validate();
             if (valid) {
                 let response = await localAxios
@@ -226,6 +257,7 @@ export default {
                 alert("Ingrese todos los datos correctamente");
                 this.$emit("input", false);
             }
+            **/
         },
     },
     components: { Datepicker },

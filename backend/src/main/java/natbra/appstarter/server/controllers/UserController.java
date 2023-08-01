@@ -36,15 +36,13 @@ private final String baseUrl = "/admin/users";
 	}
 
 	@PostMapping("/register")
-	public HttpEntity<Boolean> createUserIfNotExists(@RequestBody User user){
+	public HttpEntity<User> createUserIfNotExists(@RequestBody User user){
 		if(userRepository.existsByUsernameOrEmail(user.getUsername(),user.getEmail())){
-			return ResponseEntity.ok(false);
+			return ResponseEntity.ok(null);
 		}else{
 			user.setPassword(encoder.encode(user.getPassword()));
-			userRepository.save(user);
-			return ResponseEntity.ok(true);
+			return ResponseEntity.ok(userRepository.save(user));
 		}
-
 	}
 
 	@PostMapping(baseUrl)
