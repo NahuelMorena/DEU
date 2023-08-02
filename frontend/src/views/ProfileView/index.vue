@@ -4,7 +4,7 @@
         <v-container class="general-padding">
             <v-card>
                 <v-card-title>Perfil del Usuario</v-card-title>
-                <v-card-text v-if="user">
+                <v-card-text v-if="authStore">
                     <v-card-text>
                         <v-form ref="form">
                             <v-row>
@@ -140,6 +140,7 @@ export default {
         allTypes: null,
         showPassword: null,
         role: null,
+        snackbarStore: null,
         form: {
             name: "",
             surname: "",
@@ -167,18 +168,21 @@ export default {
         },
     }),
     async mounted() {
+        this.snackbarStore = SnackbarStore();
         this.authStore = AuthStore();
-        try {
-            let response1 = await localAxios.get("/admin/users/get-user");
-            this.user = response1.data;
-        } catch (error) {
-            console.log(error);
-        }
+        // ESTO TRAIA COMO 6 ELEMENTOS DE MAS EN ROLES
+        // try {
+        //     let response1 = await localAxios.get("/admin/users/get-user");
+        //     this.user = response1.data;
+        // } catch (error) {
+        //     console.log(error);
+        // }
         let response2 = await localAxios.get("/admin/users/get-types");
         this.allTypes = response2.data;
-        this.form = { ...this.user };
+        this.form = this.authStore.user.user;
+
         this.role =
-            this.user.roles[0].name === "TRAINER"
+            this.authStore.user.user.roles[0].name === "TRAINER"
                 ? "Entrenador"
                 : "Administrador";
         let response = await localAxios.get("/admin/roles");
@@ -187,8 +191,9 @@ export default {
     methods: {
         async save() {
             this.form.telephone = parseInt(this.form.telephone);
-
+            console.log(this.form);
             let response = await localAxios.put("/admin/users", this.form);
+            this.snackbarStore.open("Guardado", "green");
         },
     },
 };

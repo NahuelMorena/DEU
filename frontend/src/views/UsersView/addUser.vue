@@ -222,9 +222,7 @@ export default {
             try {
                 let response = await localAxios.post("/register", this.form);
                 let newUser = response.data;
-                if (newUser != null) {
-                    alert("Se creo con exito el jugador");
-                } else {
+                if (newUser != null && newUser == "") {
                     alert(
                         "Ya existia una cuenta con ese nombre de usuario/email"
                     );

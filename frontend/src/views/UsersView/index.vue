@@ -160,10 +160,12 @@ export default {
             this.datatable.items.splice(index, 1, newUser);
         },
         newUserSaved(newUser) {
-            this.datatable.items.push(newUser);
-            this.snackbarStore.open(
-                "Se creó el nuevo usuario: " + newUser.username + "."
-            );
+            if (newUser != "" && newUser != null) {
+                this.datatable.items.push(newUser);
+                this.snackbarStore.open(
+                    "Se creó el nuevo usuario: " + newUser.username + "."
+                );
+            }
         },
         confirmDelete(item) {
             this.dialogs.deleteVisit = true;
