@@ -179,7 +179,6 @@ export default {
             ],
             birthdate: [(v) => !!v || "Se requiere una fecha de nacimiento"],
             username: [(v) => !!v || "Se requiere un nombre de usuario"],
-            usertype: [(v) => !!v || "Se requiere la seleccion del tipo"],
             password: [(v) => !!v || "Se requiere una contraseña"],
         },
     }),
