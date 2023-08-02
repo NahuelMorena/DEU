@@ -36,8 +36,9 @@ public class PlanificationController {
     Utils utils;
 
     @GetMapping(baseUrl + "/basic")
-    public HttpEntity<List<Planification>> getPlanificationsBasic(){
-        return ResponseEntity.ok(planificationRepository.findAll());
+    public HttpEntity<Set<Planification>> getPlanificationsBasic(){
+        //
+        return ResponseEntity.ok(planificationRepository.findAllByUserId(utils.getAuthUser().getId()));
     }
 
     @PostMapping(baseUrl + "/retrieve")
@@ -92,6 +93,7 @@ public class PlanificationController {
     public HttpEntity<Planification> addPlanificationTrainer(@RequestBody AddPlanification planification){
         //creo la planificacion con el nombre
         Planification planification1 = new Planification();
+        planification1.setUser(utils.getAuthUser());
         planification1.setName(planification.getName());
         //la guardo y la agarro para cargarla en el trainer_planifications
 //        planification1.setTrainer_planification(planification.getTrainerPlanificationList());

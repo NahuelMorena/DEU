@@ -1,5 +1,7 @@
 package natbra.appstarter.server.model.train;
 
+import natbra.appstarter.server.model.auth.User;
+
 import javax.persistence.*;
 import java.util.Set;
 @Entity
@@ -10,6 +12,10 @@ public class Planification {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne(fetch= FetchType.EAGER)
+    @JoinColumn(name = "id_user")
+    private User user;
+
     private String name;
 
     @OneToMany(mappedBy = "planification")
@@ -19,9 +25,18 @@ public class Planification {
     public Planification(){
 
     }
-    public Planification(Long id, String name) {
+    public Planification(Long id, String name, User user) {
         this.id = id;
         this.name = name;
+        this.user = user;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Long getId() {

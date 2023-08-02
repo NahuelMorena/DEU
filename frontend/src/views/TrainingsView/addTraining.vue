@@ -15,13 +15,25 @@
                 <v-card-text>
                     <v-form ref="form" @submit.prevent="addTraining">
                         <v-row>
-                            <v-col cols="12">
+                            <v-col cols="6">
                                 <v-text-field
                                     v-model="form.name"
                                     :rules="rules.name"
                                     label="Nombre"
                                     required
                                 ></v-text-field>
+                            </v-col>
+                            <v-col cols="6">
+                                <v-select
+                                    :rules="rules.training_type"
+                                    v-model="form.training_type"
+                                    :items="allTypes"
+                                    item-text="name"
+                                    item-value="id"
+                                    data-vv-name="select"
+                                    label="Tipo de entrenamiento"
+                                    required
+                                ></v-select>
                             </v-col>
                         </v-row>
                         <v-row>
@@ -42,27 +54,6 @@
                                     type="number"
                                     required
                                 ></v-text-field>
-                            </v-col>
-                        </v-row>
-                        <v-row>
-                            <v-col cols="6">
-                                <Datepicker
-                                    :rules="rules.date"
-                                    v-model="form.date"
-                                    :label="'Fecha'"
-                                ></Datepicker>
-                            </v-col>
-                            <v-col cols="6">
-                                <v-select
-                                    :rules="rules.training_type"
-                                    v-model="form.training_type"
-                                    :items="allTypes"
-                                    item-text="name"
-                                    item-value="id"
-                                    data-vv-name="select"
-                                    label="Tipo de entrenamiento"
-                                    required
-                                ></v-select>
                             </v-col>
                         </v-row>
                         <v-row>
@@ -97,7 +88,6 @@
 <script>
 import { localAxios } from "@/axios";
 import moment from "moment";
-import Datepicker from "@/components/datepicker.vue";
 
 export default {
     props: {
@@ -127,7 +117,6 @@ export default {
             repetitions_quantity: [
                 (v) => !!v || "Se requiere la cantidad de repeticiones",
             ],
-            date: [(v) => !!v || "Se requiere una fecha"],
         },
     }),
     watch: {
@@ -163,7 +152,6 @@ export default {
             }
         },
     },
-    components: { Datepicker },
 };
 </script>
 <style>
