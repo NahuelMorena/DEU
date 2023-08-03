@@ -6,7 +6,7 @@ FROM openjdk:17-alpine
 # WORKDIR /app
 
 # Copy the Spring Boot jar file to the container
-COPY ./server/build/libs/server-0.0.1.jar app.jar
+COPY ./backend/build/libs/server-0.0.1.jar app.jar
 
 # Expose the container port
 EXPOSE 8080
