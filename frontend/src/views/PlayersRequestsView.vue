@@ -3,7 +3,7 @@
         <HeaderComponent title="Solicitudes pendientes" />
         <v-container class="general-padding">
             <v-card>
-                <v-card-title> Jugadores </v-card-title>
+                <v-card-title tabindex="0"> Jugadores </v-card-title>
                 <v-card-text>
                     <v-text-field
                         v-model="datatable.search"

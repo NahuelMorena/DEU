@@ -3,7 +3,7 @@
         <HeaderComponent title="Listado de mis entrenamientos" />
         <v-container class="general-padding">
             <v-card>
-                <v-card-title> Entrenamientos </v-card-title>
+                <v-card-title tabindex="0"> Entrenamientos </v-card-title>
                 <v-card-text>
                     <v-text-field
                         v-model="datatable.search"
@@ -28,15 +28,20 @@
                         :sort-by="['date']"
                         :sort-asc="true"
                         class="elevation-0"
+                        tabindex="0"
                     >
                         <template v-slot:item="{ item }">
                             <tr>
-                                <td>{{ item.date }}</td>
-                                <td>{{ item.name }}</td>
-                                <td>{{ item.description }}</td>
-                                <td>{{ item.training_type.name }}</td>
-                                <td>{{ item.warmup_time }}</td>
-                                <td>{{ item.repetitions_quantity }}</td>
+                                <td tabindex="0">{{ item.date }}</td>
+                                <td tabindex="0">{{ item.name }}</td>
+                                <td tabindex="0">{{ item.description }}</td>
+                                <td tabindex="0">
+                                    {{ item.training_type.name }}
+                                </td>
+                                <td tabindex="0">{{ item.warmup_time }}</td>
+                                <td tabindex="0">
+                                    {{ item.repetitions_quantity }}
+                                </td>
                                 <td>
                                     <v-tooltip top>
                                         <template

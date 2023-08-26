@@ -30,10 +30,11 @@
                         :sort-asc="true"
                         item-key="id"
                         class="elevation-0"
+                        tabindex="0"
                     >
                         <template v-slot:item="{ item }">
                             <tr>
-                                <td>{{ item.name }}</td>
+                                <td tabindex="0">{{ item.name }}</td>
                                 <!--
                                 <td>
                                     <v-tooltip top>

@@ -3,7 +3,7 @@
         <HeaderComponent title="Mis jugadores" />
         <v-container class="general-padding">
             <v-card v-if="datatable.items">
-                <v-card-title> Jugadores </v-card-title>
+                <v-card-title tabindex="0"> Jugadores </v-card-title>
                 <v-card-text>
                     <v-text-field
                         v-model="datatable.search"
@@ -36,14 +36,15 @@
                         :items="datatable.items"
                         :search="datatable.search"
                         class="elevation-0"
+                        tabindex="0"
                     >
                         <template v-slot:item="{ item }">
                             <tr>
-                                <td>{{ item.name }}</td>
-                                <td>{{ item.surname }}</td>
-                                <td>{{ item.email }}</td>
-                                <td>{{ item.telephone }}</td>
-                                <td>{{ item.birthdate }}</td>
+                                <td tabindex="0">{{ item.name }}</td>
+                                <td tabindex="0">{{ item.surname }}</td>
+                                <td tabindex="0">{{ item.email }}</td>
+                                <td tabindex="0">{{ item.telephone }}</td>
+                                <td tabindex="0">{{ item.birthdate }}</td>
                                 <td v-if="item.usertype">
                                     {{ item.usertype.name }}
                                 </td>

@@ -3,7 +3,7 @@
         <HeaderComponent title="Configuraciones" />
         <v-container class="general-padding">
             <v-card>
-                <v-card-title> Configuraciones </v-card-title>
+                <v-card-title tabindex="0"> Configuraciones </v-card-title>
                 <v-card-text>
                     <v-form
                         @submit.prevent="updateColors"

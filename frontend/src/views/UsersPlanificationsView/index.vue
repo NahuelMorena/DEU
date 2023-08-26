@@ -35,23 +35,32 @@
                         :sort-by="['planification.name', 'date', 'orderNumber']"
                         :sort-desc="true"
                         class="elevation-0"
+                        tabindex="0"
                     >
                         <template v-slot:item="{ item }">
                             <tr>
-                                <td>{{ formatDate(item.date) }}</td>
-                                <td>{{ item.planification.name }}</td>
-                                <td>{{ item.training.name }}</td>
-                                <td>{{ item.orderNumber }}</td>
-                                <td>{{ item.minutes }}</td>
+                                <td tabindex="0">
+                                    {{ formatDate(item.date) }}
+                                </td>
+                                <td tabindex="0">
+                                    {{ item.planification.name }}
+                                </td>
+                                <td tabindex="0">{{ item.training.name }}</td>
+                                <td tabindex="0">{{ item.orderNumber }}</td>
+                                <td tabindex="0">{{ item.minutes }}</td>
                                 <!--
                                 <td>{{ item.training.description }}</td>
                                 -->
-                                <td>{{ item.training.training_type.name }}</td>
-                                <td>{{ item.training.warmup_time }}</td>
-                                <td>
+                                <td tabindex="0">
+                                    {{ item.training.training_type.name }}
+                                </td>
+                                <td tabindex="0">
+                                    {{ item.training.warmup_time }}
+                                </td>
+                                <td tabindex="0">
                                     {{ item.training.repetitions_quantity }}
                                 </td>
-                                <td v-if="item.calification">
+                                <td tabindex="0" v-if="item.calification">
                                     {{ item.calification }}
                                 </td>
                                 <td v-else>
@@ -117,7 +126,7 @@
             max-width="600px"
         >
             <v-card>
-                <v-card-title class="headline">
+                <v-card-title class="headline" tabindex="0">
                     <div>Agregar/Editar calificacion</div>
 
                     <div>

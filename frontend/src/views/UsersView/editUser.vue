@@ -3,6 +3,7 @@
         <v-dialog v-model="localShow" hide-overlay persistent>
             <v-card style="width: 600px">
                 <v-card-title
+                    tabindex="0"
                     class="d-flex justify-space-between align-center mb-4"
                 >
                     <div>Editar Usuario</div>

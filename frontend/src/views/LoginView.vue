@@ -4,7 +4,7 @@
             <v-col class="d-flex justify-center align-center">
                 <v-card style="width: 500px" v-on:keyup.enter="logearse">
                     <v-card-title primary-title class="mb-7">
-                        <div class="text-h4">Iniciar sesion</div>
+                        <div class="text-h4" tabindex="0">Iniciar sesion</div>
                     </v-card-title>
                     <v-card-text>
                         <v-text-field

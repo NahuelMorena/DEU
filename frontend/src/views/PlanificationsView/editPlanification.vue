@@ -140,7 +140,7 @@
         </v-dialog>
         <v-dialog v-model="confirmDialog" max-width="500px">
             <v-card>
-                <v-card-title>Confirmar eliminación</v-card-title>
+                <v-card-title tabindex="0">Confirmar eliminación</v-card-title>
                 <v-card-text>
                     ¿Estás seguro de que deseas quitar el entrenamiento?
                 </v-card-text>

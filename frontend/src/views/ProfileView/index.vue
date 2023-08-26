@@ -3,7 +3,7 @@
         <HeaderComponent title="Perfil de usuario" />
         <v-container class="general-padding">
             <v-card>
-                <v-card-title>Perfil del Usuario</v-card-title>
+                <v-card-title tabindex="0">Perfil del Usuario</v-card-title>
                 <v-card-text v-if="authStore">
                     <v-card-text>
                         <v-form ref="form">
